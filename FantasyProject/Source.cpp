@@ -88,7 +88,7 @@ int main() {
 	Admin mariem("mariem", "2022170419",103);
 	Admin menna("menna", "2022170445",104);
 	Admin momen("momen", "2022170612",105);
-	Admin minam("minak", "2022170459",106);
+	Admin minam("minam", "2022170459",106);
 	Admin minaa("minaa", "2022170455",107);
 	admins.push_back(amira);
 	admins.push_back(simon);
