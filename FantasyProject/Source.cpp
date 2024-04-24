@@ -1,8 +1,8 @@
 #include <iostream>
 #include <list>
-#include "Admin.h"
+#include "Admin.cpp"
 #include <vector>
-#include "User.h"
+#include "User.cpp"
 using namespace std;
 int Id_counter = 1000;
 vector<Admin>admins;
