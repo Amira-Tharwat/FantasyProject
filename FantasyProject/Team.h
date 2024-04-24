@@ -8,12 +8,10 @@
 class Team
 {
 public:
-	string TeamName;
-	int CountTeamId=0;
+	string TeamName = "";
+	int CountTeamId = 0;
 	int TeamId;
-	
-public:
-	static list<Player> player;
+	static list <Player> player;
 	Team(void);
 	Team(string, int);
 	

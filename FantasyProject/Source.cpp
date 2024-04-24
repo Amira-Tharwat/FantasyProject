@@ -4,9 +4,9 @@
 #include <vector>
 #include "User.cpp"
 using namespace std;
-int Id_counter = 1000;
-vector<Admin>admins;
-vector<User>users;
+int Id_counter = 1000; 
+vector<Admin> admins;
+vector<User> users;
 void First_Page();
 void SignUp() {
 	User user;
@@ -98,7 +98,6 @@ int main() {
 	admins.push_back(momen);
 	admins.push_back(minam);
 	admins.push_back(minaa);
-
 
 	//-----------------------------------------------------
 	First_Page();

@@ -9,7 +9,7 @@ class Player
 public:
 	int PlayerId;
 	string PlayerName;
-	int CountPlayerId=0;
+	int CountPlayerId = 0;
 	Player();
 
 };

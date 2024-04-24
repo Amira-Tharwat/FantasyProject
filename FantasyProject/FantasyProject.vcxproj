@@ -132,6 +132,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Team.h" />
     <ClInclude Include="User.h" />
+    <ClInclude Include="Validation.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Admin.cpp" />

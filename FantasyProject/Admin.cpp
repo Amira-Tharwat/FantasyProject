@@ -29,11 +29,11 @@ void Admin::Home()
 	switch (answer)
 	{
 	case 1:
-		// Call Add team 
+		Admin::AddTeam();
 		break;
 
 	case 2:
-		//Call Remove team
+		Admin::RemoveTeam();
 		break;
 
 	case 3:
@@ -83,4 +83,66 @@ void Admin::AddTeam() {
 		cout << "Wrong Id" << endl;
 		AddTeam();
 	}
+}
+
+bool Admin::FindTeamInLeague(League League, int TeamID) {
+
+	for (Team& t : League.teams)
+	{
+		if (TeamID == t.TeamId) {
+			return true;
+		}
+	}
+
+	return false;
+
+}
+
+vector<Team> Admin::RemoveV(League League,int TeamID) {
+
+	vector<Team> Teams;
+	for (Team& t : League.teams)
+	{
+		if (TeamID == t.TeamId)
+			continue;
+		Teams.push_back(t);
+	}
+	return Teams;
+
+}
+
+void Admin::RemoveTeam() {
+
+	int lID,tID;
+	//Print Leagues (Name & ID)
+	cout << "Enter The League Id : ";
+	cin >> lID;
+
+	/*for (League &l : Leagues)
+	{
+		if(lID == l.LeagueId)
+		{
+			//Print Teams
+			for(Team &t : l.teams)
+			{
+				cout << t.TeamId << " " << t.TeamName << endl;
+			}
+			cout << "Enter The Team Id : ";
+			cin >> tID;
+
+			if(FindTeamInLeague(l,tId))
+				l.teams = RemoveV(l,tId);
+			else
+			{
+			cout << "Wrong ID\n";
+			RemoveTeam();
+			}
+		}
+		else
+		{
+			cout << "Wrong ID\n";
+			RemoveTeam();
+		}
+	}*/
+
 }
