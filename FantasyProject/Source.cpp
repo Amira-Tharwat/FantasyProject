@@ -30,7 +30,8 @@ void SignIn( ) {
 		if (admins[i].Name == name && admins[i].Password == password)
 		{
 			iffound = 1;
-			cout << "welcome " << name << " in home admin";//function home admin
+			cout << "welcome " << name << " in home admin";//function home admin   
+			Admin::Home();
 			break;
 		}
 	}

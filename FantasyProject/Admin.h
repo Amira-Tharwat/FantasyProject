@@ -2,7 +2,7 @@
 #include <iostream>
 #include <vector>
 using namespace std;
-class Admin
+ class  Admin
 {
 public:
 	string Name;
@@ -12,5 +12,7 @@ public :
 	Admin(void);
 	Admin(string, string,int);
 	
+	static  void  Home();
+	void AddTeam();
 };
 
