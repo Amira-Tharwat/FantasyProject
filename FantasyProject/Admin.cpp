@@ -1,4 +1,5 @@
 #include "Admin.h"
+#include "League.h"
 Admin::Admin(void){}
 Admin::Admin(string name, string password,int id)
 {
