@@ -13,6 +13,6 @@ public :
 	Admin(string, string,int);
 	
 	static  void  Home();
-	
+	void AddTeam();
 };
 
