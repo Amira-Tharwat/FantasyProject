@@ -2,6 +2,7 @@
 #include<iostream>
 #include <vector>
 #include<list>
+#include <map>
 #include<string>
 #include "League.h"
 #include "Player.h"
@@ -11,7 +12,7 @@ public:
 	string TeamName = "";
 	int CountTeamId = 0;
 	int TeamId;
-	static list <Player> player;
+	 map <int,Player> player;
 	Team(void);
 	Team(string, int);
 	

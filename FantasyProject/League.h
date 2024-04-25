@@ -10,9 +10,8 @@ static class League
 public:
 	//string LaegueName;
 	int LeagueId;
-
 	static vector<Team> teams;
-	//static vector<Player> players;
+	static vector<Player> players;
 	//static vector<Round> rounds;
 };
 

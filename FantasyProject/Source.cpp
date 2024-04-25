@@ -3,6 +3,7 @@
 #include "Admin.cpp"
 #include <vector>
 #include "User.cpp"
+#include"Player.h"
 using namespace std;
 int Id_counter = 1000; 
 vector<Admin> admins;

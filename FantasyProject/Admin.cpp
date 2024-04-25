@@ -4,6 +4,7 @@
 #include <list>
 #include <vector>
 #include "Player.h"
+#include<map>
 
 Admin::Admin(void){}
 Admin::Admin(string name, string password,int id)
@@ -37,7 +38,7 @@ void Admin::Home()
 		break;
 
 	case 3:
-		// Call Add Player 
+		Player::AddPlayer();
 		break;
 
 	case 4:
@@ -146,3 +147,108 @@ void Admin::RemoveTeam() {
 	}*/
 
 }
+void Player::AddPlayer() {
+
+	Team t;
+	int leagueId;
+	Player p;
+	int ans;
+	League l;
+
+	cout << "Please Enter League id  \n";
+	cin >> leagueId;
+	int i = 0;
+	while (i != l.players.size()) {
+		if (leagueId == l.LeagueId)
+		{
+			int teamId;
+			int j = 0;
+			cout << "Please Enter Team ID ";
+			cin >> teamId;
+			while (j != l.teams.size()) {
+			if (teamId == t.TeamId)
+			{
+				cout << "Enter Player Name";
+				cin >> t.player[p.PlayerId].PlayerName;
+				cout << "Enter Player Position";
+				cin >> t.player[p.PlayerId].PlayerPosition;
+				cout << "Enter Player Price";
+				cin >> t.player[p.PlayerId].PlayerPrice;
+				cout << "You Add Player " << p.PlayerName << " Successfully\n";
+			}
+			else 
+			{
+				cout << "This Team Id Not Available \n 1- try again 2-Exit";
+				cin >> ans;
+				switch (ans)
+				{
+				case 1:
+					AddPlayer();
+					break;
+				case 2:
+					Admin::Home();
+					break;
+				default:
+					cout << "Invalid Answer \n ";
+
+				}
+
+			}
+				j++; 
+			}
+		}
+
+		i++;
+
+	}
+
+
+	/*l.players[i];
+	i++;*/
+
+
+
+
+
+	/*cout << "Teams ID Is \n";
+	for(int i=0 ;i<t.player.size();i++){
+		{
+		 // lw 3wzen n show el id
+		}*/
+
+
+		/*cout << "Enter Team ID";
+		cin >> id;
+		if (id == t.TeamId) {
+			cout << "Enter Player Name";
+			cin >> p.PlayerName;
+			cout << "Enter Player Position";
+			cin >> p.PlayerPosition;
+			cout << "Enter Player Price";
+			cin >> p.PlayerPrice;
+			cout << "You Add Player " << p.PlayerName << " Successfully\n";
+		}
+		else {
+			cout << "This Team Id Not Available \n 1- try again 2-Exit";
+			cin >> ans;
+			switch (ans)
+			{
+			case 1:
+				AddPlayer();
+				break;
+			case 2:
+				Admin::Home();
+				break;
+			default:
+				cout<<"Invalid Answer \n ";
+
+
+
+		}
+		*/
+
+}
+	
+	
+
+
