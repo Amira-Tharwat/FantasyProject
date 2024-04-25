@@ -1,5 +1,4 @@
 #pragma once
-#include <iostream>
 #include <map>
 #include "League.h"
 using namespace std;

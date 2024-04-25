@@ -1,10 +1,8 @@
 #pragma once
-#include<iostream>
-#include <vector>
-#include<list>
-#include<string>
-#include "League.h"
-//#include "Team.h"
+#include <iostream>
+#include <string>
+#include "Team.h"
+using namespace std;
 class Player
 {
 	int CountPlayerId = 1;
@@ -14,5 +12,6 @@ public:
 	string PlayerPosition;
 	int PlayerPrice;
 	Player();
+	Player(int Id, string Name, string Position, int Price);
 };
 

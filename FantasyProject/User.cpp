@@ -1,15 +1,16 @@
 #include "User.h"
-int Id_Counter = 1;
+
+int Id_Count = 1;
 User::User(void) 
 {
-	Id = Id_Counter;
+	Id = Id_Count;
 	Budget = 80000;
-	Id_Counter++;
+	Id_Count++;
 }
 User::User(string name, string password) {
 	Name = name;
-	Id = Id_Counter;
+	Id = Id_Count;
 	Password = password;
 	Budget = 80000;
-	Id_Counter++;
+	Id_Count++;
 }

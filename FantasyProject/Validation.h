@@ -3,7 +3,6 @@
 using namespace std;
 
 class Validation {
-
 public:
 
 template <typename T>
@@ -21,7 +20,7 @@ static T ReadNumber()
 template <typename T>
 static bool IsNumberInRange(T Number, T From, T To)
 {
-	return (Number >= From && Number <= To)
+	return (Number >= From && Number <= To);
 	
 }
 

@@ -1,11 +1,11 @@
 #include "Admin.h"
+#include "Player.h"
 #include "League.h"
 #include "Leagues.h"
 #include "Team.h"
-#include <list>
-#include <vector>
-#include "Player.h"
 #include<map>
+using namespace std;
+
 int LeagueId;
 Admin::Admin(void){}
 Admin::Admin(string name, string password,int id)
@@ -97,7 +97,8 @@ void Admin::AddPlayer() {
 		cin >> tID;
 		auto s = Leagues::leagues[LeagueId].teams.find(tID);
 		if (s != Leagues::leagues[LeagueId].teams.end()) {
-			while (ans != 1 || ans != 2) {
+			cin >> ans;
+			while (ans != 1 && ans != 2) {
 				cout << "This Team Id Not Available \n 1- try again 2-Exit";
 				cin >> ans;
 				switch (ans)
