@@ -1,11 +1,12 @@
 #include "Admin.h"
 #include "League.h"
+#include "Leagues.h"
 #include "Team.h"
 #include <list>
 #include <vector>
 #include "Player.h"
 #include<map>
-
+int LeagueId;
 Admin::Admin(void){}
 Admin::Admin(string name, string password,int id)
 {
@@ -38,7 +39,7 @@ void Admin::Home()
 		break;
 
 	case 3:
-		Player::AddPlayer();
+		Admin::AddPlayer();
 		break;
 
 	case 4:
@@ -59,196 +60,60 @@ void Admin::Home()
 
 }
 void Admin::AddTeam() {
-	League l; int id;
-	Team team;
-	Team::player;
-	Player p;
-	string PlayerName;
-	p.PlayerName = PlayerName;
 	
-	cout << "Enter The League Id : ";
-	cin >> id;
-	if (id == l.LeagueId) {
-		cout << "Enter The Team Name : ";
-		cin >> team.TeamName;
-		cout << "Enter The Team Id : ";
-		cin >> team.TeamId;
-		cout << "Enter The Players Name : ";
-		/*for (int i = 0;i < team.player.size();i++) {
-			team.player.push_back(PlayerName);
-
-		}*/
-		cout << "Team " << team.TeamName << " is added successfully :)" << endl;
-	}
-	else {
-		cout << "Wrong Id" << endl;
-		AddTeam();
-	}
+	Team team = Team();
+	cout << "Enter The Team Name : ";
+	cin >> team.TeamName;
+	cout << "Team " << team.TeamName << " is added successfully :)" << endl;
+	team.TeamId = LeagueId;
+	Leagues::leagues[LeagueId].teams[team.TeamId] = team;
+	Home();
 }
-
-bool Admin::FindTeamInLeague(League League, int TeamID) {
-
-	for (Team& t : League.teams)
-	{
-		if (TeamID == t.TeamId) {
-			return true;
-		}
-	}
-
-	return false;
-
-}
-
-vector<Team> Admin::RemoveV(League League,int TeamID) {
-
-	vector<Team> Teams;
-	for (Team& t : League.teams)
-	{
-		if (TeamID == t.TeamId)
-			continue;
-		Teams.push_back(t);
-	}
-	return Teams;
-
-}
-
 void Admin::RemoveTeam() {
 
-	int lID,tID;
-	//Print Leagues (Name & ID)
-	cout << "Enter The League Id : ";
-	cin >> lID;
-
-	/*for (League &l : Leagues)
-	{
-		if(lID == l.LeagueId)
-		{
-			//Print Teams
-			for(Team &t : l.teams)
-			{
-				cout << t.TeamId << " " << t.TeamName << endl;
-			}
-			cout << "Enter The Team Id : ";
-			cin >> tID;
-
-			if(FindTeamInLeague(l,tId))
-				l.teams = RemoveV(l,tId);
-			else
-			{
-			cout << "Wrong ID\n";
-			RemoveTeam();
-			}
-		}
-		else
-		{
-			cout << "Wrong ID\n";
-			RemoveTeam();
-		}
-	}*/
-
+	int tID;
+	for (auto i = Leagues::leagues[LeagueId].teams.begin(); i != Leagues::leagues[LeagueId].teams.end(); i++)
+		cout << i->first << "\t" << i->second.TeamName<< endl;
+	cout << "Enter The Team Id : ";
+	cin >> tID;
+	Team teamRemove = Leagues::leagues[LeagueId].teams[tID];
+	cout << "Team " << teamRemove.TeamName << " is Removed successfully :)" << endl;
+	Leagues::leagues[LeagueId].teams.erase(tID);
 }
-void Player::AddPlayer() {
+void Admin::AddPlayer() {
 
-	Team t;
-	int leagueId;
-	Player p;
-	int ans;
-	League l;
-
-	cout << "Please Enter League id  \n";
-	cin >> leagueId;
-	int i = 0;
-	while (i != l.players.size()) {
-		if (leagueId == l.LeagueId)
-		{
-			int teamId;
-			int j = 0;
-			cout << "Please Enter Team ID ";
-			cin >> teamId;
-			while (j != l.teams.size()) {
-			if (teamId == t.TeamId)
-			{
-				cout << "Enter Player Name";
-				cin >> t.player[p.PlayerId].PlayerName;
-				cout << "Enter Player Position";
-				cin >> t.player[p.PlayerId].PlayerPosition;
-				cout << "Enter Player Price";
-				cin >> t.player[p.PlayerId].PlayerPrice;
-				cout << "You Add Player " << p.PlayerName << " Successfully\n";
-			}
-			else 
-			{
+	Player p = Player();
+	int tID, ans;
+	cout << "Enter Player Name";
+	cin >> p.PlayerName;
+	cout << "Enter Player Position";
+	cin >> p.PlayerPosition;
+	cout << "Enter Player Price";
+	cin >> p.PlayerPrice;
+	while (true) {
+		for (auto i = Leagues::leagues[LeagueId].teams.begin(); i != Leagues::leagues[LeagueId].teams.end(); i++)
+			cout << i->first << "\t" << i->second.TeamName << endl;
+		cout << "Enter The Team Id : ";
+		cin >> tID;
+		auto s = Leagues::leagues[LeagueId].teams.find(tID);
+		if (s != Leagues::leagues[LeagueId].teams.end()) {
+			while (ans != 1 || ans != 2) {
 				cout << "This Team Id Not Available \n 1- try again 2-Exit";
 				cin >> ans;
 				switch (ans)
 				{
 				case 1:
 					AddPlayer();
-					break;
 				case 2:
 					Admin::Home();
-					break;
+
 				default:
 					cout << "Invalid Answer \n ";
-
 				}
 
 			}
-				j++; 
-			}
+
 		}
-
-		i++;
-
+		break;
 	}
-
-
-	/*l.players[i];
-	i++;*/
-
-
-
-
-
-	/*cout << "Teams ID Is \n";
-	for(int i=0 ;i<t.player.size();i++){
-		{
-		 // lw 3wzen n show el id
-		}*/
-
-
-		/*cout << "Enter Team ID";
-		cin >> id;
-		if (id == t.TeamId) {
-			cout << "Enter Player Name";
-			cin >> p.PlayerName;
-			cout << "Enter Player Position";
-			cin >> p.PlayerPosition;
-			cout << "Enter Player Price";
-			cin >> p.PlayerPrice;
-			cout << "You Add Player " << p.PlayerName << " Successfully\n";
-		}
-		else {
-			cout << "This Team Id Not Available \n 1- try again 2-Exit";
-			cin >> ans;
-			switch (ans)
-			{
-			case 1:
-				AddPlayer();
-				break;
-			case 2:
-				Admin::Home();
-				break;
-			default:
-				cout<<"Invalid Answer \n ";
-
-
-
-		}
-		*/
-
 }
-	
-	
-
-

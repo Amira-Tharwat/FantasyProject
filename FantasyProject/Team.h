@@ -8,11 +8,11 @@
 #include "Player.h"
 class Team
 {
+	int CountTeamId = 0;
 public:
 	string TeamName = "";
-	int CountTeamId = 0;
 	int TeamId;
-	 map <int,Player> player;
+	map <int,Player> players;
 	Team(void);
 	Team(string, int);
 	

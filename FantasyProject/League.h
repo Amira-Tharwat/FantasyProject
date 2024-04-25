@@ -1,17 +1,20 @@
 #pragma once
 #include<iostream>
 #include <vector>
-#include<list>
+#include<map>
 #include "Team.h"
 using namespace std;
 static class League
 {
 
 public:
-	//string LaegueName;
+	string LaegueName;
 	int LeagueId;
-	static vector<Team> teams;
-	static vector<Player> players;
-	//static vector<Round> rounds;
+	static map<int,Team> teams;
+	static map<int,Player> players;
+	//static map<int,Round> rounds;
+public:
+	League();
+	League(int ,string);
 };
 

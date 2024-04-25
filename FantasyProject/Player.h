@@ -7,14 +7,12 @@
 //#include "Team.h"
 class Player
 {
+	int CountPlayerId = 1;
 public:
 	int PlayerId;
 	string PlayerName;
-	int CountPlayerId = 0;
 	string PlayerPosition;
 	int PlayerPrice;
 	Player();
-   static void AddPlayer();
-
 };
 

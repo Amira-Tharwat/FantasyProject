@@ -17,5 +17,5 @@ public:
 	static vector<Team> RemoveV(League League, int TeamID);
 	static bool FindTeamInLeague(League League,int TeamID);
 	static void RemoveTeam();
-
+	static void AddPlayer();
 };

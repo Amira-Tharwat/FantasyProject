@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClInclude Include="Admin.h" />
     <ClInclude Include="League.h" />
+    <ClInclude Include="Leagues.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Team.h" />
     <ClInclude Include="User.h" />
@@ -137,6 +138,7 @@
   <ItemGroup>
     <ClCompile Include="Admin.cpp" />
     <ClCompile Include="League.cpp" />
+    <ClCompile Include="Leagues.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Team.cpp" />

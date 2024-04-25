@@ -1,8 +1,9 @@
 #include "Team.h"
 #include <iostream>
 Team::Team() {
-	TeamId = CountTeamId;
 	CountTeamId++;
+	TeamId = CountTeamId;
+	
 }
 //Team::Team(string TName, int TId) {
 //	TeamName = TName;
