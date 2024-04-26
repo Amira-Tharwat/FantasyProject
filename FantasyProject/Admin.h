@@ -12,6 +12,8 @@ public:
 	Admin(string, string,int);
 	static void  Home();
 	static void AddTeam();
+	static void SetLeagueId();
+	static void AddRound();
 	static void RemoveTeam();
 	static void AddPlayer();
 	static void RemovePlayer();

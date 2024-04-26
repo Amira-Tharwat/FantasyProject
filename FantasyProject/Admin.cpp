@@ -3,6 +3,7 @@
 #include "League.h"
 #include "Leagues.h"
 #include "Team.h"
+
 #include<map>
 using namespace std;
 
@@ -14,8 +15,20 @@ Admin::Admin(string name, string password,int id)
 	Password = password;
 	Id = id;
 }
+void Admin::SetLeagueId()
+{
+	int legId;
+
+	cout << "Please Enter League Id\n";
+	cin >> legId;
+
+	LeagueId = legId;
+	Home();
+}
 void Admin::Home()
 {
+	
+	
 	cout << "Please Enter\n";
 	cout << "1- Add Team\n";
 	cout << "2- Remove Team\n";
@@ -47,7 +60,7 @@ void Admin::Home()
 		break;
 
 	case 5:
-		// Call Add Round
+		Admin::AddRound();
 		break;
 	case 6:
 		//Call End Round
@@ -138,4 +151,39 @@ void Admin::RemovePlayer()
 	cout << " Player" << playerRemove.PlayerName << " is Removed successfully :)" << endl;
 
 
+}
+void Admin::AddRound()
+{
+	int roundId;
+	cout << "Enter number of Round\n";
+	cin >> roundId;
+	 map<int, Team> tempTeams;
+	for (int i = 0; i < Leagues::leagues[LeagueId].teams.size() / 2; i++)
+	{
+	 
+		int t = 2;
+		int tID;
+		Match match;
+		while (t--)
+		{
+			
+			for (auto i = Leagues::leagues[LeagueId].teams.begin(); i != Leagues::leagues[LeagueId].teams.end(); i++)
+				cout << i->first << "\t" << i->second.TeamName << endl;
+			cout << "Enter The Team Id For Match " << i+1<<" :\n";
+			cin >> tID;
+			tempTeams[tID] = Leagues::leagues[LeagueId].teams[tID];
+			Leagues::leagues[LeagueId].teams.erase(tID);
+			if (t == 1)
+			{
+				match.team1 = tempTeams[tID];
+			}
+			else 
+				match.team2 = tempTeams[tID];
+		}
+		Leagues::leagues[LeagueId].rounds[roundId].matches.push(match);
+    }
+	for (auto i : tempTeams)
+	{
+		Leagues::leagues[LeagueId].teams[i.first] = i.second;
+	}
 }
