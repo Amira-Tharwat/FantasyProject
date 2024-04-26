@@ -9,7 +9,8 @@ public:
 	string LaegueName;
 	int LeagueId;
 	static map<int, Team> teams;
-	//static map<int,Player> Players;
+	static map<int,Player> Players;
+
 	//static map<int,Round> rounds;
 public:
 	League();

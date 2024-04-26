@@ -14,4 +14,5 @@ public:
 	static void AddTeam();
 	static void RemoveTeam();
 	static void AddPlayer();
+	static void RemovePlayer();
 };

@@ -43,7 +43,7 @@ void Admin::Home()
 		break;
 
 	case 4:
-		//Call Remove Player
+		Admin::RemovePlayer();
 		break;
 
 	case 5:
@@ -81,7 +81,7 @@ void Admin::RemoveTeam() {
 	Leagues::leagues[LeagueId].teams.erase(tID);
 }
 void Admin::AddPlayer() {
-
+	Team team = Team();
 	Player p = Player();
 	int tID, ans;
 	cout << "Enter Player Name";
@@ -90,6 +90,8 @@ void Admin::AddPlayer() {
 	cin >> p.PlayerPosition;
 	cout << "Enter Player Price";
 	cin >> p.PlayerPrice;
+
+	Leagues::leagues[LeagueId].teams[team.TeamId].Players[p.PlayerId]=p;
 	while (true) {
 		for (auto i = Leagues::leagues[LeagueId].teams.begin(); i != Leagues::leagues[LeagueId].teams.end(); i++)
 			cout << i->first << "\t" << i->second.TeamName << endl;
@@ -117,4 +119,23 @@ void Admin::AddPlayer() {
 		}
 		break;
 	}
+}
+
+void Admin::RemovePlayer()
+{
+	int  tID,PID;
+	for (auto i = Leagues::leagues[LeagueId].teams.begin(); i != Leagues::leagues[LeagueId].teams.end(); i++)
+		cout << i->first << "\t" << i->second.TeamName << endl;
+	cout << "Enter The Team Id : ";
+	cin >> tID;
+	for (auto i = Leagues::leagues[LeagueId].teams[tID].Players.begin(); i != Leagues::leagues[LeagueId].teams[tID].Players.end(); i++)
+		cout << i->first << "\t"  <<  i->second.PlayerName << endl;
+	cout << "Enter The Player Id : "; 
+	cin >> PID;
+	Leagues::leagues[LeagueId].teams[tID].Players.erase(PID);
+
+	Player playerRemove = Leagues::leagues[LeagueId].teams[tID].Players[PID];
+	cout << " Player" << playerRemove.PlayerName << " is Removed successfully :)" << endl;
+
+
 }
