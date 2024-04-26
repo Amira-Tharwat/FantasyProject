@@ -191,9 +191,12 @@ void Admin::AddRound()
 void Admin::RemoveRound()
 {
 	int roundId;
-	cout << "Enter number of Round that you want to remove \n";
-	cin >> roundId;
+	for (auto i = Leagues::leagues[LeagueId].rounds.begin(); i != Leagues::leagues[LeagueId].rounds.end(); i++)
+	{
+		cout <<"Round " << i->first << endl;
+	}
+	    cout << "Enter number of Round that you want to remove \n";
+	    cin >> roundId;
 		Leagues::leagues[LeagueId].rounds.erase(roundId);
-	   
 		cout << " Round " << roundId << " is Removed successfully :)" << endl;
 }
