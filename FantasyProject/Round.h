@@ -5,6 +5,7 @@ using namespace std;
 class Round
 {
 public :
+	int roundId;
 	queue<Match> matches;
 	Round();
 };

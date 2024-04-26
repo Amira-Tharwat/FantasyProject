@@ -14,6 +14,7 @@ public:
 	static void AddTeam();
 	static void SetLeagueId();
 	static void AddRound();
+	static void RemoveRound();
 	static void RemoveTeam();
 	static void AddPlayer();
 	static void RemovePlayer();

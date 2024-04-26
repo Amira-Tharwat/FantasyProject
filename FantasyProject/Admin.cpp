@@ -63,7 +63,7 @@ void Admin::Home()
 		Admin::AddRound();
 		break;
 	case 6:
-		//Call End Round
+		Admin::RemoveRound();
 		break;
 	case 7:
 		//Call  View All users
@@ -160,13 +160,11 @@ void Admin::AddRound()
 	 map<int, Team> tempTeams;
 	for (int i = 0; i < Leagues::leagues[LeagueId].teams.size() / 2; i++)
 	{
-	 
 		int t = 2;
 		int tID;
 		Match match;
 		while (t--)
 		{
-			
 			for (auto i = Leagues::leagues[LeagueId].teams.begin(); i != Leagues::leagues[LeagueId].teams.end(); i++)
 				cout << i->first << "\t" << i->second.TeamName << endl;
 			cout << "Enter The Team Id For Match " << i+1<<" :\n";
@@ -186,4 +184,16 @@ void Admin::AddRound()
 	{
 		Leagues::leagues[LeagueId].teams[i.first] = i.second;
 	}
+}
+
+
+
+void Admin::RemoveRound()
+{
+	int roundId;
+	cout << "Enter number of Round that you want to remove \n";
+	cin >> roundId;
+		Leagues::leagues[LeagueId].rounds.erase(roundId);
+	   
+		cout << " Round " << roundId << " is Removed successfully :)" << endl;
 }
