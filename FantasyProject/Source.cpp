@@ -5,7 +5,7 @@
 using namespace std;
 vector<Admin>admins;
 vector<User>users;
-void F();
+void First_Page();
 void SignIn() {
 	int answer1;
 	string name, password;
@@ -18,7 +18,7 @@ void SignIn() {
 		if (admins[i].Name == name && admins[i].Password == password)
 		{
 			iffound = true;
-			cout << "welcome " << name << " in home admin";//function home admin   
+			cout << "welcome " << name << " in home admin"<<endl;//function home admin   
 			Admin::SetLeagueId();
 			break;
 		}
@@ -43,7 +43,7 @@ void SignIn() {
 				SignIn();
 				break;
 			case 2:
-				F();
+				First_Page();
 				break;
 			default:
 				break;
@@ -64,9 +64,9 @@ void SignUp() {
 	cin >> user.Password;
 	users.push_back(user);
 	cout << "your account created\n";
-	F();
+	First_Page();
 }
-void F() {
+void First_Page() {
 	int answer;
 	cout << "1-SignIn \n2-SignUp\n";
 	cin >> answer;
@@ -99,6 +99,6 @@ int main() {
 	admins.push_back(momen);
 	admins.push_back(minam);
 	admins.push_back(minaa);
-	F();
+	First_Page();
 
 }

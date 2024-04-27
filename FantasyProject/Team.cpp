@@ -11,3 +11,6 @@ Team::Team(string TName, int TId) {
 	TeamId = TId;
 
 }
+void Team::setId() {
+	CountTeamId--;
+}

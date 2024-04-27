@@ -9,6 +9,7 @@ public:
 	int LeagueId;
 	Team(void);
 	Team(string, int);
+	void static setId();
 
 };
 

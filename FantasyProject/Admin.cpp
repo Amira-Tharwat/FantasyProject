@@ -1,5 +1,6 @@
 #include "Admin.h"
 #include "Leagues.h"
+
 Leagues leagues = Leagues();
 int LeagueId;
 Admin::Admin() {}
@@ -12,7 +13,9 @@ Admin::Admin(int id, string name, string password)
 void Admin::SetLeagueId()
 {
 	int legId;
-
+	for (int i = 1; i <= 3; i++) {
+		cout << i << "\t"<<leagues.leagues[i].LaegueName<<endl;
+	}
 	cout << "Please Enter League Id\n";
 	cin >> legId;
 
@@ -58,11 +61,11 @@ void Admin::Home()
 		break;
 
 	case 5:
-		Admin::AddRound();
+		AddRound();
 
 		break;
 	case 6:
-		Admin::RemoveRound();
+		RemoveRound();
 
 		break;
 	case 7:
@@ -80,6 +83,7 @@ void Admin::AddTeam() {
 	cout << "Team " << team.TeamName << " is added successfully :)" << endl;
 	team.LeagueId = LeagueId;
 	leagues.leagues[LeagueId].teams[team.TeamId] = team;
+	Team::setId();
 	Home();
 }
 void Admin::RemoveTeam() {
@@ -132,8 +136,8 @@ void Admin::AddPlayer() {
 		}
 		else {
 			leagues.leagues[LeagueId].Players[p.PlayerId] = p;
-			leagues.leagues[LeagueId].teams[tID].Players[p.PlayerId]=p ;
-			
+			leagues.leagues[LeagueId].teams[tID].Players[p.PlayerId]=p;
+			Player::setId();
 		}
 		break;
 	}
