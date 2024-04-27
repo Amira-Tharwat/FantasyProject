@@ -1,6 +1,8 @@
 #include "Player.h"
 static int CountPlayerId = 1;
+
 Player::Player() {
+	
 	PlayerId = CountPlayerId;
 	CountPlayerId++;
 	PlayerPrice = 0;

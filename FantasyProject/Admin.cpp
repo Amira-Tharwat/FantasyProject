@@ -48,13 +48,13 @@ void Admin::Home()
 		break;
 
 	case 3:
-		Admin::AddPlayer();
+		AddPlayer();
 
 		break;
 
 	case 4:
-		Admin::RemovePlayer();
-		cout << "reamove player";
+		RemovePlayer();
+		
 		break;
 
 	case 5:
@@ -95,6 +95,8 @@ void Admin::RemoveTeam() {
 	Home();
 }
 void Admin::AddPlayer() {
+	
+	
 	Player p = Player();
 	int tID, ans = 0;
 	cout << "Enter Player Name";
@@ -129,7 +131,9 @@ void Admin::AddPlayer() {
 
 		}
 		else {
-			leagues.leagues[LeagueId].teams[tID].Players[p.PlayerId] = p;
+			leagues.leagues[LeagueId].Players[p.PlayerId] = p;
+			leagues.leagues[LeagueId].teams[tID].Players[p.PlayerId]=p ;
+			
 		}
 		break;
 	}

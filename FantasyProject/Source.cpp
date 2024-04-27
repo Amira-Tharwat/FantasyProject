@@ -5,6 +5,7 @@
 using namespace std;
 vector<Admin>admins;
 vector<User>users;
+void F();
 void SignIn() {
 	int answer1;
 	string name, password;
@@ -13,7 +14,7 @@ void SignIn() {
 	cin >> name;
 	cout << "Enter your password\n";
 	cin >> password;
-	for (int i = 1; i <= 7; i++) {
+	for (int i = 0; i < 7; i++) {
 		if (admins[i].Name == name && admins[i].Password == password)
 		{
 			iffound = true;
@@ -42,7 +43,7 @@ void SignIn() {
 				SignIn();
 				break;
 			case 2:
-				/*F();*/
+				F();
 				break;
 			default:
 				break;
@@ -63,7 +64,7 @@ void SignUp() {
 	cin >> user.Password;
 	users.push_back(user);
 	cout << "your account created\n";
-	/*F();*/
+	F();
 }
 void F() {
 	int answer;
