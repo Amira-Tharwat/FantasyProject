@@ -1,17 +1,14 @@
-#pragma once
-#include"Player.h"
-#include <map>
-using namespace std;
-
+#include "Player.h"
+#include<map>
 class Team
 {
-	int CountTeamId = 0;
 public:
-	string TeamName = "";
+	string TeamName;
 	int TeamId;
-	map <int,Player> Players;
+	map <int, Player> Players;
+	int LeagueId;
 	Team(void);
 	Team(string, int);
-	
+
 };
 

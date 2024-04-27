@@ -1,15 +1,13 @@
 #include "Team.h"
-#include"Player.h"
-#include <iostream>
-using namespace std;
-
+static int CountTeamId = 0;
 Team::Team() {
 	CountTeamId++;
 	TeamId = CountTeamId;
-	
 }
 Team::Team(string TName, int TId) {
+	CountTeamId++;
+	TeamId = CountTeamId;
 	TeamName = TName;
 	TeamId = TId;
-	
+
 }

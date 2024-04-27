@@ -1,10 +1,8 @@
-#pragma once
-#include <queue>
-#include"Match.h"
-using namespace std;
+#include "Match.h"
+#include<queue>
 class Round
 {
-public :
+public:
 	int roundId;
 	queue<Match> matches;
 	Round();

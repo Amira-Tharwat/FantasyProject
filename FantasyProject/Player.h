@@ -1,11 +1,9 @@
 #pragma once
-#include <iostream>
-#include <string>
-#include "Team.h"
+#include<iostream>
 using namespace std;
 class Player
 {
-	int CountPlayerId = 1;
+
 public:
 	int PlayerId;
 	string PlayerName;
@@ -14,4 +12,5 @@ public:
 	Player();
 	Player(int Id, string Name, string Position, int Price);
 };
+
 
