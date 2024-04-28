@@ -1,7 +1,9 @@
 #include "League.h"
 class Leagues
 {
+
 public:
-	map<int, League> leagues;
+  static map<int, League> leagues;
 	Leagues();
+
 };

@@ -8,7 +8,7 @@ public:
 	map <int, Player> Players;
 	int LeagueId;
 	Team(void);
-	Team(string, int);
+	Team( string , int );
 	void static setId();
 
 };

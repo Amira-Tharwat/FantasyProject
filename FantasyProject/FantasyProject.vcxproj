@@ -133,6 +133,7 @@
     <ClInclude Include="Match.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Round.h" />
+    <ClInclude Include="Squad.h" />
     <ClInclude Include="Team.h" />
     <ClInclude Include="User.h" />
   </ItemGroup>
@@ -144,6 +145,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Round.cpp" />
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="Squad.cpp" />
     <ClCompile Include="Team.cpp" />
     <ClCompile Include="User.cpp" />
   </ItemGroup>

@@ -17,6 +17,7 @@ public:
 	static void AddPlayer();
 	static void RemovePlayer();
 	static void AddRound();
+	static void clacPoints();
 	static void RemoveRound();
 };
 
