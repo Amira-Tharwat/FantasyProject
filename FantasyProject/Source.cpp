@@ -106,11 +106,18 @@ int main() {
 	WriteInFiles();
 }
 void ReadFromFiles() {
-	ifstream adminsfile,teamsfile,playersfile,roundsfile;
+	ifstream adminsfile,teamsfile,playersfile,roundsfile,playerpointsfile,leaguesfile;
+	leaguesfile.open("Leagues.txt");
 	adminsfile.open("Admins.txt");
 	teamsfile.open("Teams.txt");
 	playersfile.open("Players.txt");
 	roundsfile.open("Rounds.txt");
+	playerpointsfile.open("Playerspoints.txt");
+	for (int i = 1; i < 4; i++) {
+		Leagues::leagues[i].LeagueId = i;
+		leaguesfile >> Leagues::leagues[i].LaegueName;
+
+	}
 	for (int i = 0; i < 7; i++) {
 		Admin admin;
 		adminsfile>> admin.Id;
@@ -194,11 +201,11 @@ void ReadFromFiles() {
 			}
 			istringstream isss0(mdata[0]);
 			isss0 >> match.team1.TeamId;
-			istringstream isss1(matchs[1]);
+			istringstream isss1(mdata[1]);
 			isss1 >> match.team2.TeamId;
-			istringstream isss2(matchs[2]);
+			istringstream isss2(mdata[2]);
 			isss2 >> match.res1;
-			istringstream isss3(matchs[3]);
+			istringstream isss3(mdata[3]);
 			isss3 >> match.res2;
 			match.team1 = Leagues::leagues[round.leagueId].teams.find(match.team1.TeamId)->second;
 			match.team2 = Leagues::leagues[round.leagueId].teams.find(match.team2.TeamId)->second;
@@ -209,11 +216,35 @@ void ReadFromFiles() {
 
 		
 	}
-	
+	while (getline(playerpointsfile, line)) {
+		istringstream iss(line);
+		string token;
+		Player player;
+		int roundid;
+		int points;
+		vector<string> tokens;
+		while (getline(iss, token, ',')) {
+
+			tokens.push_back(token);
+
+		}
+		istringstream isss0(tokens[0]);
+		isss0 >> player.LeagueId;
+		istringstream isss1(tokens[1]);
+		isss1 >> player.TeamId;
+		istringstream isss2(tokens[2]);
+		isss2 >> player.PlayerId;
+		istringstream isss3(tokens[3]);
+		isss3 >> roundid;
+		istringstream isss4(tokens[4]);
+		isss4 >> points;
+		Leagues::leagues[player.LeagueId].teams[player.TeamId].Players[player.PlayerId].PointsInRounds[roundid]=points;
+	}
 	adminsfile.close();
 	teamsfile.close();
 	playersfile.close();
 	roundsfile.close();
+	playerpointsfile.close();
 }
 void WriteInFiles() {
 	ofstream adminsfile,teamsfile,playersfile,roundsfile;
@@ -228,7 +259,7 @@ void WriteInFiles() {
 		adminsfile << i->Name << endl;
 		adminsfile << i->Password << endl;
 	}
-	for (int i = 0; i < 3; i++) {
+	for (int i = 1; i < 4; i++) {
 		for (auto j = Leagues::leagues[i].teams.begin(); j != Leagues::leagues[i].teams.end(); j++) {
 			teamsfile << j->second.LeagueId<<',' << j->second.TeamName << ',' << j->second.TeamId<<endl;
 			
@@ -237,9 +268,10 @@ void WriteInFiles() {
 			playersfile << p->second.TeamId << ',' << p->second.LeagueId << ',' << p->second.PlayerId << ',' << p->second.PlayerName << ',' << p->second.PlayerPosition << ',' << p->second.PlayerPrice << endl;
 		}
 		
-		roundsfile << i<<"-";
+		
 		for (auto r = Leagues::leagues[i].rounds.begin(); r != Leagues::leagues[i].rounds.end(); r++) {
 			queue <Match> copyq = r->second.matches;
+			roundsfile << i << "-";
 			roundsfile << r->first<<"-";
 			while (!(copyq.empty()))
 			{
@@ -249,6 +281,7 @@ void WriteInFiles() {
 				roundsfile << copyq.front().res2<<'-';
 				copyq.pop();
 			}
+			roundsfile << endl;
 		}
 	}
 	adminsfile.close();

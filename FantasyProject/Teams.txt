@@ -1,3 +1,5 @@
 1,zamalek,1
 1,liverpool,5
-2,real,5
+1,mancity,7
+2,real,6
+2,barcelona,11

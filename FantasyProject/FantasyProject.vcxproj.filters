@@ -91,5 +91,8 @@
     <Text Include="Playerspoints.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="Leagues.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>
