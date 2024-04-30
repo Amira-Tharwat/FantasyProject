@@ -1,11 +1,10 @@
 #include "Player.h"
-#include <map>
 #include <vector>
 #include <stack>
 class Squad
 {
 public:
-	map < string, vector<Player> > squad;  
+	map <string,vector<Player>>squads;  
 	stack <Player> deka ;
 	map<int, int> RoundPoints;
 	int TotalPoints;

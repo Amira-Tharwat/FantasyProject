@@ -1,14 +1,9 @@
-#include <vector>
 #include "Admin.h"
 #include "User.h"
 #include "Leagues.h"
 #include <fstream>
-
 #include <sstream>
-
-
 using namespace std;
-
 vector<Admin>admins;
 vector<User>users;
 void ReadFromFiles();
@@ -39,6 +34,7 @@ void SignIn() {
 			if (users[i].Name == name && users[i].Password == password) {
 				iffound = true;
 				cout << "welcome " << name << " in home user";//function home user
+				users[i].chooseLeague(users[i].Id);
 				break;
 			}
 		}
@@ -253,7 +249,6 @@ void WriteInFiles() {
 	teamsfile.open("Teams.txt");
 	playersfile.open("Players.txt");
 	roundsfile.open("Rounds.txt");
-	
 	for (auto i = admins.begin(); i != admins.end();i++) {
 		adminsfile << i->Id << endl;
 		adminsfile << i->Name << endl;

@@ -1,20 +1,22 @@
-#include<iostream>
-#include <vector>
 #include "Squad.h"
-using namespace std;
 class User
 {
-
 public:
 	string Name;
 	int Id;
 	string Password;
 	float Budget;
-	vector<Squad> squad[4]; 
+	map<int,Squad>squad;
 	User(void);
 	User(string, string);
-    void setSquad(); 
-	void updateSquad();
-	void showRank();
+	void chooseLeague(int);
+	void Home();
+	void setSquad();
+	void RemovePlayer();
+	/*void showRank();
+	void LogOut();
+	void ShowPoints();
+	void PickSquad();
+	void TransfersSquad();*/
 };
 
