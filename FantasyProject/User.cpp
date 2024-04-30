@@ -84,10 +84,11 @@ void User::Home() {
 	}
 }
 void User::setSquad() {
+	bool isFind = true;
 	int playerid;
-	cout << " you must choose"<< countsOfPosition[0] <<" Goolkeepr - "<<countsOfPosition[1]<< " defenders - "<< countsOfPosition[2] <<" Midfielders - "<<countsOfPosition[4]<<" forward \n";
-	cout << "Your Bidget:" << Budget;
 	while (true) {
+		cout << " you must choose" << countsOfPosition[0] << " Goolkeepr - " << countsOfPosition[1] << " defenders - " << countsOfPosition[2] << " Midfielders - " << countsOfPosition[4] << " forward \n";
+		cout << "Your Bidget:" << Budget<<endl;
 		cout << "1-Goolkeepr\n";
 		cout << "2-defenders\n";
 		cout << "3-Midfielders\n";
@@ -140,11 +141,15 @@ void User::setSquad() {
 		for (auto i : Leagues::leagues[leagueId].Players) {
 			if (i.second.PlayerPosition == position) {
 				for (auto j : squad[leagueId].squads[position]) {
-					if (j.PlayerId != i.second.PlayerId) {
-						cout << i.first << '-' << i.second.PlayerName << '-' << i.second.PlayerPrice << '-' << i.second.PlayerPosition << endl;
+					if (j.PlayerId == i.second.PlayerId) {
+						isFind = false;
+						break;
 					}
 				}
+				if(isFind)
+					cout << i.first << '-' << i.second.PlayerName << '-' << i.second.PlayerPrice << '-' << i.second.PlayerPosition << endl;
 			}
+			isFind = true;
 		}
 		cout << "Enter the ID Of Player:";
 		cin >> playerid;
