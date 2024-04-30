@@ -1,5 +1,9 @@
+
 #include "Admin.h"
+
 #include "Leagues.h"
+
+
 map<int, League> Leagues::leagues;
 int LeagueId;
 Admin::Admin() {}
@@ -9,7 +13,7 @@ Admin::Admin(int id, string name, string password)
 	Password = password;
 	Id = id;
 }
-void Admin::SetLeagueId()
+int Admin::SetLeagueId()
 {
 	int legId;
 	for (int i = 1; i <= 3; i++) {
@@ -19,9 +23,13 @@ void Admin::SetLeagueId()
 	cin >> legId;
 
 	LeagueId = legId;
+	if (Home() == 0) {
+		return 0;
+	}
 	Home();
+
 }
-void Admin::Home()
+int Admin::Home()
 {
 
 
@@ -34,6 +42,8 @@ void Admin::Home()
 	cout << "5- Add Round\n";
 	cout << "6- End Round\n";
 	cout << "7- View All users\n";
+	cout << "8-Logout\n";
+	
 
 
 	int answer;
@@ -68,9 +78,13 @@ void Admin::Home()
 
 		break;
 	case 7:
-		 //First_Page();
+	//	Source::First_Page();
 		//Call  View All users
 		break;
+	case 8:
+		return 0;
+		
+		
 	}
 
 
@@ -109,11 +123,15 @@ void Admin::AddPlayer() {
 	cin >> p.PlayerPosition;
 	cout << "Enter Player Price";
 	cin >> p.PlayerPrice;
+
 	while (true) {
 		for (auto i = Leagues::leagues[LeagueId].teams.begin(); i != Leagues::leagues[LeagueId].teams.end(); i++)
 			cout << i->first << "\t" << i->second.TeamName << endl;
 		cout << "Enter The Team Id : ";
 		cin >> tID;
+		p.LeagueId = LeagueId;
+		p.TeamId = tID;
+
 		auto s = Leagues::leagues[LeagueId].teams.find(tID);
 		if (s == Leagues::leagues[LeagueId].teams.end()) {
 			cin >> ans;
@@ -155,7 +173,7 @@ void Admin::RemovePlayer()
 	cout << "Enter The Player Id : ";
 	cin >> PID;
 	Leagues::leagues[LeagueId].teams[tID].Players.erase(PID);
-
+	Leagues::leagues[LeagueId].Players.erase(PID);
 	Player playerRemove = Leagues::leagues[LeagueId].teams[tID].Players[PID];
 	cout << " Player" << playerRemove.PlayerName << " is Removed successfully :)" << endl;
 	Home();

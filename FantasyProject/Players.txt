@@ -1,0 +1,3 @@
+5,1,13,mohamedsalah,livingroom,2000
+5,2,7,mero,home,10000
+5,2,10,simon,ssd,10000

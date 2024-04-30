@@ -10,9 +10,9 @@ public:
 
 	Admin(void);
 	Admin(int, string, string);
-	static void  Home();
+	static int  Home();
 	static void AddTeam();
-	static void SetLeagueId();
+	static int SetLeagueId();
 	static void RemoveTeam();
 	static void AddPlayer();
 	static void RemovePlayer();

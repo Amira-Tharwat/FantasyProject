@@ -75,4 +75,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Admins.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="Teams.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="Players.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="Rounds.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="Playerspoints.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+  </ItemGroup>
 </Project>
