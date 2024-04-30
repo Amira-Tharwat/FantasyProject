@@ -21,7 +21,7 @@ void SignIn() {
 		if (admins[i].Name == name && admins[i].Password == password)
 		{
 			iffound = true;
-			cout << "welcome " << name << " in home admin"<<endl;//function home admin  
+			cout << "welcome " << name << " in home admin" << endl;//function home admin  
 			if (Admin::SetLeagueId() == 0) {
 				First_Page();
 			}
@@ -40,10 +40,11 @@ void SignIn() {
 		}
 	}
 	if (!iffound) {
-		cout << "the name or password is uncorrect.. \n1-try again\n2-back to home page\n";
-		cin >> answer1;
-		while (answer1 != 1 && answer1 != 2)
-		{
+		
+		cout << "the name or password is uncorrect.. \n";
+		do{
+			cout<<"1-try again\n2-back to home page\n";
+			cin >> answer1;		
 			switch (answer1)
 			{
 			case 1:
@@ -58,9 +59,11 @@ void SignIn() {
 			if (answer1 == 1 || answer1 == 2) {
 				break;
 			}
-		}
-
-
+			else {
+				cout << "enter 1 or 2 only\n";
+			}
+			
+		} while (answer1 != 1 && answer1 != 2);
 	}
 }
 void SignUp() {

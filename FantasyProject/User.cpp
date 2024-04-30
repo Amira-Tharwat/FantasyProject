@@ -85,7 +85,7 @@ void User::Home() {
 }
 void User::setSquad() {
 	int playerid;
-	cout << "you must choose"<< countsOfPosition[0] <<" Goolkeepr - "<<countsOfPosition[1]<< "defenders - "<< countsOfPosition[2] <<"Midfielders - "<<countsOfPosition[4]<<" forward \n";
+	cout << " you must choose"<< countsOfPosition[0] <<" Goolkeepr - "<<countsOfPosition[1]<< " defenders - "<< countsOfPosition[2] <<" Midfielders - "<<countsOfPosition[4]<<" forward \n";
 	cout << "Your Bidget:" << Budget;
 	while (true) {
 		cout << "1-Goolkeepr\n";
