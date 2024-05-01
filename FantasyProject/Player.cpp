@@ -1,9 +1,7 @@
 #include "Player.h"
-static int CountPlayerId = 1;
+
 Player::Player() {
-	PlayerId = CountPlayerId;
-	CountPlayerId++;
-	PlayerPrice = 0;
+	
 }
 
 Player::Player(int Id, string Name, string Position, int Price) {
@@ -12,7 +10,5 @@ Player::Player(int Id, string Name, string Position, int Price) {
 	PlayerPosition = Position;
 	PlayerPrice = Price;
 }
-void Player::setId() {
-	CountPlayerId-=2;
-}
+
 

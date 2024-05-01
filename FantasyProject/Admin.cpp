@@ -93,8 +93,9 @@ void Admin::AddTeam() {
 	cin >> team.TeamName;
 	cout << "Team " << team.TeamName << " is added successfully :)" << endl;
 	team.LeagueId = LeagueId;
+	team.TeamId = Leagues::leagues[LeagueId].teams.rbegin()->second.TeamId + 1;
 	Leagues::leagues[LeagueId].teams[team.TeamId] = team;
-	Team::setId();
+	
 	Home();
 }
 void Admin::RemoveTeam() {
@@ -120,7 +121,7 @@ void Admin::AddPlayer() {
 	cin >> p.PlayerPosition;
 	cout << "Enter Player Price";
 	cin >> p.PlayerPrice;
-
+	p.PlayerId = Leagues::leagues[LeagueId].Players.rbegin()->second.PlayerId+1;
 	while (true) {
 		for (auto i = Leagues::leagues[LeagueId].teams.begin(); i != Leagues::leagues[LeagueId].teams.end(); i++)
 			cout << i->first << "\t" << i->second.TeamName << endl;
@@ -152,7 +153,7 @@ void Admin::AddPlayer() {
 		else {
 			Leagues::leagues[LeagueId].Players[p.PlayerId] = p;
 			Leagues::leagues[LeagueId].teams[tID].Players[p.PlayerId]=p;
-			Player::setId();
+		
 		}
 		break;
 	}

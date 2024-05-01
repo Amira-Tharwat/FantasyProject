@@ -155,7 +155,10 @@
     <Text Include="Players.txt" />
     <Text Include="Playerspoints.txt" />
     <Text Include="Rounds.txt" />
+    <Text Include="Squad.txt" />
     <Text Include="Teams.txt" />
+    <Text Include="UserRoundPoints.txt" />
+    <Text Include="Users.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

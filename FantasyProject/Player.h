@@ -15,7 +15,7 @@ public:
 	map<int, int > PointsInRounds;
 	Player();
 	Player(int Id, string Name, string Position, int Price);
-	static void setId();
+	
 };
 
 
