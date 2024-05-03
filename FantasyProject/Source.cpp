@@ -3,9 +3,11 @@
 #include "Leagues.h"
 #include <fstream>
 #include <sstream>
+#include "Validation.h"
 using namespace std;
 vector<Admin>admins;
 vector<User>users;
+Validation v;
 void ReadFromFiles();
  void WriteInFiles();
 int First_Page();
@@ -33,7 +35,7 @@ void SignIn() {
 		for (int i = 0; i < users.size(); i++) {
 			if (users[i].Name == name && users[i].Password == password) {
 				iffound = true;
-				cout << "welcome " << name << " in home user";//function home user
+				cout << "welcome " << name << " in home user" << endl;//function home user
 				users[i].chooseLeague(users[i].Id);
 				break;
 			}
@@ -78,22 +80,26 @@ void SignUp() {
 }
 int First_Page() {
 	int answer;
+	
 	cout << "1-SignIn \n2-SignUp\n3-exit program";
-	cin >> answer;
-	switch (answer)
-	{
-	case 1:
-		SignIn();
-		break;
-	case 2:
-		SignUp();
-		break;
-	case 3:
-		WriteInFiles();
-		exit(0);
-	default:
-		break;
-	}
+	answer = v.ReadNumberInRange(1, 3);
+		
+		switch (answer)
+		{
+		case 1:
+			SignIn();
+			break;
+		case 2:
+			SignUp();
+			break;
+		case 3:
+			WriteInFiles();
+			exit(0);
+		default:
+			cout << "Invaled choose" << endl;
+		
+		}
+	
 	return 1;
 }
 int main() {

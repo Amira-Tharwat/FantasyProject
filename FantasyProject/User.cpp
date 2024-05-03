@@ -40,6 +40,7 @@ void User::Home() {
 		{
 		case 1:
 			setSquad();
+			Home();
 			break;
 		case 2:
 			/*LogOut();*/
@@ -76,7 +77,8 @@ void User::Home() {
 			/*chooseLeague(Id);*/
 			break;
 		case 6:
-			/*LogOut();*/
+		/*	LogOut();*/
+
 			break;
 		default:
 			break;
@@ -87,7 +89,29 @@ void User::setSquad() {
 	bool isFind = true;
 	int playerid;
 	while (true) {
-		cout << " you must choose" << countsOfPosition[0] << " Goolkeepr - " << countsOfPosition[1] << " defenders - " << countsOfPosition[2] << " Midfielders - " << countsOfPosition[4] << " forward \n";
+		int count = 0;
+		for (auto i : squad[leagueId].squads)
+		{
+			count += i.second.size();
+		}
+		if (count == 15)
+		{
+			int choose;
+			
+			cout << " 1 : if you want change player ";
+			cout << " 2 : if you want submit";
+			cin >> choose;
+			if (choose == 1) 
+			{
+				RemovePlayer();
+			}
+			else
+			{
+				break;
+			}
+
+		}
+		cout << " you must choose" << countsOfPosition[0] << " Goolkeepr - " << countsOfPosition[1] << " defenders - " << countsOfPosition[2] << " Midfielders - " << countsOfPosition[3] << " forward \n";
 		cout << "Your Bidget:" << Budget<<endl;
 		cout << "1-Goolkeepr\n";
 		cout << "2-defenders\n";
@@ -97,6 +121,7 @@ void User::setSquad() {
 		cout << "Enter the Choice:";
 		cin >> answer;
 		string position;
+		int va;
 		switch (answer)
 		{
 		case 1:
@@ -105,7 +130,7 @@ void User::setSquad() {
 				continue;
 			}
 			position = "Goolkeepr";
-			countsOfPosition[0]--;
+			va=0;
 			
 			break;
 		case 2:
@@ -114,7 +139,7 @@ void User::setSquad() {
 				continue;
 			}
 			position = "defenders";
-			countsOfPosition[1]--;
+		    va=1;
 			
 			break;
 		case 3:
@@ -123,16 +148,18 @@ void User::setSquad() {
 				continue;
 			}
 			position = "Midfielders";
-			countsOfPosition[2]--;
+			va=2;
 			
 			break;
+
 		case 4:
+		
 			if (countsOfPosition[3] == 0) {
 				cout << "you Choosen the max Number Of forward\n";
 				continue;
 			}
 			position = "forward";
-			countsOfPosition[3]--;
+			va=3;
 
 			break;
 		default:
@@ -155,27 +182,33 @@ void User::setSquad() {
 		cin >> playerid;
 		if (Budget < Leagues::leagues[leagueId].Players[playerid].PlayerPrice) {
 			RemovePlayer();
+
 		}
 		else {
 			Budget -= Leagues::leagues[leagueId].Players[playerid].PlayerPrice;
 			squad[leagueId].squads[position].push_back(Leagues::leagues[leagueId].Players[playerid]);
+			countsOfPosition[va]--;
 		}
 	}
+
 }
 void User::RemovePlayer() {
 	int index=0;
 	int count=0;
 	string position;
 	int playerid;
+	cout << " your budget is "<< Budget <<endl;
+
 	for (auto i : squad[leagueId].squads) {
 		for (auto j :i.second) {
-			cout << j.PlayerId << "-" << j.PlayerName << "-" << j.PlayerPrice << "-" << j.PlayerPosition;
+			cout << j.PlayerId <<"-" << j.PlayerName << "-" << j.PlayerPrice << "-" << j.PlayerPosition<<endl;
 
 		}
 	}
 	cout << "Enter the ID Of Player To remove:";
 	cin >> playerid;
 	for (auto i : squad[leagueId].squads) {
+		count = 0;
 		for (auto j : i.second) {
 			if (j.PlayerId == playerid) {
 				position = i.first;
@@ -184,14 +217,17 @@ void User::RemovePlayer() {
 			count++;
 		}
 	}
+	 Budget += squad[leagueId].squads[position][index].PlayerPrice;
 	squad[leagueId].squads[position].erase(squad[leagueId].squads[position].begin() + index);
 	if (position == "Goolkeepr")
-		countsOfPosition[0]--;
+		countsOfPosition[0]++;
 	else if (position == "defenders")
-		countsOfPosition[1]--;
+		countsOfPosition[1]++;
 	else if (position == "Midfielders")
-		countsOfPosition[2]--;
+		countsOfPosition[2]++;
 	else
-		countsOfPosition[3]--;
+		countsOfPosition[3]++;
 	setSquad();
 }
+
+

@@ -42,6 +42,9 @@
     <ClInclude Include="Squad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Validation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Admin.cpp">
@@ -72,6 +75,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Squad.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Validation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

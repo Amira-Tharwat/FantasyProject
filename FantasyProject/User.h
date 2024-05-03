@@ -13,10 +13,11 @@ public:
 	void Home();
 	void setSquad();
 	void RemovePlayer();
+	//void LogOut();
+	//void ShowPoints();
 	/*void showRank();
-	void LogOut();
-	void ShowPoints();
 	void PickSquad();
-	void TransfersSquad();*/
+	void TransfersSquad();
+	*/
 };
 
