@@ -130,6 +130,7 @@
     <ClInclude Include="Admin.h" />
     <ClInclude Include="League.h" />
     <ClInclude Include="Leagues.h" />
+    <ClInclude Include="list_main.h" />
     <ClInclude Include="Match.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Round.h" />

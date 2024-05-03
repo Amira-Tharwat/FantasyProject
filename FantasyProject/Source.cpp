@@ -1,10 +1,7 @@
-#include "Admin.h"
-#include "User.h"
+#include "Validation.h"
 #include "Leagues.h"
 #include <fstream>
 #include <sstream>
-#include "Validation.h"
-using namespace std;
 vector<Admin>admins;
 vector<User>users;
 void ReadFromFiles();
@@ -70,13 +67,14 @@ void SignIn() {
 void SignUp() {
 	User user = User();
 	cout << "Enter your name\n";
-	cin >> user.Name;
+	user.Name = Validation::username();
 	cout << "Enter your password\n";
-	cin >> user.Password;
+	user.Password = Validation::pass();
 	users.push_back(user);
 	cout << "your account created\n";
 	First_Page();
 }
+
 int First_Page() {
 	int answer;
 	
