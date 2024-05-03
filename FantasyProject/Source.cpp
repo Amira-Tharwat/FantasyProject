@@ -7,7 +7,6 @@
 using namespace std;
 vector<Admin>admins;
 vector<User>users;
-Validation v;
 void ReadFromFiles();
  void WriteInFiles();
 int First_Page();
@@ -81,8 +80,8 @@ void SignUp() {
 int First_Page() {
 	int answer;
 	
-	cout << "1-SignIn \n2-SignUp\n3-exit program";
-	answer = v.ReadNumberInRange(1, 3);
+	cout << "1-SignIn \n2-SignUp\n3-exit program\n";
+	answer = Validation::ReadNumberInRange(1, 3);
 		
 		switch (answer)
 		{
@@ -97,7 +96,6 @@ int First_Page() {
 			exit(0);
 		default:
 			cout << "Invaled choose" << endl;
-		
 		}
 	
 	return 1;

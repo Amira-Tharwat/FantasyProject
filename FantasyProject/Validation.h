@@ -3,18 +3,17 @@
 using namespace std;
 
 class Validation {
-
 public:
-	Validation();
-	template <typename T>
-	 T ReadNumber();
 
-	template <typename T>
-	 bool IsNumberInRange(T Number, T From, T To);
+	
+	 static int ReadNumber();
+
+	
+	 static bool IsNumberInRange(int Number, int From,int To);
 
 
-	template <typename T>
-    T ReadNumberInRange(T From, T To);
+	
+    static int ReadNumberInRange(int From, int To);
 
 };
 
