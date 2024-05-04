@@ -54,13 +54,13 @@ string Validation::username()
 		cout << " minmum numeber of char is 3"<<endl;
 		check = 0;
 	}
-	for (auto i : users)
+	/*for (auto i : users)
 	{
 		if (name == i.Name) {
 			cout << "this name already exist " << endl;
 			check = 0;
 		}
-	}
+	}*/
 	} while (!check);
 
 	return name;
