@@ -1,6 +1,5 @@
 
 #include "Admin.h"
-#include "Leagues.h"
 map<int, League> Leagues::leagues;
 int LeagueId;
 Admin::Admin() {}

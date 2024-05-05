@@ -1,4 +1,3 @@
-
 #include "Validation.h"
 #include <string>
 int Validation::ReadNumber()
@@ -32,7 +31,7 @@ int Validation::ReadNumberInRange(int From, int To)
 	return Number;
 }
 
-string Validation::username()
+string Validation::username(vector<User>users)
 {
 	string name;
 		bool check=1;
@@ -54,13 +53,13 @@ string Validation::username()
 		cout << " minmum numeber of char is 3"<<endl;
 		check = 0;
 	}
-	/*for (auto i : users)
+	for (auto i : users)
 	{
 		if (name == i.Name) {
 			cout << "this name already exist " << endl;
 			check = 0;
 		}
-	}*/
+	}
 	} while (!check);
 
 	return name;
@@ -77,12 +76,14 @@ string Validation::pass()
 		getline(cin, pass);
 		for (int i = 0; i < pass.size();i++)
 		{
-			if (pass[i] >= '0' && pass[i] <= '9') { integer = 1; }
+			if (pass[i] >= '0' && pass[i] <= '9') {
+				integer = 1; 
+			}
 			else if ((pass[i] >= '!' && pass[i] <= '/')|| (pass[i] >= ':' && pass[i] <= '@') || (pass[i] >= '(' && pass[i] <= '`') || (pass[i] >= '{' && pass[i] <= '~'))
 			{
 				spicalcharacter = 1;
 			}
-			else if (((pass[0] >= 'a' && pass[0] <= 'z') || (pass[0] >= 'A' && pass[0] <= 'Z')))
+			else if (((pass[i] >= 'a' && pass[i] <= 'z') || (pass[i] >= 'A' && pass[i] <= 'Z')))
 			{
 				character = 1;
 			}

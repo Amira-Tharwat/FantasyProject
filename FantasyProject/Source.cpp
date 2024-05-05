@@ -1,13 +1,12 @@
 #include "Validation.h"
-#include "Leagues.h"
 #include <fstream>
 #include <sstream>
 #include "Admin.h"
-#include "User.h"
-vector<Admin>admins;
-vector<User>users;
+
+vector<User> users;
+vector<Admin> admins;
 void ReadFromFiles();
- void WriteInFiles();
+void WriteInFiles();
 int First_Page();
 void SignIn() {
 	int answer1;
@@ -69,7 +68,7 @@ void SignIn() {
 void SignUp() {
 	User user = User();
 	cout << "Enter your name\n";
-	user.Name = Validation::username();
+	user.Name = Validation::username(users);
 	cout << "Enter your password\n";
 	user.Password = Validation::pass();
 	users.push_back(user);
