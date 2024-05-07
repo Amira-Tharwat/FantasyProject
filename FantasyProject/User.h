@@ -14,7 +14,7 @@ public:
 	void setSquad();
 	void RemovePlayer();
 	//void LogOut();
-	//void ShowPoints();
+	void ShowPoints();
 	/*void showRank();
 	void PickSquad();
 	void TransfersSquad();

@@ -1,5 +1,7 @@
 #include "User.h"
 #include "Leagues.h"
+#include"Validation.h"
+
 int leagueId;
 static int Id_Count = 1;
 int UserId;
@@ -62,7 +64,7 @@ void User::Home() {
 		switch (answer)
 		{
 		case 1:
-			/*ShowPoints();*/
+			ShowPoints();
 			break;
 		case 2:
 			/*PickSquad();*/
@@ -229,5 +231,69 @@ void User::RemovePlayer() {
 		countsOfPosition[3]++;
 	setSquad();
 }
+void  User::ShowPoints() {
+	int roundid;
+	bool x = 0;
+	bool dekaexist = 0;
+	vector <int> exist;
+	stack<Player>copydeka;
+	for (auto i : Leagues::leagues[leagueId].rounds) {
+		for (auto j : i.second.matches) {
+			if (j.second.isPlayed == 1) {
 
+				cout << i.first << "- Round " << i.first;
+				exist.push_back(i.first);
+				break;
+			}
+		}
+	}
+	
+	do {
+		x = 0;
+		cout << "Enter Round Id\n";
+		roundid = Validation::ReadNumber();
+		for (auto i : exist)
+		{
+			if (i == roundid)
+			{
+				x = 1;
+				break;
+			}
+
+
+		}
+	} while (!x);
+	if (x == 1) {
+		cout <<"Points of This Round is " << squad[leagueId].RoundPoints[roundid];
+		
+		cout << "Points of each Player is  ";
+		for (auto i : squad[leagueId].squads) {
+		
+			for (auto j : i.second) {
+				
+				while (!squad[roundid].deka.empty()) {
+					copydeka.push(squad[roundid].deka.top());
+					if (squad[roundid].deka.top().PlayerId == j.PlayerId) {
+						
+						dekaexist = 1;
+						break;
+					}
+						squad[roundid].deka.pop();
+						
+				}
+				if (!dekaexist) {
+					cout << i.first << "  " << j.PlayerName << " has Point : " << j.PointsInRounds[roundid];
+					
+				}
+				while (!copydeka.empty()) {
+					squad[roundid].deka.push(copydeka.top());
+					copydeka.pop();
+				}
+			}
+		}
+	}
+
+	
+	
+}
 
