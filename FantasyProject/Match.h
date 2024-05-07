@@ -7,7 +7,7 @@ public:
 	int res1, res2;
 	map<int,map<int,Player>>XI;
 	map<int,map<int, Player>>pdla;
-	map < string, map<int,int>> Details;
+	map <string,map<int,int>> Details;
 	int MatchId;
 	Match();
 };

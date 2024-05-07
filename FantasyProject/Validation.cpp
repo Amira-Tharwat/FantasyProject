@@ -2,13 +2,29 @@
 #include <string>
 int Validation::ReadNumber()
 {
-	int Number;
-	while (!(cin >> Number)) {
+	int number;
+	bool b = true;
+	string Number;
+	do
+	{
+		b = true;
+		getline(cin, Number);
+		for (int i = 0; i < Number.size(); i++) {
+			if (!(Number[i] >= '0' && Number[i] <= '9'))
+			{
+				b = false;
+				cout << "Invalid Number, Enter again:";
+				break;
+			}
+		}	
+	} while (!b);
+	number = stoi(Number);
+	/*while (!(cin >> Number)) {
 		cin.clear();
 		cin.ignore(numeric_limits<streamsize>::max(), '\n');
 		cout << "Invalid Number, Enter again:";
-	}
-	return Number;
+	}*/
+	return number;
 }
 
 
@@ -37,7 +53,7 @@ string Validation::username(vector<User>users)
 		bool check=1;
 	do {
 		 check = 1;
-		 cin.ignore();
+		 
 		 getline(cin, name);
 	if (name.find(' ')!= string::npos) {
 		cout << " do not use spaces !" <<endl;
@@ -45,7 +61,7 @@ string Validation::username(vector<User>users)
 	}
 	else if (!((name[0] >= 'a' && name[0] <= 'z') || (name[0] >= 'A' && name[0] <= 'Z')))
 	{
-		cout << "can not uese special char or integer"<<endl;
+		cout << "can not uese special char or integer in the first"<<endl;
 		check = 0;
 	}
 	else if(name.size() < 3)
@@ -72,7 +88,7 @@ string Validation::pass()
 	do {
 		check = 1;
 		character = 0; spicalcharacter = 0; integer = 0;
-		cin.ignore();
+		
 		getline(cin, pass);
 		for (int i = 0; i < pass.size();i++)
 		{

@@ -2,7 +2,6 @@
 #include <fstream>
 #include <sstream>
 #include "Admin.h"
-
 vector<User> users;
 vector<Admin> admins;
 void ReadFromFiles();
@@ -13,21 +12,24 @@ void SignIn() {
 	string name, password;
 	bool iffound = false;
 	cout << "Enter your name\n";
-	cin >> name;
+	getline(cin, name);
+	
 	cout << "Enter your password\n";
-	cin >> password;
-	for (int i = 0; i < 7; i++) {
-		if (admins[i].Name == name && admins[i].Password == password)
-		{
-			iffound = true;
-			cout << "welcome " << name << " in home admin" << endl;//function home admin  
-			if (Admin::SetLeagueId() == 0) {
-				First_Page();
-			}
-			Admin::SetLeagueId();
-			break;
-		}
-	}
+	
+	getline(cin, password);
+	
+	//for (int i = 0; i < 7; i++) {
+	//	if (admins[i].Name == name && admins[i].Password == password)
+	//	{
+	//		iffound = true;
+	//		cout << "welcome " << name << " in home admin" << endl;//function home admin  
+	//		if (Admin::SetLeagueId() == 0) {
+	//			First_Page();
+	//		}
+	//		Admin::SetLeagueId();
+	//		break;
+	//	}
+	//}
 	if (!iffound) {
 		for (int i = 0; i < users.size(); i++) {
 			if (users[i].Name == name && users[i].Password == password) {
