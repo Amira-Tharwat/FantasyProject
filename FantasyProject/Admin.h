@@ -18,5 +18,7 @@ public:
 	static void AddRound();
 	static void clacPoints();
 	static void RemoveRound();
+	static void setResult();
+	static void setSquadfortowteams(int,int);
 };
 

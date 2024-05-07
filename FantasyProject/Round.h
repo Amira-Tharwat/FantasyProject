@@ -1,11 +1,11 @@
 #include "Match.h"
-#include<queue>
+
 class Round
 {
 public:
 	int roundId;
 	int leagueId;
-	queue<Match> matches;
+	map<int,Match> matches;
 	Round();
 };
 
