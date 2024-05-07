@@ -1,4 +1,5 @@
 #include "Validation.h"
+
 #include <string>
 int Validation::ReadNumber()
 {
@@ -115,4 +116,33 @@ string Validation::pass()
 	return pass;
 }
  
+string Validation::nameVal() {
+	string name;
+	bool check;
+	do {
+		check = 1;
 
+		getline(cin, name);
+		if (name.find(' ') != string::npos) {
+			cout << " do not use spaces ! if you want add space add '_' " << endl;
+			check = 0;
+		}
+		
+		else if (name.size() < 3)
+		{
+			cout << " minmum numeber of char is 3" << endl;
+			check = 0;
+		}
+
+		for (int i = 0; i < name.size(); i++)
+		{
+	     if (!((name[i] >= 'a' && name[i] <= 'z') || (name[i] >= 'A' && name[i] <= 'Z')||name[i]=='_'))
+		 {
+			cout << "can not uese special char or integer" << endl;
+			check = 0;
+		 }
+		}
+	} while (!check);
+
+		return name;
+}

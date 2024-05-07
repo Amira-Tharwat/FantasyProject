@@ -1,6 +1,7 @@
 #include "Admin.h"
 #include <chrono>
 #include <thread>
+#include "Validation.h"
 //#include "User.h"
 //vector<User>users;
 map<int, League> Leagues::leagues;
@@ -19,7 +20,7 @@ int Admin::SetLeagueId()
 		cout << i << "\t" << Leagues::leagues[i].LaegueName << endl;
 	}
 	cout << "Please Enter League Id\n";
-	cin >> legId;
+	legId = Validation::ReadNumberInRange(1, 3);
 
 	LeagueId = legId;
 	if (Home() == 0) {
@@ -30,24 +31,22 @@ int Admin::SetLeagueId()
 }
 int Admin::Home()
 {
-
-
-
 	cout << "Please Enter\n";
 	cout << "1- Add Team\n";
 	cout << "2- Remove Team\n";
 	cout << "3- Add Player\n";
 	cout << "4- Remove Player\n";
 	cout << "5- Add Round\n";
-	cout << "6- End Round\n";
-	cout << "7- Set Result\n";
-	cout << "8- View All users\n";
-	cout << "9-Logout\n";
+	cout << "6- Add Match\n";
+	cout << "7- Remove Round\n";
+	cout << "8- Set Result\n";
+	cout << "9- View All users\n";
+	cout << "10-Logout\n";
 
 
 
 	int answer;
-	cin >> answer;
+	answer = Validation::ReadNumberInRange(1, 10);
 	switch (answer)
 	{
 	case 1:
@@ -74,16 +73,18 @@ int Admin::Home()
 
 		break;
 	case 6:
-		RemoveRound();
+		AddMatch();
 
 		break;
 	case 7:
-		setResult();
+		RemoveMatch();
+
 		break;
 	case 8:
+		setResult();
+		break;
+	case 9:
 		return 0;
-
-
 	}
 
 
@@ -92,7 +93,20 @@ void Admin::AddTeam() {
 
 	Team team;
 	cout << "Enter The Team Name : ";
-	cin >> team.TeamName;
+	bool b = true;
+	do {
+
+		team.TeamName = Validation::nameVal();
+		for (auto i : Leagues::leagues[LeagueId].teams)
+		{
+			if (i.second.TeamName == team.TeamName)
+			{
+				cout << "This name of team is already exist\n";
+				b = false;
+				break;
+			}
+		}
+	} while (!b);
 	cout << "Team " << team.TeamName << " is added successfully :)" << endl;
 	team.LeagueId = LeagueId;
 	team.TeamId = Leagues::leagues[LeagueId].teams.rbegin()->second.TeamId + 1;
@@ -101,35 +115,102 @@ void Admin::AddTeam() {
 	Home();
 }
 void Admin::RemoveTeam() {
+	bool b = true;
+	if (!Leagues::leagues[LeagueId].teams.size())
+	{
+		int ans;
+		cout << "Not Teams Found\n1-if you want to go back to home page\n2-if you want to add team\n";
+		ans = Validation::ReadNumberInRange(1, 2);
+		switch (ans)
+		{
+		case 1:
+			Home();
+			break;
+		case 2:
+			AddTeam();
+			break;
 
-	int tID;
-	for (auto i = Leagues::leagues[LeagueId].teams.begin(); i != Leagues::leagues[LeagueId].teams.end(); i++)
-		cout << i->first << "\t" << i->second.TeamName << endl;
-	cout << "Enter The Team Id : ";
-	cin >> tID;
-	Team teamRemove = Leagues::leagues[LeagueId].teams[tID];
-	cout << "Team " << teamRemove.TeamName << " is Removed successfully :)" << endl;
-	Leagues::leagues[LeagueId].teams.erase(tID);
-	Home();
+		}
+	}
+	else
+	{
+		int tID;
+		for (auto i = Leagues::leagues[LeagueId].teams.begin(); i != Leagues::leagues[LeagueId].teams.end(); i++)
+			cout << i->first << "\t" << i->second.TeamName << endl;
+		cout << "Enter The Team Id : ";
+		do {
+			tID = Validation::ReadNumber();
+			auto j = Leagues::leagues[LeagueId].teams.find(tID);
+			if (j == Leagues::leagues[LeagueId].teams.end())
+			{
+				b = 0;
+				cout << "Not found team with this ID , try again\n";
+			}
+		} while (!b);
+
+
+		Team teamRemove = Leagues::leagues[LeagueId].teams[tID];
+		cout << "Team " << teamRemove.TeamName << " is Removed successfully :)" << endl;
+		Leagues::leagues[LeagueId].teams.erase(tID);
+		Home();
+	}
 }
 void Admin::AddPlayer() {
+	if (!Leagues::leagues[LeagueId].teams.size())
+	{
+		int ans;
+		cout << "Not Rounds Found\n1-if you want to go back to home page\n2-if you want to add team\n";
+		ans = Validation::ReadNumberInRange(1, 2);
+		switch (ans)
+		{
+		case 1:
+			Home();
+			break;
+		case 2:
+			AddTeam();
+			break;
+
+		}
+	}
+	bool b = 1;
 	Player p = Player();
 	int tID, ans = 0;
 	cout << "Enter Player Name";
-	cin >> p.PlayerName;
+	p.PlayerName = Validation::nameVal();
+	cin.ignore();
+	// ----------------------------------------
 	cout << "Enter Player Position";
-	cin >> p.PlayerPosition;
+	cout << "1-GoalKeeper\n2-defenders\n3-Midfielders\n4-forward\n";
+	ans = Validation::ReadNumberInRange(1, 4);
+
+	if (ans == 1)
+		p.PlayerPosition = "GoalKeeper";
+	else if (ans == 2)
+		p.PlayerPosition = "defenders";
+	else if (ans == 3)
+		p.PlayerPosition = "Midfielders";
+	else
+		p.PlayerPosition = "forward";
+	//------------------------------------
 	cout << "Enter Player Price";
-	cin >> p.PlayerPrice;
+	p.PlayerPrice = Validation::ReadNumberInRange(2500, 12000);
 	p.PlayerId = Leagues::leagues[LeagueId].Players.rbegin()->second.PlayerId + 1;
 	while (true) {
 		for (auto i = Leagues::leagues[LeagueId].teams.begin(); i != Leagues::leagues[LeagueId].teams.end(); i++)
 			cout << i->first << "\t" << i->second.TeamName << endl;
 		cout << "Enter The Team Id : ";
-		cin >> tID;
+		do {
+			cin >> tID;
+			auto j = Leagues::leagues[LeagueId].teams.find(tID);
+			if (j == Leagues::leagues[LeagueId].teams.end())
+			{
+				b = 0;
+				cout << "Not found team with this ID , try again\n";
+			}
+		} while (!b);
 		p.LeagueId = LeagueId;
 		p.TeamId = tID;
-
+		/*
 		auto s = Leagues::leagues[LeagueId].teams.find(tID);
 		if (s == Leagues::leagues[LeagueId].teams.end()) {
 			cin >> ans;
@@ -151,38 +232,134 @@ void Admin::AddPlayer() {
 
 		}
 		else {
-			Leagues::leagues[LeagueId].Players[p.PlayerId] = p;
-			Leagues::leagues[LeagueId].teams[tID].Players[p.PlayerId] = p;
 
-		}
+
+		}*/
+		Leagues::leagues[LeagueId].Players[p.PlayerId] = p;
+		Leagues::leagues[LeagueId].teams[tID].Players[p.PlayerId] = p;
 		break;
 	}
 	Home();
 }
+void Admin::AddPlayer(int tID)
+{
+	bool b = 1;
+	Player p = Player();
+	int ans = 0;
+	cout << "Enter Player Name";
+	p.PlayerName = Validation::nameVal();
+	cin.ignore();
+	// ----------------------------------------
+	cout << "Enter Player Position";
+	cout << "1-GoalKeeper\n2-defenders\n3-Midfielders\n4-forward\n";
+	ans = Validation::ReadNumberInRange(1, 4);
+
+	if (ans == 1)
+		p.PlayerPosition = "GoalKeeper";
+	else if (ans == 2)
+		p.PlayerPosition = "defenders";
+	else if (ans == 3)
+		p.PlayerPosition = "Midfielders";
+	else
+		p.PlayerPosition = "forward";
+	//------------------------------------
+	cout << "Enter Player Price";
+	p.PlayerPrice = Validation::ReadNumberInRange(2500, 12000);
+	p.PlayerId = Leagues::leagues[LeagueId].Players.rbegin()->second.PlayerId + 1;
+	p.LeagueId = LeagueId;
+	p.TeamId = tID;
+	Leagues::leagues[LeagueId].Players[p.PlayerId] = p;
+	Leagues::leagues[LeagueId].teams[tID].Players[p.PlayerId] = p;
+}
 void Admin::RemovePlayer()
 {
 	int  tID, PID;
+	bool b = 1;
+
 	for (auto i = Leagues::leagues[LeagueId].teams.begin(); i != Leagues::leagues[LeagueId].teams.end(); i++)
 		cout << i->first << "\t" << i->second.TeamName << endl;
 	cout << "Enter The Team Id : ";
-	cin >> tID;
-	for (auto i = Leagues::leagues[LeagueId].teams[tID].Players.begin(); i != Leagues::leagues[LeagueId].teams[tID].Players.end(); i++)
-		cout << i->first << "\t" << i->second.PlayerName << endl;
-	cout << "Enter The Player Id : ";
-	cin >> PID;
-	Leagues::leagues[LeagueId].teams[tID].Players.erase(PID);
-	Leagues::leagues[LeagueId].Players.erase(PID);
-	Player playerRemove = Leagues::leagues[LeagueId].teams[tID].Players[PID];
-	cout << " Player" << playerRemove.PlayerName << " is Removed successfully :)" << endl;
-	Home();
-
+	do {
+		tID = Validation::ReadNumber();
+		auto j = Leagues::leagues[LeagueId].teams.find(tID);
+		if (j == Leagues::leagues[LeagueId].teams.end())
+		{
+			b = 0;
+			cout << "Not found team with this ID , try again\n";
+		}
+	} while (!b);
+	b = 1;
+	if (!Leagues::leagues[LeagueId].teams[tID].Players.size())
+	{
+		int ans;
+		cout << "Not Teams Found\n1-if you want to go back to home page\n2-if you want to add Player\n";
+		ans = Validation::ReadNumberInRange(1, 2);
+		switch (ans)
+		{
+		case 1:
+			Home();
+			break;
+		case 2:
+			AddPlayer(tID);
+			break;
+		}
+	}
+	else
+	{
+		for (auto i = Leagues::leagues[LeagueId].teams[tID].Players.begin(); i != Leagues::leagues[LeagueId].teams[tID].Players.end(); i++)
+			cout << i->first << "\t" << i->second.PlayerName << endl;
+		cout << "Enter The Player Id : ";
+		do {
+			PID = Validation::ReadNumber();
+			auto j = Leagues::leagues[LeagueId].teams.find(tID);
+			if (j == Leagues::leagues[LeagueId].teams.end())
+			{
+				cout << "Not found team with this ID , try again\n";
+				b = 0;
+			}
+		} while (!b);
+		Leagues::leagues[LeagueId].teams[tID].Players.erase(PID);
+		Leagues::leagues[LeagueId].Players.erase(PID);
+		Player playerRemove = Leagues::leagues[LeagueId].teams[tID].Players[PID];
+		cout << " Player" << playerRemove.PlayerName << " is Removed successfully :)" << endl;
+		Home();
+	}
 }
 void Admin::AddRound()
 {
+	bool b = 1;
 	char answer;
 	int roundId;
-	cout << "Enter number of Round\n";
-	cin >> roundId;
+	if (Leagues::leagues[LeagueId].rounds.size() == (Leagues::leagues[LeagueId].teams.size() - 1) * 2)
+	{
+		cout << "All rounds is completed\n";
+		int ans;
+		cout << "1-if you want to go back to home page\n";
+		ans = Validation::ReadNumberInRange(1, 1);
+		Home();
+	}
+	do {
+		b = 1;
+		cout << "Enter number of Round\n";
+		roundId = Validation::ReadNumberInRange(1, (Leagues::leagues[LeagueId].teams.size() - 1) * 2);
+		auto j = Leagues::leagues[LeagueId].teams.find(roundId);
+		if (j != Leagues::leagues[LeagueId].teams.end())
+		{
+			cout << "This Round is exist\n";
+			b = 0;
+			int ans;
+			cout << "1-if you want to go back to home page\n2-Try again\n";
+			ans = Validation::ReadNumberInRange(1, 2);
+			switch (ans)
+			{
+			case 1:
+				Home();
+				break;
+			case 2:
+				break;
+			}
+		}
+	} while (!b);
 	map<int, Team> tempTeams;
 	for (int i = 0; i < 5; i++)
 	{
@@ -194,7 +371,15 @@ void Admin::AddRound()
 			for (auto ii = Leagues::leagues[LeagueId].teams.begin(); ii != Leagues::leagues[LeagueId].teams.end(); i++)
 				cout << ii->first << "\t" << ii->second.TeamName << endl;
 			cout << "Enter The Team" << t << "Id For Match " << i + 1 << ":\n";
-			cin >> tID;
+			do {
+				tID = Validation::ReadNumber();
+				auto j = Leagues::leagues[LeagueId].teams.find(tID);
+				if (j == Leagues::leagues[LeagueId].teams.end())
+				{
+					b = 0;
+					cout << "Not found team with this ID , try again\n";
+				}
+			} while (!b);
 			tempTeams[tID] = Leagues::leagues[LeagueId].teams[tID];
 			Leagues::leagues[LeagueId].teams.erase(tID);
 			if (t == 1)
@@ -208,80 +393,116 @@ void Admin::AddRound()
 		match.MatchId = Leagues::leagues[LeagueId].rounds[roundId].matches.rbegin()->second.MatchId + 1;
 		cout << "the match Added Successfuly\n";
 		Leagues::leagues[LeagueId].rounds[roundId].matches[match.MatchId] = match;
-		cout << "Are you want enter anthor match (y/n)?";
-		cin >> answer;
-		if (answer == 'n' || answer == 'N') {
-			return;
+		cout << "1-if you want enter anthor match\n2-if you want to go back to home page\n";
+		answer = Validation::ReadNumberInRange(1, 2);
+		if (answer == 2) {
+			Home();
 		}
 	}
+	cout << "You are added all Matches succesufully\n";
 	for (auto i : tempTeams)
 	{
 		Leagues::leagues[LeagueId].teams[i.first] = i.second;
 	}
 	Home();
 }
-void Admin::RemoveRound()
-{
-	int roundId;
-	for (auto i = Leagues::leagues[LeagueId].rounds.begin(); i != Leagues::leagues[LeagueId].rounds.end(); i++)
-	{
-		cout << "Round " << i->first << endl;
-	}
-	cout << "Enter number of Round that you want to remove \n";
-	cin >> roundId;
-	Leagues::leagues[LeagueId].rounds.erase(roundId);
-	cout << " Round " << roundId << " is Removed successfully :)" << endl;
-}
 void Admin::AddMatch() {
-	char answer;
-	
-	int roundId;
-	for (auto i : Leagues::leagues[LeagueId].rounds) {
-		cout << i.first << '-' << "Round " << i.second.roundId << endl;
-	}
-	cout << "Enter the number of the round\n";
-	cin >> roundId;
-	for (auto i : Leagues::leagues[LeagueId].rounds.find(roundId)->second.matches) {
-		cout << i.first << '-' << i.second.team1.TeamName << "     VS     " << i.second.team2.TeamName << endl;
-	}
-	cout << "this is Matches of this round\n";
-	cout << "Now You Add Match on this Round\n";
-	using namespace std::this_thread; // sleep_for, sleep_until
-	using namespace std::chrono;
-	sleep_until(system_clock::now() + seconds(2));
-	for (int i = Leagues::leagues[LeagueId].rounds[roundId].matches.size();i<5; i++)
+	if (!Leagues::leagues[LeagueId].rounds.size())
 	{
-		int t = 0;
-		int tID;
-		Match match;
-		while (t < 2)
+		int ans;
+		cout << "Not Rounds Found\n1-if you want to go back to home page\n2-if you want to add Round\n";
+		ans = Validation::ReadNumberInRange(1, 2);
+		switch (ans)
 		{
-			for (auto ii = Leagues::leagues[LeagueId].teams.begin(); ii != Leagues::leagues[LeagueId].teams.end(); i++) {
-				for (auto k : Leagues::leagues[LeagueId].rounds[roundId].matches) {
-					auto j = k.second.team1.TeamId; auto jj = k.second.team2.TeamId;
-					if (j!=ii->second.TeamId&&jj!=ii->second.TeamId)
-						cout << ii->first << "\t" << ii->second.TeamName << endl;
-				}
-			}
-			cout << "Enter The Team" << t << "Id For Match " << i + 1 << ":\n";
-			cin >> tID;
-			if (t == 1)
-			{
-				match.team1 = Leagues::leagues[LeagueId].teams[tID];
-			}
-			else
-				match.team2 = Leagues::leagues[LeagueId].teams[tID];
-			t++;
-		}
-		match.MatchId = Leagues::leagues[LeagueId].rounds[roundId].matches.rbegin()->second.MatchId + 1;
-		cout << "the match Added Successfuly\n";
-		Leagues::leagues[LeagueId].rounds[roundId].matches[match.MatchId] = match;
-		cout << "Are you want enter anthor match (y/n)?";
-		cin >> answer;
-		if (answer == 'n' || answer == 'N') {
-			return;
+		case 1:
+			Home();
+			break;
+		case 2:
+			AddRound();
+			break;
+
 		}
 	}
+	else
+	{
+		char answer;
+		bool b = 1;
+		int roundId;
+		for (auto i : Leagues::leagues[LeagueId].rounds) {
+			cout << i.first << '-' << "Round " << i.second.roundId << endl;
+		}
+		cout << "Enter the number of the round\n";
+
+		do {
+			roundId = Validation::ReadNumber();
+			auto s = Leagues::leagues[LeagueId].rounds.find(roundId);
+			if (s == Leagues::leagues[LeagueId].rounds.end())
+			{
+				b = 0;
+				cout << "Not found Round with this ID , try again\n";
+			}
+
+		} while (!b);
+
+		for (auto i : Leagues::leagues[LeagueId].rounds.find(roundId)->second.matches) {
+			cout << i.first << '-' << i.second.team1.TeamName << "     VS     " << i.second.team2.TeamName << endl;
+		}
+
+		cout << "this is Matches of this round\n";
+		cout << "Now You Add Match on this Round\n";
+		using namespace std::this_thread; // sleep_for, sleep_until
+		using namespace std::chrono;
+		sleep_until(system_clock::now() + seconds(2));
+		for (int i = Leagues::leagues[LeagueId].rounds[roundId].matches.size(); i < 5; i++)
+		{
+			int t = 0;
+			int tID;
+			Match match;
+			while (t < 2)
+			{
+				vector<int> teamsId;
+				for (auto ii = Leagues::leagues[LeagueId].teams.begin(); ii != Leagues::leagues[LeagueId].teams.end(); i++) {
+					for (auto k : Leagues::leagues[LeagueId].rounds[roundId].matches) {
+						auto j = k.second.team1.TeamId; auto jj = k.second.team2.TeamId;
+						if (j != ii->second.TeamId && jj != ii->second.TeamId)
+						{
+                           cout << ii->first << "\t" << ii->second.TeamName << endl;
+						   teamsId.push_back(ii->first);
+						}
+							
+					}
+				}
+				bool exsit = 0;
+				do {
+				   	exsit = 0;
+                      cout << "Enter The Team" << t << "Id For Match " << i + 1 << ":\n";
+					  tID = Validation::ReadNumber();
+					  for (int i = 0; i < teamsId.size(); i++)
+					  {
+						  if (tID == teamsId[i])
+							  exsit = 1;
+					  }
+				} while (!exsit);
+				
+				if (t == 1)
+				{
+					match.team1 = Leagues::leagues[LeagueId].teams[tID];
+				}
+				else
+					match.team2 = Leagues::leagues[LeagueId].teams[tID];
+				t++;
+			}
+			match.MatchId = Leagues::leagues[LeagueId].rounds[roundId].matches.rbegin()->second.MatchId + 1;
+			cout << "the match Added Successfuly\n";
+			Leagues::leagues[LeagueId].rounds[roundId].matches[match.MatchId] = match;
+			cout << "1-if you want enter anthor match\n2-if you want to go back to home page\n";
+			answer = Validation::ReadNumberInRange(1, 2);
+			if (answer == 2) {
+				Home();
+			}
+		}
+	}
+	
 }
 void Admin::RemoveMatch() {
 	int roundId, matchId;
@@ -586,7 +807,7 @@ void Admin::setResult() {
 	for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].pdla[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId]) {
 		Leagues::leagues[LeagueId].Players[i.first].PointsInRounds[roundId] += 1;
 	}
-	
+
 }
 void Admin::setSquadfortowteams(int roundId, int matchId) {
 	int playerId, counterwhile = 1;
@@ -698,4 +919,17 @@ void Admin::setSquadfortowteams(int roundId, int matchId) {
 }
 //void Admin::clacPoints() {
 //	for()
+//}
+
+//void Admin::RemoveRound()
+//{
+//	int roundId;
+//	for (auto i = Leagues::leagues[LeagueId].rounds.begin(); i != Leagues::leagues[LeagueId].rounds.end(); i++)
+//	{
+//		cout << "Round " << i->first << endl;
+//	}
+//	cout << "Enter number of Round that you want to remove \n";
+//	cin >> roundId;
+//	Leagues::leagues[LeagueId].rounds.erase(roundId);
+//	cout << " Round " << roundId << " is Removed successfully :)" << endl;
 //}

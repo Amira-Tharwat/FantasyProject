@@ -15,11 +15,12 @@ public:
 	static void RemoveTeam();
 	static void AddPlayer();
 	static void RemovePlayer();
+    static void AddPlayer(int);
 	static void AddRound();
 	static void AddMatch();
 	static void RemoveMatch();
 	static void clacPoints();
-	static void RemoveRound();
+	//static void RemoveRound();
 	static void setResult();
 	static void setSquadfortowteams(int,int);
 };

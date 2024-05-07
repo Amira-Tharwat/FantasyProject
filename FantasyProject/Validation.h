@@ -6,6 +6,8 @@ public:
     static int ReadNumberInRange(int From, int To);
 	static string username(vector<User>);
 	static string pass();
+	static string nameVal();
+	
 }; 
 
 

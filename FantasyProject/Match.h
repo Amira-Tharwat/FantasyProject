@@ -9,6 +9,7 @@ public:
 	map<int,map<int, Player>>pdla;
 	map <string,map<int,int>> Details;
 	int MatchId;
+	bool isPlayed;
 	Match();
 };
 
