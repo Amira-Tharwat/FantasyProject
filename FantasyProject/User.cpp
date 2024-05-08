@@ -1,7 +1,9 @@
 #include "Leagues.h"
 #include"Validation.h"
 #include <queue>
-vector<User>U;
+#include<utility>
+
+vector<User> U;
 int leagueId;
 static int Id_Count = 1;
 int UserId;
@@ -78,7 +80,7 @@ void User::Home() {
 			/*TransfersSquad();*/
 			break;
 		case 4:
-			/*ShowPoints();*/
+			showRank();
 			break;
 		case 5:
 			/*chooseLeague(Id);*/
@@ -236,7 +238,7 @@ void User::RemovePlayer() {
 		countsOfPosition[3]++;
 	setSquad();
 }
-void  User::ShowPoints() {
+void User::ShowPoints() {
 	int roundid;
 	bool x = 0;
 	bool dekaexist = 0;
@@ -301,26 +303,26 @@ void  User::ShowPoints() {
 	
 	
 }
-void  User::showRank() {
+void User::showRank() {
 	int count=1;
 	int ans;
-	priority_queue<pair<int, User>, vector<pair<int, User>>, greater<>> OrderUser;
+	 multimap<int,User, greater<int> >OrderUser;
 	for (auto i : U) {
-		OrderUser.push({ i.squad[leagueId].TotalPoints,i });
+		OrderUser.insert(make_pair(i.squad[leagueId].TotalPoints, i));
 	}
-	while (!(OrderUser.empty())) {
-		if (count <=10)
-			cout << count << '-' << OrderUser.top().second.Name << "Total Points" << OrderUser.top().first<<endl;
-		if (OrderUser.top().second.Id == Id&&count>10) {
+	for (auto i : OrderUser) {
+		if (count <= 10)
+			cout << count << '-' << i.second.Name << "Total Points" << i.first << endl;
+		if (i.second.Id == Id && count > 10) {
 			cout << ".\n.\n.\n.\n";
-			cout << count << '-' << OrderUser.top().second.Name << "Total Points" << OrderUser.top().first << endl;
+			cout << count << '-' << i.second.Name << "Total Points" << i.first << endl;
 			break;
 		}
 		count++;
-		OrderUser.pop();
 	}
 	
 	cout << "if You Want Go back to Home Enter 1:";
+	cin.ignore();
 	ans = Validation::ReadNumberInRange(1, 1);
 	Home();
 }

@@ -116,7 +116,6 @@ void ReadFromFiles() {
 	usersfile.open("Users.txt");
 	teamsfile.open("Teams.txt");
 	playersfile.open("Players.txt");
-	
 	playerpointsfile.open("Playerspoints.txt");
 	squadfile.open("Squad.txt");
 	userroundpointsfile.open("UserRoundPoints.txt");
@@ -231,7 +230,7 @@ void ReadFromFiles() {
 		users.push_back(user);
 
 	}
-	while (getline(squadfile, line)) {
+	while (getline(squadfile,line)) {
 		istringstream iss(line);
 		string token;
 		vector<string> tokens;
@@ -252,7 +251,7 @@ void ReadFromFiles() {
 			int PlayerId;
 			istringstream isss2(tokens[i]);
 			isss2 >> PlayerId;
-			users[userid].squad[leagueid].squads[Leagues::leagues[leagueid].Players[PlayerId].PlayerPosition].push_back(Leagues::leagues[leagueid].Players[PlayerId]);
+			users[userid-1].squad[leagueid].squads[Leagues::leagues[leagueid].Players[PlayerId].PlayerPosition].push_back(Leagues::leagues[leagueid].Players[PlayerId]);
 		}
 		
 		
@@ -260,23 +259,23 @@ void ReadFromFiles() {
 			int playerid;
 			istringstream isss3(tokens[i]);
 			isss3 >>playerid;
-			users[userid].squad[leagueid].deka.push(Leagues::leagues[leagueid].Players[playerid]);
+			users[userid-1].squad[leagueid].deka.push(Leagues::leagues[leagueid].Players[playerid]);
 		}
 		istringstream isss4(tokens[21]);
-		isss4 >> users[userid].squad[leagueid].TotalPoints;
+		isss4 >> users[userid-1].squad[leagueid].TotalPoints;
 		int playerid;
 		istringstream isss5(tokens[22]);
 		isss5 >> playerid;
-		users[userid].squad[leagueid].captain = Leagues::leagues[leagueid].Players[playerid];
+		users[userid-1].squad[leagueid].captain = Leagues::leagues[leagueid].Players[playerid];
 		istringstream isss6(tokens[23]);
 		isss6 >> playerid;
-		users[userid].squad[leagueid].ViceCaptain = Leagues::leagues[leagueid].Players[playerid];
+		users[userid-1].squad[leagueid].ViceCaptain = Leagues::leagues[leagueid].Players[playerid];
 		istringstream isss7(tokens[24]);
-		isss7 >> users[userid].squad[leagueid].tribleCaptain ;
+		isss7 >> users[userid-1].squad[leagueid].tribleCaptain ;
 		istringstream isss8(tokens[25]);
-		isss8 >> users[userid].squad[leagueid].wildCard;
+		isss8 >> users[userid-1].squad[leagueid].wildCard;
 		istringstream isss9(tokens[26]);
-		isss9 >> users[userid].squad[leagueid].numOfSubestitution;
+		isss9 >> users[userid-1].squad[leagueid].numOfSubestitution;
 	}
 	while (getline(userroundpointsfile, line)) {
 		istringstream iss(line);
