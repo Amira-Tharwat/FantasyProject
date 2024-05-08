@@ -91,9 +91,6 @@
     <Text Include="Players.txt">
       <Filter>Resource Files</Filter>
     </Text>
-    <Text Include="Rounds.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
     <Text Include="Playerspoints.txt">
       <Filter>Resource Files</Filter>
     </Text>
@@ -107,6 +104,12 @@
       <Filter>Resource Files</Filter>
     </Text>
     <Text Include="UserRoundPoints.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="Matchs.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="DetailsMatchs.txt">
       <Filter>Resource Files</Filter>
     </Text>
   </ItemGroup>
