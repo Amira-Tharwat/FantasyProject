@@ -1,4 +1,5 @@
 #include "Squad.h"
+#include<vector>
 class User
 {
 public:
@@ -15,9 +16,10 @@ public:
 	void RemovePlayer();
 	//void LogOut();
 	void ShowPoints();
-	/*void showRank();
-	void PickSquad();
-	void TransfersSquad();
-	*/
+	void showRank();
+	void GetUsers(const vector<User>&);
+	/*void PickSquad();
+	void TransfersSquad();*/
+	
 };
 

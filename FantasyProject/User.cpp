@@ -1,7 +1,7 @@
-#include "User.h"
 #include "Leagues.h"
 #include"Validation.h"
-
+#include <queue>
+vector<User>U;
 int leagueId;
 static int Id_Count = 1;
 int UserId;
@@ -19,7 +19,12 @@ User::User(string name, string password) {
 	Name = name;
 	Password = password;
 }
-
+void User::GetUsers(const  vector<User>&Users) {
+	U.resize(Users.size());
+	for (int i = 0; i < Users.size(); i++) {
+		U[i] = Users[i];
+	}
+}
 void User::chooseLeague(int userId) {
 	int legId;
 	for (int i = 1; i <= 3; i++) {
@@ -295,5 +300,28 @@ void  User::ShowPoints() {
 
 	
 	
+}
+void  User::showRank() {
+	int count=1;
+	int ans;
+	priority_queue<pair<int, User>, vector<pair<int, User>>, greater<>> OrderUser;
+	for (auto i : U) {
+		OrderUser.push({ i.squad[leagueId].TotalPoints,i });
+	}
+	while (!(OrderUser.empty())) {
+		if (count <=10)
+			cout << count << '-' << OrderUser.top().second.Name << "Total Points" << OrderUser.top().first<<endl;
+		if (OrderUser.top().second.Id == Id&&count>10) {
+			cout << ".\n.\n.\n.\n";
+			cout << count << '-' << OrderUser.top().second.Name << "Total Points" << OrderUser.top().first << endl;
+			break;
+		}
+		count++;
+		OrderUser.pop();
+	}
+	
+	cout << "if You Want Go back to Home Enter 1:";
+	ans = Validation::ReadNumberInRange(1, 1);
+	Home();
 }
 

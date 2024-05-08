@@ -35,7 +35,9 @@ void SignIn() {
 			if (users[i].Name == name && users[i].Password == password) {
 				iffound = true;
 				cout << "welcome " << name << " in home user" << endl;//function home user
+				users[i].GetUsers(users);
 				users[i].chooseLeague(users[i].Id);
+				
 				break;
 			}
 		}
@@ -93,7 +95,7 @@ int First_Page() {
 			SignUp();
 			break;
 		case 3:
-			/*WriteInFiles();*/
+			WriteInFiles();
 			exit(0);
 		default:
 			cout << "Invaled choose" << endl;
@@ -102,11 +104,10 @@ int First_Page() {
 	return 1;
 }
 int main() {
-	Admin a(1, "Mina", "123");
-	admins.push_back(a);
-	/*ReadFromFiles();*/
+	
+	ReadFromFiles();
 	First_Page();
-	/*WriteInFiles();*/
+	WriteInFiles();
 }
 void ReadFromFiles() {
 	ifstream adminsfile,teamsfile,playersfile,playerpointsfile,leaguesfile,usersfile,squadfile,userroundpointsfile,matchsfile,detailsmatchs;
