@@ -86,8 +86,7 @@ void User::Home() {
 			/*chooseLeague(Id);*/
 			break;
 		case 6:
-		/*	LogOut();*/
-
+			/*LogOut();*/
 			break;
 		default:
 			break;
@@ -312,10 +311,10 @@ void User::showRank() {
 	}
 	for (auto i : OrderUser) {
 		if (count <= 10)
-			cout << count << '-' << i.second.Name << "Total Points" << i.first << endl;
+			cout << count << '-' << i.second.Name << "  Total Points" << i.first << endl;
 		if (i.second.Id == Id && count > 10) {
 			cout << ".\n.\n.\n.\n";
-			cout << count << '-' << i.second.Name << "Total Points" << i.first << endl;
+			cout << count << '-' << i.second.Name << "    Total Points" << i.first << endl;
 			break;
 		}
 		count++;

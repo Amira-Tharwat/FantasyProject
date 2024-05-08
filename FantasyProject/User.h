@@ -1,5 +1,5 @@
 #include "Squad.h"
-#include<vector>
+
 class User
 {
 public:
