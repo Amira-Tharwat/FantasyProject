@@ -176,11 +176,11 @@ void Admin::AddPlayer() {
 	bool b = 1;
 	Player p = Player();
 	int tID, ans = 0;
-	cout << "Enter Player Name";
+	cout << "Enter Player Name \n";
 	p.PlayerName = Validation::nameVal();
-	cin.ignore();
+	
 	// ----------------------------------------
-	cout << "Enter Player Position";
+	cout << "Enter Player Position \n";
 	cout << "1-GoalKeeper\n2-defenders\n3-Midfielders\n4-forward\n";
 	ans = Validation::ReadNumberInRange(1, 4);
 
@@ -200,8 +200,11 @@ void Admin::AddPlayer() {
 		for (auto i = Leagues::leagues[LeagueId].teams.begin(); i != Leagues::leagues[LeagueId].teams.end(); i++)
 			cout << i->first << "\t" << i->second.TeamName << endl;
 		cout << "Enter The Team Id : ";
+		
 		do {
-			cin >> tID;
+			
+			tID=Validation::ReadNumber();
+		
 			auto j = Leagues::leagues[LeagueId].teams.find(tID);
 			if (j == Leagues::leagues[LeagueId].teams.end())
 			{
@@ -462,7 +465,7 @@ void Admin::AddMatch() {
 			while (t < 2)
 			{
 				vector<int> teamsId;
-				for (auto ii = Leagues::leagues[LeagueId].teams.begin(); ii != Leagues::leagues[LeagueId].teams.end(); i++) {
+				for (auto ii = Leagues::leagues[LeagueId].teams.begin(); ii != Leagues::leagues[LeagueId].teams.end(); ii++) {
 					for (auto k : Leagues::leagues[LeagueId].rounds[roundId].matches) {
 						auto j = k.second.team1.TeamId; auto jj = k.second.team2.TeamId;
 						if (j != ii->second.TeamId && jj != ii->second.TeamId)
@@ -635,7 +638,7 @@ void Admin::setResult() {
 				countOfGoals = 1;
 			}
 			Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Goals"][playerId] = countOfGoals;
-			res1 -= countOfGoals;
+			res2 -= countOfGoals;
 			break;
 		case 2:
 			for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId]) {
@@ -659,7 +662,7 @@ void Admin::setResult() {
 				countOfGoals = 1;
 			}
 			Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Goals"][playerId] = countOfGoals;
-			res1 -= countOfGoals;
+			res2 -= countOfGoals;
 		default:
 			break;
 		}
@@ -820,8 +823,8 @@ void Admin::setSquadfortowteams(int roundId, int matchId) {
 	for (auto i : Leagues::leagues[LeagueId].teams[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId].Players) {
 
 		if (i.second.PlayerPosition == "Goolkeepr") {
-			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId].find(i.second.PlayerId);
-			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId].end())
+			/*auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId].find(i.second.PlayerId);
+			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId].end())*/
 				cout << i.second.PlayerId << '-' << i.second.PlayerName << '-' << i.second.PlayerPosition << endl;
 		}
 	}
@@ -840,8 +843,10 @@ void Admin::setSquadfortowteams(int roundId, int matchId) {
 		}
 		cout << "Enter the Id of The main Player" << counterwhile << ":";
 		cin >> playerId;
+		counterwhile++;
 		Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId][playerId] = Leagues::leagues[LeagueId].Players[playerId];
 	}
+	counterwhile = 1;
 	cout << "You Added the 11 players successfully\n";
 	cout << " You need Enter The Substitute players(y/n)?\n";
 	cin >> yn;
@@ -856,6 +861,7 @@ void Admin::setSquadfortowteams(int roundId, int matchId) {
 			}
 			cout << "Enter the Substitute Player" << numberOfsubtetution << ":";
 			cin >> playerId;
+
 			Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].pdla[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId][playerId] = Leagues::leagues[LeagueId].Players[playerId];
 			numberOfsubtetution++;
 			cout << "You Need Add Anthor (y/n)?";
@@ -892,8 +898,10 @@ void Admin::setSquadfortowteams(int roundId, int matchId) {
 		}
 		cout << "Enter the Id of The main Player" << counterwhile << ":";
 		cin >> playerId;
+		counterwhile++;
 		Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2.TeamId][playerId] = Leagues::leagues[LeagueId].Players[playerId];
 	}
+	counterwhile = 1;
 	cout << "You Added the 11 players successfully\n";
 	cout << " You need Enter The Substitute players(y/n)?\n";
 	cin >> yn;

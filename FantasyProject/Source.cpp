@@ -297,6 +297,7 @@ void ReadFromFiles() {
 		Match match;
 		int leagueid;
 		int roundid;
+		Round round;
 		while (getline(iss, token, '-')) {
 
 			tokens.push_back(token);
@@ -306,6 +307,8 @@ void ReadFromFiles() {
 		isss0 >> leagueid;
 		istringstream isss1(tokens[1]);
 		isss1 >> roundid;
+		round.roundId = roundid;
+		Leagues::leagues[leagueid].rounds[roundid] = round;
 		istringstream isss2(tokens[2]);
 		isss2 >> match.MatchId;
 		istringstream isss3(tokens[3]);
@@ -460,7 +463,8 @@ void WriteInFiles() {
 				for (auto d : m.second.pdla[m.second.team1.TeamId]) {
 					matchsfile << d.first << ',';
 				}
-				matchsfile << m.second.team2.TeamId << '-' << m.second.res2 << '-';
+
+				matchsfile <<'-' << m.second.team2.TeamId << '-' << m.second.res2 << '-';
 				for (auto p : m.second.XI[m.second.team2.TeamId]) {
 					matchsfile << p.first << ',';
 				}
@@ -482,29 +486,33 @@ void WriteInFiles() {
 	}
 	for (auto i = users.begin(); i != users.end(); i++) {
 		usersfile << i->Id << ',' << i->Name << ',' << i->Password << ',' << i->Budget<<endl;
+		
 		for (auto j : i->squad) {
-			squadfile << j.first<<'-'<<i->Id<<'-';
-			for (auto ps : j.second.squads) {
-				for (auto p : ps.second) {
-					squadfile << p.PlayerId << '-';
+			if (!(j.second.squads.empty())) {
+				squadfile << j.first << '-' << i->Id << '-';
+				for (auto ps : j.second.squads) {
+					for (auto p : ps.second) {
+						squadfile << p.PlayerId << '-';
+					}
 				}
-			}
-			copydeka = j.second.deka;
-			while (!copydeka.empty()){
-				squadfile << copydeka.top().PlayerId<<'-';
-			    copydeka.pop();
-			}
-			squadfile << j.second.TotalPoints;
-			squadfile << j.second.captain.PlayerId;
-			squadfile << j.second.ViceCaptain.PlayerId;
-			squadfile << j.second.tribleCaptain;
-			squadfile << j.second.wildCard;
-			squadfile << j.second.numOfSubestitution;
-			
-			for (auto r : users[i->Id].squad[j.first].RoundPoints) {
-				userroundpointsfile << j.first << '-' << i->Id << '-'<<r.first<<'-'<<r.second<<endl;
+				copydeka = j.second.deka;
+				while (!copydeka.empty()) {
+					squadfile << copydeka.top().PlayerId << '-';
+					copydeka.pop();
+				}
+				squadfile << j.second.TotalPoints;
+				squadfile << j.second.captain.PlayerId;
+				squadfile << j.second.ViceCaptain.PlayerId;
+				squadfile << j.second.tribleCaptain;
+				squadfile << j.second.wildCard;
+				squadfile << j.second.numOfSubestitution;
 
+				/*for (auto r : users[i->Id].squad[j.first].RoundPoints) {
+					userroundpointsfile << j.first << '-' << i->Id << '-' << r.first << '-' << r.second << endl;
+
+				}*/
 			}
+
 		}
 		
 	}

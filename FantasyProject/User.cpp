@@ -109,7 +109,7 @@ void User::setSquad() {
 		{
 			int choose;
 
-			cout << " 1 : if you want change player ";
+			cout << " 1 : if you want change player \n";
 			cout << " 2 : if you want submit";
 			cin >> choose;
 			if (choose == 1)
@@ -118,6 +118,7 @@ void User::setSquad() {
 			}
 			else
 			{
+
 				break;
 			}
 
