@@ -1,6 +1,5 @@
 #include "Validation.h"
 
-#include <string>
 int Validation::ReadNumber()
 {
 	int number;
@@ -20,11 +19,7 @@ int Validation::ReadNumber()
 		}	
 	} while (!b);
 	number = stoi(Number);
-	/*while (!(cin >> Number)) {
-		cin.clear();
-		cin.ignore(numeric_limits<streamsize>::max(), '\n');
-		cout << "Invalid Number, Enter again:";
-	}*/
+	
 	return number;
 }
 

@@ -1,8 +1,7 @@
+#include "Validation.h"
 #include "Leagues.h"
-#include"Validation.h"
 #include <queue>
 #include<utility>
-
 vector<User> U;
 int leagueId;
 static int Id_Count = 1;
@@ -21,7 +20,7 @@ User::User(string name, string password) {
 	Name = name;
 	Password = password;
 }
-void User::GetUsers(const  vector<User>&Users) {
+void User::GetUsers(const  vector<User>& Users) {
 	U.resize(Users.size());
 	for (int i = 0; i < Users.size(); i++) {
 		U[i] = Users[i];
@@ -41,10 +40,13 @@ void User::chooseLeague(int userId) {
 void User::Home() {
 	if (squad[leagueId].squads.empty()) {
 		cout << "1-set squad" << endl;
-		cout << "2-Log Out" << endl;
+		cout << "2-Change League \n";
+		cout << "3-Log Out" << endl;
+
 		int answer;
 		cout << "Enter Number Of Choice:";
 		cin >> answer;
+		cin.ignore();
 		switch (answer)
 		{
 		case 1:
@@ -52,8 +54,9 @@ void User::Home() {
 			Home();
 			break;
 		case 2:
-			/*LogOut();*/
-			break;
+			chooseLeague(Id);
+		case 3:
+			return;
 		default:
 			break;
 		}
@@ -68,6 +71,7 @@ void User::Home() {
 		int answer;
 		cout << "Enter Number Of Choice:";
 		cin >> answer;
+		cin.ignore();
 		switch (answer)
 		{
 		case 1:
@@ -83,11 +87,10 @@ void User::Home() {
 			showRank();
 			break;
 		case 5:
-			/*chooseLeague(Id);*/
+			chooseLeague(Id);
 			break;
 		case 6:
-			/*LogOut();*/
-			break;
+			return;
 		default:
 			break;
 		}
@@ -105,11 +108,11 @@ void User::setSquad() {
 		if (count == 15)
 		{
 			int choose;
-			
+
 			cout << " 1 : if you want change player ";
 			cout << " 2 : if you want submit";
 			cin >> choose;
-			if (choose == 1) 
+			if (choose == 1)
 			{
 				RemovePlayer();
 			}
@@ -120,7 +123,7 @@ void User::setSquad() {
 
 		}
 		cout << " you must choose" << countsOfPosition[0] << " Goolkeepr - " << countsOfPosition[1] << " defenders - " << countsOfPosition[2] << " Midfielders - " << countsOfPosition[3] << " forward \n";
-		cout << "Your Bidget:" << Budget<<endl;
+		cout << "Your Bidget:" << Budget << endl;
 		cout << "1-Goolkeepr\n";
 		cout << "2-defenders\n";
 		cout << "3-Midfielders\n";
@@ -138,8 +141,8 @@ void User::setSquad() {
 				continue;
 			}
 			position = "Goolkeepr";
-			va=0;
-			
+			va = 0;
+
 			break;
 		case 2:
 			if (countsOfPosition[1] == 0) {
@@ -147,8 +150,8 @@ void User::setSquad() {
 				continue;
 			}
 			position = "defenders";
-		    va=1;
-			
+			va = 1;
+
 			break;
 		case 3:
 			if (countsOfPosition[2] == 0) {
@@ -156,18 +159,18 @@ void User::setSquad() {
 				continue;
 			}
 			position = "Midfielders";
-			va=2;
-			
+			va = 2;
+
 			break;
 
 		case 4:
-		
+
 			if (countsOfPosition[3] == 0) {
 				cout << "you Choosen the max Number Of forward\n";
 				continue;
 			}
 			position = "forward";
-			va=3;
+			va = 3;
 
 			break;
 		default:
@@ -181,7 +184,7 @@ void User::setSquad() {
 						break;
 					}
 				}
-				if(isFind)
+				if (isFind)
 					cout << i.first << '-' << i.second.PlayerName << '-' << i.second.PlayerPrice << '-' << i.second.PlayerPosition << endl;
 			}
 			isFind = true;
@@ -201,15 +204,15 @@ void User::setSquad() {
 
 }
 void User::RemovePlayer() {
-	int index=0;
-	int count=0;
+	int index = 0;
+	int count = 0;
 	string position;
 	int playerid;
-	cout << " your budget is "<< Budget <<endl;
+	cout << " your budget is " << Budget << endl;
 
 	for (auto i : squad[leagueId].squads) {
-		for (auto j :i.second) {
-			cout << j.PlayerId <<"-" << j.PlayerName << "-" << j.PlayerPrice << "-" << j.PlayerPosition<<endl;
+		for (auto j : i.second) {
+			cout << j.PlayerId << "-" << j.PlayerName << "-" << j.PlayerPrice << "-" << j.PlayerPosition << endl;
 
 		}
 	}
@@ -225,7 +228,7 @@ void User::RemovePlayer() {
 			count++;
 		}
 	}
-	 Budget += squad[leagueId].squads[position][index].PlayerPrice;
+	Budget += squad[leagueId].squads[position][index].PlayerPrice;
 	squad[leagueId].squads[position].erase(squad[leagueId].squads[position].begin() + index);
 	if (position == "Goolkeepr")
 		countsOfPosition[0]++;
@@ -253,7 +256,7 @@ void User::ShowPoints() {
 			}
 		}
 	}
-	
+
 	do {
 		x = 0;
 		cout << "Enter Round Id\n";
@@ -270,26 +273,26 @@ void User::ShowPoints() {
 		}
 	} while (!x);
 	if (x == 1) {
-		cout <<"Points of This Round is " << squad[leagueId].RoundPoints[roundid];
-		
+		cout << "Points of This Round is " << squad[leagueId].RoundPoints[roundid];
+
 		cout << "Points of each Player is  ";
 		for (auto i : squad[leagueId].squads) {
-		
+
 			for (auto j : i.second) {
-				
+
 				while (!squad[roundid].deka.empty()) {
 					copydeka.push(squad[roundid].deka.top());
 					if (squad[roundid].deka.top().PlayerId == j.PlayerId) {
-						
+
 						dekaexist = 1;
 						break;
 					}
-						squad[roundid].deka.pop();
-						
+					squad[roundid].deka.pop();
+
 				}
 				if (!dekaexist) {
 					cout << i.first << "  " << j.PlayerName << " has Point : " << j.PointsInRounds[roundid];
-					
+
 				}
 				while (!copydeka.empty()) {
 					squad[roundid].deka.push(copydeka.top());
@@ -299,13 +302,13 @@ void User::ShowPoints() {
 		}
 	}
 
-	
-	
+
+
 }
 void User::showRank() {
-	int count=1;
+	int count = 1;
 	int ans;
-	 multimap<int,User, greater<int> >OrderUser;
+	multimap<int, User, greater<int> >OrderUser;
 	for (auto i : U) {
 		OrderUser.insert(make_pair(i.squad[leagueId].TotalPoints, i));
 	}
@@ -319,10 +322,11 @@ void User::showRank() {
 		}
 		count++;
 	}
-	
+
 	cout << "if You Want Go back to Home Enter 1:";
 	cin.ignore();
 	ans = Validation::ReadNumberInRange(1, 1);
 	Home();
 }
+
 

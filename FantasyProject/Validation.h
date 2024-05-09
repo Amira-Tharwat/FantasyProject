@@ -1,4 +1,5 @@
 #include "User.h"
+#include <string>
 class Validation {
 public:
     static int ReadNumber();
@@ -8,6 +9,6 @@ public:
 	static string pass();
 	static string nameVal();
 	
-}; 
+};
 
 

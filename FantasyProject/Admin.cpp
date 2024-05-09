@@ -1,10 +1,8 @@
 #include "Admin.h"
 #include <chrono>
 #include <thread>
-#include "Validation.h"
-//#include "User.h"
-//vector<User>users;
-map<int, League> Leagues::leagues;
+vector <User>us;
+map<int,League> Leagues::leagues;
 int LeagueId;
 Admin::Admin() {}
 Admin::Admin(int id, string name, string password)
@@ -13,8 +11,12 @@ Admin::Admin(int id, string name, string password)
 	Password = password;
 	Id = id;
 }
-int Admin::SetLeagueId()
+int	Admin::SetLeagueId(const  vector<User>& Users)
 {
+	us.resize(Users.size());
+	for (int i = 0; i < Users.size(); i++) {
+		us[i] = Users[i];
+	}
 	int legId;
 	for (int i = 1; i <= 3; i++) {
 		cout << i << "\t" << Leagues::leagues[i].LaegueName << endl;
@@ -29,7 +31,7 @@ int Admin::SetLeagueId()
 	Home();
 
 }
-int Admin::Home()
+int	 Admin::Home()
 {
 	cout << "Please Enter\n";
 	cout << "1- Add Team\n";
@@ -129,7 +131,6 @@ void Admin::RemoveTeam() {
 		case 2:
 			AddTeam();
 			break;
-
 		}
 	}
 	else
@@ -807,7 +808,7 @@ void Admin::setResult() {
 	for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].pdla[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId]) {
 		Leagues::leagues[LeagueId].Players[i.first].PointsInRounds[roundId] += 1;
 	}
-
+	clacPoints(roundId,Leagues::leagues[LeagueId].rounds[roundId].matches[matchId]);
 }
 void Admin::setSquadfortowteams(int roundId, int matchId) {
 	int playerId, counterwhile = 1;
@@ -917,19 +918,154 @@ void Admin::setSquadfortowteams(int roundId, int matchId) {
 		cout << "You Added" << numberOfsubtetution << "Substitute Player successfully\n";
 	}
 }
-//void Admin::clacPoints() {
-//	for()
-//}
-
-//void Admin::RemoveRound()
-//{
-//	int roundId;
-//	for (auto i = Leagues::leagues[LeagueId].rounds.begin(); i != Leagues::leagues[LeagueId].rounds.end(); i++)
-//	{
-//		cout << "Round " << i->first << endl;
-//	}
-//	cout << "Enter number of Round that you want to remove \n";
-//	cin >> roundId;
-//	Leagues::leagues[LeagueId].rounds.erase(roundId);
-//	cout << " Round " << roundId << " is Removed successfully :)" << endl;
-//}
+void Admin::clacPoints(int roundId,Match match) {
+	stack<Player>CopyDeka;
+	stack<Player>CopyDeka2;
+	bool found=0;
+	bool inteam=0;
+	bool played = 0;
+	bool captinisplayed = 0;
+	bool captininmatch=0;
+	
+	for (auto i : us) {
+		for (auto j : i.squad[LeagueId].squads) {
+			for (auto k : j.second) {
+				while (!(i.squad[LeagueId].deka.empty())) {
+					CopyDeka.push(i.squad[LeagueId].deka.top());
+					if (k.PlayerId == CopyDeka.top().PlayerId) {
+						found = 1;
+					}
+					CopyDeka.pop();
+				}
+				while (!CopyDeka.empty())
+				{
+					i.squad[LeagueId].deka.push(CopyDeka.top());
+					CopyDeka.pop();
+				}
+				if (!found) {
+					for (auto m : match.XI) {
+						for (auto n : m.second) {
+							if (n.second.PlayerId == k.PlayerId) {
+								played = 1;
+								break;
+							}
+						}
+						if (played)
+							break;
+						else if (!played) {
+							for (auto m : match.pdla) {
+								for (auto n : m.second) {
+									if (n.second.PlayerId == k.PlayerId) {
+										played = 1;
+										break;
+									}
+								}
+								if (played)
+									break;
+							}
+						}
+					}
+					if (!played) {
+						for (auto m : match.team1.Players) {
+							if (m.second.PlayerId == k.PlayerId) {
+								if (k.PlayerId == i.squad[LeagueId].captain.PlayerId) {
+									captinisplayed = 1;
+								}
+								inteam = 1;
+								break;
+							}
+						}
+						if (!inteam) {
+							for (auto m : match.team2.Players) {
+								if (m.second.PlayerId == k.PlayerId) {
+									if (k.PlayerId == i.squad[LeagueId].captain.PlayerId) {
+										captinisplayed = 1;
+									}
+									inteam = 1;
+									break;
+								}
+							}
+						}
+					}
+					if (played) {
+						if (k.PlayerId == i.squad[LeagueId].captain.PlayerId) {
+							captinisplayed = 1;
+							if(i.squad[LeagueId].tribleCaptain){
+								i.squad[LeagueId].RoundPoints[roundId] += (k.PointsInRounds[roundId] * 3);
+								i.squad[LeagueId].TotalPoints += (k.PointsInRounds[roundId] * 3);
+							}
+							else {
+								i.squad[LeagueId].RoundPoints[roundId] += (k.PointsInRounds[roundId]) * 2;
+								i.squad[LeagueId].TotalPoints += (k.PointsInRounds[roundId] * 2);
+							}
+						}
+						else {
+							i.squad[LeagueId].RoundPoints[roundId] += k.PointsInRounds[roundId];
+							i.squad[LeagueId].TotalPoints += k.PointsInRounds[roundId];
+						}
+					}
+					if (inteam && captinisplayed) {
+						if (i.squad[LeagueId].tribleCaptain) {
+							i.squad[LeagueId].RoundPoints[roundId] += (i.squad[LeagueId].ViceCaptain.PointsInRounds[roundId])*2;
+							i.squad[LeagueId].TotalPoints += (i.squad[LeagueId].ViceCaptain.PointsInRounds[roundId])*2;
+						}
+						else {
+							i.squad[LeagueId].RoundPoints[roundId] += i.squad[LeagueId].ViceCaptain.PointsInRounds[roundId];
+							i.squad[LeagueId].TotalPoints += i.squad[LeagueId].ViceCaptain.PointsInRounds[roundId];
+						}
+					}
+					if (inteam) {
+						while (!i.squad[LeagueId].deka.empty())
+						{
+							if (i.squad[LeagueId].deka.top().PlayerPosition == "Goolkeepr"&&k.PlayerPosition=="Goolkeepr") {
+								i.squad[LeagueId].RoundPoints[roundId] += k.PointsInRounds[roundId];
+							}
+							else if (i.squad[LeagueId].deka.top().PlayerPosition != "Goolkeepr") {
+								CopyDeka2.push(i.squad[LeagueId].deka.top());
+								for (auto m : match.XI) {
+									for (auto n : m.second) {
+										if (i.squad[LeagueId].deka.top().PlayerId == n.second.PlayerId) {
+											played = 1;
+											break;
+										}
+									}
+									if (played)
+									{
+										break;
+									}
+								}
+								for (auto m : match.pdla) {
+									for (auto n : m.second) {
+										if (i.squad[LeagueId].deka.top().PlayerId == n.second.PlayerId) {
+											played = 1;
+											break;
+										}
+									}
+									if (played) {
+										break;
+									}
+								}
+								if (played) {
+									i.squad[LeagueId].RoundPoints[roundId] += CopyDeka2.top().PointsInRounds[roundId];
+									i.squad[LeagueId].TotalPoints += CopyDeka2.top().PointsInRounds[roundId];
+									break;
+								}
+							}
+							i.squad[LeagueId].deka.pop();
+						}
+						while (!CopyDeka2.empty())
+						{
+							i.squad[LeagueId].deka.push(CopyDeka2.top());
+							CopyDeka2.pop();
+						}
+					}
+				}
+			}
+			 found = 0;
+			 inteam = 0;
+			 played = 0;
+			 captinisplayed = 0;
+			 captininmatch = 0;
+		}
+	}
+}

@@ -1,4 +1,5 @@
 #include "Leagues.h"
+#include "Validation.h"
 class Admin
 {
 
@@ -11,7 +12,7 @@ public:
 	Admin(int, string, string);
 	static int  Home();
 	static void AddTeam();
-	static int SetLeagueId();
+	static int SetLeagueId(const vector<User>&);
 	static void RemoveTeam();
 	static void AddPlayer();
 	static void RemovePlayer();
@@ -19,8 +20,7 @@ public:
 	static void AddRound();
 	static void AddMatch();
 	static void RemoveMatch();
-	static void clacPoints();
-	//static void RemoveRound();
+	static void clacPoints(int,Match);
 	static void setResult();
 	static void setSquadfortowteams(int,int);
 };
