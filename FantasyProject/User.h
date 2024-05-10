@@ -18,8 +18,8 @@ public:
 	void ShowPoints();
 	void showRank();
 	void GetUsers(const vector<User>&);
-	/*void PickSquad();
-	void TransfersSquad();*/
+	void PickSquad();
+	/*void TransfersSquad();*/
 	
 };
 

@@ -120,10 +120,8 @@ void User::setSquad() {
 			}
 			else
 			{
-
 				break;
 			}
-
 		}
 		cout << " you must choose" << countsOfPosition[0] << " Goolkeepr - " << countsOfPosition[1] << " defenders - " << countsOfPosition[2] << " Midfielders - " << countsOfPosition[3] << " forward \n";
 		cout << "Your Bidget:" << Budget << endl;
@@ -189,13 +187,13 @@ void User::setSquad() {
 				}
 
 				if (isFind) {
-					cout << i.first << '-' << i.second.PlayerName << '-' << i.second.PlayerPrice << '-' << i.second.PlayerPosition <<"       " <<Leagues::leagues[leagueId].teams[i.second.TeamId].TeamName << endl;
+					cout << i.first << '-' << i.second.PlayerName << '-' << i.second.PlayerPrice << '-' << i.second.PlayerPosition << "       " << Leagues::leagues[leagueId].teams[i.second.TeamId].TeamName << endl;
 					numplayersid.push_back(i.first);
 				}
 			}
 			isFind = true;
 		}
-		bool validid=0;
+		bool validid = 0;
 		do {
 			cout << "Enter the ID Of Player:";
 			playerid = Validation::ReadNumber();
@@ -207,7 +205,7 @@ void User::setSquad() {
 			}
 			if (validid == 0) {
 				cout << "the id is invalid ...\n1- please try again \n2- go back \n";
-				int ans = Validation::ReadNumberInRange(1,2);
+				int ans = Validation::ReadNumberInRange(1, 2);
 				switch (ans)
 				{
 				case 1:
@@ -218,9 +216,9 @@ void User::setSquad() {
 					break;
 				}
 			}
-			
+
 		} while (validid == 0);
-		
+
 		if (Budget < Leagues::leagues[leagueId].Players[playerid].PlayerPrice) {
 			RemovePlayer();
 
@@ -321,7 +319,7 @@ void User::ShowPoints() {
 
 				}
 				if (!dekaexist) {
-					cout << i.first << "  " << j->PlayerName << " has Point : " << j->PointsInRounds[roundid];
+					cout << i.first << "  " << j->PlayerName << " has Point : " << j->PointsInRounds[roundid] << endl;
 
 				}
 				while (!copydeka.empty()) {
@@ -331,9 +329,6 @@ void User::ShowPoints() {
 			}
 		}
 	}
-
-
-
 }
 void User::showRank() {
 	int count = 1;
@@ -358,5 +353,311 @@ void User::showRank() {
 	ans = Validation::ReadNumberInRange(1, 1);
 	Home();
 }
+void User::PickSquad() {
+	bool isplayed = false, isfound = false, whoteam, teamisplayed = false, found = false;
+	Round round;
+	int matchid, answer, playerid;
+	vector <int>playersid;
+	stack <Player*>copyDeka;
+	for (auto i : Leagues::leagues[leagueId].rounds) {
+		for (auto j : i.second.matches)
+		{
+			if (j.second.isPlayed) {
+				isplayed = true;
+				break;
+			}
+		}
+		if (!isplayed) {
+			round = i.second;
+			break;
+		}
+	}
+	for (auto i : round.matches) {
+		cout << i.first << " - " << i.second.team1.TeamName << "   VS    " << i.second.team2.TeamName << endl;
+	}
+	for (auto i : squad[leagueId].squads) {
+		for (auto j : i.second) {
+			while (!(squad[leagueId].deka.empty())) {
+				copyDeka.push(squad[leagueId].deka.top());
+				if (j->PlayerId == copyDeka.top()->PlayerId) {
+					isfound = true;
+					break;
+				}
+				squad[leagueId].deka.pop();
+			}
+			if (!isfound) {
+				if (j->PlayerId == squad[leagueId].captain.PlayerId) {
+					cout << j->PlayerId << " - " << j->PlayerName << "       " << j->PlayerPosition << "       " << "captin";
+				}
+				else if (j->PlayerId == squad[leagueId].ViceCaptain.PlayerId) {
+					cout << j->PlayerId << " - " << j->PlayerName << "       " << j->PlayerPosition << "       " << "vice captin";
+				}
+				else {
+					cout << j->PlayerId << " - " << j->PlayerName << "       " << j->PlayerPosition << "       ";
+				}
 
+			}
+			for (auto k : round.matches) {
+				auto m = k.second.team1.Players.find(j->PlayerId);
+				if (m != k.second.team1.Players.end()) {
+					matchid = k.second.MatchId;
+					whoteam = true;
+					teamisplayed = true;
+					break;
+				}
+				auto m = k.second.team2.Players.find(j->PlayerId);
+				if (m != k.second.team2.Players.end()) {
+					matchid = k.second.MatchId;
+					whoteam = false;
+					teamisplayed = true;
+					break;
+				}
+			}
+			if (!teamisplayed) {
+				cout << " - " << endl;
+			}
+			else {
+				if (whoteam) {
+					cout << round.matches[matchid].team2.TeamName << endl;
+				}
+				else if (!whoteam) {
+					cout << round.matches[matchid].team1.TeamName << endl;
+				}
+			}
+			while (!(copyDeka.empty()))
+			{
+				squad[leagueId].deka.push(copyDeka.top());
+				copyDeka.pop();
+			}
+		}
+		cout << " this is the main squad\n\n\n";
+		while (!(squad[leagueId].deka.empty())) {
+			copyDeka.push(squad[leagueId].deka.top());
+			cout << copyDeka.top()->PlayerId << " - " << copyDeka.top()->PlayerName << "       " << copyDeka.top()->PlayerPosition << "       ";
+			for (auto k : round.matches) {
+				auto m = k.second.team1.Players.find(copyDeka.top()->PlayerId);
+				if (m != k.second.team1.Players.end()) {
+					matchid = k.second.MatchId;
+					whoteam = true;
+					teamisplayed = true;
+					break;
+				}
+				auto m = k.second.team2.Players.find(copyDeka.top()->PlayerId);
+				if (m != k.second.team2.Players.end()) {
+					matchid = k.second.MatchId;
+					whoteam = false;
+					teamisplayed = true;
+					break;
+				}
+			}
+			if (!teamisplayed) {
+				cout << " - " << endl;
+			}
+			else {
+				if (whoteam) {
+					cout << round.matches[matchid].team2.TeamName << endl;
+				}
+				else if (!whoteam) {
+					cout << round.matches[matchid].team1.TeamName << endl;
+				}
+			}
+
+		}
+
+		while (!(copyDeka.empty()))
+		{
+			squad[leagueId].deka.push(copyDeka.top());
+			copyDeka.pop();
+		}
+		cout << " this is the Bench\n\n\n";
+	}
+	cout << "1-set captin and vice captin\n2-switch between main squad and Bench\n 3-if you want active triple captin\n4-back to Home\n";
+	answer = Validation::ReadNumberInRange(1, 4);
+	switch (answer)
+	{
+	case 1:
+		playersid.clear();
+		for (auto i : squad[leagueId].squads) {
+			for (auto j : i.second) {
+				while (!(squad[leagueId].deka.empty())) {
+					copyDeka.push(squad[leagueId].deka.top());
+					if (j->PlayerId == copyDeka.top()->PlayerId) {
+						isfound = true;
+						break;
+					}
+					squad[leagueId].deka.pop();
+				}
+				if (!isfound) {
+					if (j->PlayerId != squad[leagueId].captain.PlayerId) {
+						if (j->PlayerId == squad[leagueId].ViceCaptain.PlayerId) {
+							cout << j->PlayerId << " - " << j->PlayerName << "       " << j->PlayerPosition << "       " << "Vice Captin";
+						}
+						else {
+							cout << j->PlayerId << " - " << j->PlayerName << "       " << j->PlayerPosition << "       ";
+							playersid.push_back(j->PlayerId);
+
+						}
+
+					}
+
+				}
+				for (auto k : round.matches) {
+					auto m = k.second.team1.Players.find(j->PlayerId);
+					if (m != k.second.team1.Players.end()) {
+						matchid = k.second.MatchId;
+						whoteam = true;
+						teamisplayed = true;
+						break;
+					}
+					auto m = k.second.team2.Players.find(j->PlayerId);
+					if (m != k.second.team2.Players.end()) {
+						matchid = k.second.MatchId;
+						whoteam = false;
+						teamisplayed = true;
+						break;
+					}
+				}
+				if (!teamisplayed) {
+					cout << " - " << endl;
+				}
+				else {
+					if (whoteam) {
+						cout << round.matches[matchid].team2.TeamName << endl;
+					}
+					else if (!whoteam) {
+						cout << round.matches[matchid].team1.TeamName << endl;
+					}
+				}
+				while (!(copyDeka.empty()))
+				{
+					squad[leagueId].deka.push(copyDeka.top());
+					copyDeka.pop();
+				}
+			}
+		}
+		do {
+			cout << "First Enter the player Id for The Captin:";
+			playerid = Validation::ReadNumber();
+			for (auto n : playersid) {
+				if (playerid == n) {
+					found = true;
+					break;
+				}
+			}
+			if (!found) {
+				cout << "Enter the playerID valid";
+			}
+		} while (!found);
+		if (playerid == squad[leagueId].ViceCaptain.PlayerId) {
+			Player player;
+			player = squad[leagueId].captain;
+			squad[leagueId].captain = Leagues::leagues[leagueId].Players[playerid];
+			squad[leagueId].ViceCaptain = player;
+		}
+		else {
+			squad[leagueId].captain = Leagues::leagues[leagueId].Players[playerid];
+		}
+		cout << " you select captin successfully \n";
+		cout << "1-if youe want set vice \n 2-go back to Home:";
+		answer = Validation::ReadNumberInRange(1, 2);
+		switch (answer)
+		{
+		case 1:
+			playersid.clear();
+			for (auto i : squad[leagueId].squads) {
+				for (auto j : i.second) {
+					while (!(squad[leagueId].deka.empty())) {
+						copyDeka.push(squad[leagueId].deka.top());
+						if (j->PlayerId == copyDeka.top()->PlayerId) {
+							isfound = true;
+							break;
+						}
+						squad[leagueId].deka.pop();
+					}
+					if (!isfound) {
+						if (j->PlayerId != squad[leagueId].ViceCaptain.PlayerId) {
+							if (j->PlayerId == squad[leagueId].captain.PlayerId) {
+								cout << j->PlayerId << " - " << j->PlayerName << "       " << j->PlayerPosition << "       " << "Captin";
+							}
+							else {
+								cout << j->PlayerId << " - " << j->PlayerName << "       " << j->PlayerPosition << "       ";
+								playersid.push_back(j->PlayerId);
+							}
+
+						}
+
+					}
+					for (auto k : round.matches) {
+						auto m = k.second.team1.Players.find(j->PlayerId);
+						if (m != k.second.team1.Players.end()) {
+							matchid = k.second.MatchId;
+							whoteam = true;
+							teamisplayed = true;
+							break;
+						}
+						auto m = k.second.team2.Players.find(j->PlayerId);
+						if (m != k.second.team2.Players.end()) {
+							matchid = k.second.MatchId;
+							whoteam = false;
+							teamisplayed = true;
+							break;
+						}
+					}
+					if (!teamisplayed) {
+						cout << " - " << endl;
+					}
+					else {
+						if (whoteam) {
+							cout << round.matches[matchid].team2.TeamName << endl;
+						}
+						else if (!whoteam) {
+							cout << round.matches[matchid].team1.TeamName << endl;
+						}
+					}
+					while (!(copyDeka.empty()))
+					{
+						squad[leagueId].deka.push(copyDeka.top());
+						copyDeka.pop();
+					}
+				}
+			}
+			do {
+				cout << "First Enter the player Id for The vice Captin:";
+				playerid = Validation::ReadNumber();
+				for (auto n : playersid) {
+					if (playerid == n) {
+						found = true;
+						break;
+					}
+				}
+				if (!found) {
+					cout << "Enter the playerID valid";
+				}
+			} while (!found);
+			if (playerid == squad[leagueId].captain.PlayerId) {
+				Player player;
+				player = squad[leagueId].ViceCaptain;
+				squad[leagueId].ViceCaptain = Leagues::leagues[leagueId].Players[playerid];
+				squad[leagueId].captain = player;
+			}
+			else {
+				squad[leagueId].ViceCaptain = Leagues::leagues[leagueId].Players[playerid];
+			}
+			break;
+		case 2:
+			return;
+		}
+		break;
+	case 2:
+
+		break;
+	case 3:
+
+		break;
+	case 4:
+		return;
+		break;
+
+	}
+}
 
