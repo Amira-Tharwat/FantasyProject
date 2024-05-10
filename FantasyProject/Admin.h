@@ -10,9 +10,9 @@ public:
 
 	Admin(void);
 	Admin(int, string, string);
-	static int  Home();
+	static void  Home();
 	static void AddTeam();
-	static int SetLeagueId(const vector<User>&);
+	static void SetLeagueId(const vector<User>&);
 	static void RemoveTeam();
 	static void AddPlayer();
 	static void RemovePlayer();

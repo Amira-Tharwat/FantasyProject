@@ -11,7 +11,7 @@ Admin::Admin(int id, string name, string password)
 	Password = password;
 	Id = id;
 }
-int	Admin::SetLeagueId(const  vector<User>& Users)
+void	Admin::SetLeagueId(const  vector<User>& Users)
 {
 	us.resize(Users.size());
 	for (int i = 0; i < Users.size(); i++) {
@@ -25,13 +25,11 @@ int	Admin::SetLeagueId(const  vector<User>& Users)
 	legId = Validation::ReadNumberInRange(1, 3);
 
 	LeagueId = legId;
-	if (Home() == 0) {
-		return 0;
-	}
+	
 	Home();
 
 }
-int	 Admin::Home()
+void	 Admin::Home()
 {
 	cout << "Please Enter\n";
 	cout << "1- Add Team\n";
@@ -86,9 +84,9 @@ int	 Admin::Home()
 		setResult();
 		break;
 	case 9:
-		return 0;
+		return ;
 	}
-
+	
 
 }
 void Admin::AddTeam() {

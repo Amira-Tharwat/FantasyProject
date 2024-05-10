@@ -48,9 +48,8 @@ void SignIn() {
 		{
 			iffound = true;
 			cout << "welcome " << name << " in home admin" << endl;//function home admin  
-			if (Admin::SetLeagueId(users) == 0) {
-				First_Page();
-			}
+			Admin::SetLeagueId(users);
+			First_Page();
 		}
 	}
 	if (!iffound) {
@@ -501,12 +500,12 @@ void WriteInFiles() {
 					squadfile << copydeka.top().PlayerId << '-';
 					copydeka.pop();
 				}
-				squadfile << j.second.TotalPoints;
-				squadfile << j.second.captain.PlayerId;
-				squadfile << j.second.ViceCaptain.PlayerId;
-				squadfile << j.second.tribleCaptain;
-				squadfile << j.second.wildCard;
-				squadfile << j.second.numOfSubestitution;
+				squadfile << j.second.TotalPoints<<'-';
+				squadfile << j.second.captain.PlayerId<<'-';
+				squadfile << j.second.ViceCaptain.PlayerId<<'-';
+				squadfile << j.second.tribleCaptain<<'-';
+				squadfile << j.second.wildCard<<'-';
+				squadfile << j.second.numOfSubestitution<<endl;
 
 				/*for (auto r : users[i->Id].squad[j.first].RoundPoints) {
 					userroundpointsfile << j.first << '-' << i->Id << '-' << r.first << '-' << r.second << endl;

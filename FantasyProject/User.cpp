@@ -32,7 +32,7 @@ void User::chooseLeague(int userId) {
 		cout << i << "\t" << Leagues::leagues[i].LaegueName << endl;
 	}
 	cout << "Please Enter League Id\n";
-	cin >> legId;
+	legId = Validation::ReadNumberInRange(1, 3);
 	leagueId = legId;
 	UserId = userId;
 	Home();
@@ -45,8 +45,8 @@ void User::Home() {
 
 		int answer;
 		cout << "Enter Number Of Choice:";
-		cin >> answer;
-		cin.ignore();
+		answer = Validation::ReadNumberInRange(1, 3);
+		/*cin.ignore();*/
 		switch (answer)
 		{
 		case 1:
@@ -70,7 +70,7 @@ void User::Home() {
 		cout << "6-Log Out\n";
 		int answer;
 		cout << "Enter Number Of Choice:";
-		cin >> answer;
+		answer = Validation::ReadNumberInRange(1, 6);
 		cin.ignore();
 		switch (answer)
 		{
@@ -99,6 +99,7 @@ void User::Home() {
 void User::setSquad() {
 	bool isFind = true;
 	int playerid;
+	vector<int> numplayersid;
 	while (true) {
 		int count = 0;
 		for (auto i : squad[leagueId].squads)
@@ -111,7 +112,8 @@ void User::setSquad() {
 
 			cout << " 1 : if you want change player \n";
 			cout << " 2 : if you want submit";
-			cin >> choose;
+			choose = Validation::ReadNumberInRange(1, 2);
+			cin.ignore();
 			if (choose == 1)
 			{
 				RemovePlayer();
@@ -131,7 +133,7 @@ void User::setSquad() {
 		cout << "4-forward\n";
 		int answer;
 		cout << "Enter the Choice:";
-		cin >> answer;
+		answer = Validation::ReadNumberInRange(1, 4);
 		string position;
 		int va;
 		switch (answer)
@@ -185,13 +187,40 @@ void User::setSquad() {
 						break;
 					}
 				}
-				if (isFind)
-					cout << i.first << '-' << i.second.PlayerName << '-' << i.second.PlayerPrice << '-' << i.second.PlayerPosition << endl;
+
+				if (isFind) {
+					cout << i.first << '-' << i.second.PlayerName << '-' << i.second.PlayerPrice << '-' << i.second.PlayerPosition <<"       " <<Leagues::leagues[leagueId].teams[i.second.TeamId].TeamName << endl;
+					numplayersid.push_back(i.first);
+				}
 			}
 			isFind = true;
 		}
-		cout << "Enter the ID Of Player:";
-		cin >> playerid;
+		bool validid=0;
+		do {
+			cout << "Enter the ID Of Player:";
+			playerid = Validation::ReadNumber();
+			for (auto i : numplayersid) {
+				if (playerid == i) {
+					validid = 1;
+					break;
+				}
+			}
+			if (validid == 0) {
+				cout << "the id is invalid ...\n1- please try again \n2- go back \n";
+				int ans = Validation::ReadNumberInRange(1,2);
+				switch (ans)
+				{
+				case 1:
+					continue;
+				case 2:
+					setSquad();
+				default:
+					break;
+				}
+			}
+			
+		} while (validid == 0);
+		
 		if (Budget < Leagues::leagues[leagueId].Players[playerid].PlayerPrice) {
 			RemovePlayer();
 
