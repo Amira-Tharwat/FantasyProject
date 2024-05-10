@@ -308,6 +308,7 @@ void ReadFromFiles() {
 		istringstream isss1(tokens[1]);
 		isss1 >> roundid;
 		round.roundId = roundid;
+		round.leagueId = leagueid;
 		Leagues::leagues[leagueid].rounds[roundid] = round;
 		istringstream isss2(tokens[2]);
 		isss2 >> match.MatchId;

@@ -2,7 +2,7 @@
 #include <chrono>
 #include <thread>
 vector <User>us;
-map<int,League> Leagues::leagues;
+map<int, League> Leagues::leagues;
 int LeagueId;
 Admin::Admin() {}
 Admin::Admin(int id, string name, string password)
@@ -178,7 +178,7 @@ void Admin::AddPlayer() {
 	int tID, ans = 0;
 	cout << "Enter Player Name \n";
 	p.PlayerName = Validation::nameVal();
-	
+
 	// ----------------------------------------
 	cout << "Enter Player Position \n";
 	cout << "1-GoalKeeper\n2-defenders\n3-Midfielders\n4-forward\n";
@@ -200,11 +200,11 @@ void Admin::AddPlayer() {
 		for (auto i = Leagues::leagues[LeagueId].teams.begin(); i != Leagues::leagues[LeagueId].teams.end(); i++)
 			cout << i->first << "\t" << i->second.TeamName << endl;
 		cout << "Enter The Team Id : ";
-		
+
 		do {
-			
-			tID=Validation::ReadNumber();
-		
+
+			tID = Validation::ReadNumber();
+
 			auto j = Leagues::leagues[LeagueId].teams.find(tID);
 			if (j == Leagues::leagues[LeagueId].teams.end())
 			{
@@ -470,24 +470,24 @@ void Admin::AddMatch() {
 						auto j = k.second.team1.TeamId; auto jj = k.second.team2.TeamId;
 						if (j != ii->second.TeamId && jj != ii->second.TeamId)
 						{
-                           cout << ii->first << "\t" << ii->second.TeamName << endl;
-						   teamsId.push_back(ii->first);
+							cout << ii->first << "\t" << ii->second.TeamName << endl;
+							teamsId.push_back(ii->first);
 						}
-							
+
 					}
 				}
 				bool exsit = 0;
 				do {
-				   	exsit = 0;
-                      cout << "Enter The Team" << t << "Id For Match " << i + 1 << ":\n";
-					  tID = Validation::ReadNumber();
-					  for (int i = 0; i < teamsId.size(); i++)
-					  {
-						  if (tID == teamsId[i])
-							  exsit = 1;
-					  }
+					exsit = 0;
+					cout << "Enter The Team" << t << "Id For Match " << i + 1 << ":\n";
+					tID = Validation::ReadNumber();
+					for (int i = 0; i < teamsId.size(); i++)
+					{
+						if (tID == teamsId[i])
+							exsit = 1;
+					}
 				} while (!exsit);
-				
+
 				if (t == 1)
 				{
 					match.team1 = Leagues::leagues[LeagueId].teams[tID];
@@ -506,7 +506,7 @@ void Admin::AddMatch() {
 			}
 		}
 	}
-	
+
 }
 void Admin::RemoveMatch() {
 	int roundId, matchId;
@@ -793,16 +793,27 @@ void Admin::setResult() {
 	}
 	for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details) {
 		for (auto j : i.second) {
-			if (i.first == "Goals")
+			if (i.first == "Goals") {
 				Leagues::leagues[LeagueId].Players[j.first].PointsInRounds[roundId] += 6 * j.second;
-			else if (i.first == "Assist")
+				Leagues::leagues[LeagueId].teams[Leagues::leagues[LeagueId].Players[j.first].TeamId].Players[j.first].PointsInRounds[roundId] = 6 * j.second;
+			}
+			else if (i.first == "Assist") {
 				Leagues::leagues[LeagueId].Players[j.first].PointsInRounds[roundId] += 4 * j.second;
-			else if (i.first == "Yellow")
+				Leagues::leagues[LeagueId].teams[Leagues::leagues[LeagueId].Players[j.first].TeamId].Players[j.first].PointsInRounds[roundId] = 4 * j.second;
+			}
+			else if (i.first == "Yellow") {
 				Leagues::leagues[LeagueId].Players[j.first].PointsInRounds[roundId] += -1 * j.second;
-			else if (i.first == "Red")
+				Leagues::leagues[LeagueId].teams[Leagues::leagues[LeagueId].Players[j.first].TeamId].Players[j.first].PointsInRounds[roundId] = -1 * j.second;
+			}
+
+			else if (i.first == "Red") {
 				Leagues::leagues[LeagueId].Players[j.first].PointsInRounds[roundId] += -3;
-			else if (i.first == "OwnGoal")
+				Leagues::leagues[LeagueId].teams[Leagues::leagues[LeagueId].Players[j.first].TeamId].Players[j.first].PointsInRounds[roundId] += -3;
+			}
+			else if (i.first == "OwnGoal") {
 				Leagues::leagues[LeagueId].Players[j.first].PointsInRounds[roundId] += -4;
+				Leagues::leagues[LeagueId].teams[Leagues::leagues[LeagueId].Players[j.first].TeamId].Players[j.first].PointsInRounds[roundId] += -4;
+			}
 		}
 	}
 	for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId]) {
@@ -811,7 +822,7 @@ void Admin::setResult() {
 	for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].pdla[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId]) {
 		Leagues::leagues[LeagueId].Players[i.first].PointsInRounds[roundId] += 1;
 	}
-	clacPoints(roundId,Leagues::leagues[LeagueId].rounds[roundId].matches[matchId]);
+	clacPoints(roundId, Leagues::leagues[LeagueId].rounds[roundId].matches[matchId]);
 }
 void Admin::setSquadfortowteams(int roundId, int matchId) {
 	int playerId, counterwhile = 1;
@@ -825,7 +836,7 @@ void Admin::setSquadfortowteams(int roundId, int matchId) {
 		if (i.second.PlayerPosition == "Goolkeepr") {
 			/*auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId].find(i.second.PlayerId);
 			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId].end())*/
-				cout << i.second.PlayerId << '-' << i.second.PlayerName << '-' << i.second.PlayerPosition << endl;
+			cout << i.second.PlayerId << '-' << i.second.PlayerName << '-' << i.second.PlayerPosition << endl;
 		}
 	}
 	cout << "Enter the Id of The main goalkeeper:";
@@ -926,15 +937,15 @@ void Admin::setSquadfortowteams(int roundId, int matchId) {
 		cout << "You Added" << numberOfsubtetution << "Substitute Player successfully\n";
 	}
 }
-void Admin::clacPoints(int roundId,Match match) {
+void Admin::clacPoints(int roundId, Match match) {
 	stack<Player>CopyDeka;
 	stack<Player>CopyDeka2;
-	bool found=0;
-	bool inteam=0;
+	bool found = 0;
+	bool inteam = 0;
 	bool played = 0;
 	bool captinisplayed = 0;
-	bool captininmatch=0;
-	
+	bool captininmatch = 0;
+
 	for (auto i : us) {
 		for (auto j : i.squad[LeagueId].squads) {
 			for (auto k : j.second) {
@@ -998,7 +1009,7 @@ void Admin::clacPoints(int roundId,Match match) {
 					if (played) {
 						if (k.PlayerId == i.squad[LeagueId].captain.PlayerId) {
 							captinisplayed = 1;
-							if(i.squad[LeagueId].tribleCaptain){
+							if (i.squad[LeagueId].tribleCaptain) {
 								i.squad[LeagueId].RoundPoints[roundId] += (k.PointsInRounds[roundId] * 3);
 								i.squad[LeagueId].TotalPoints += (k.PointsInRounds[roundId] * 3);
 							}
@@ -1014,8 +1025,8 @@ void Admin::clacPoints(int roundId,Match match) {
 					}
 					if (inteam && captinisplayed) {
 						if (i.squad[LeagueId].tribleCaptain) {
-							i.squad[LeagueId].RoundPoints[roundId] += (i.squad[LeagueId].ViceCaptain.PointsInRounds[roundId])*2;
-							i.squad[LeagueId].TotalPoints += (i.squad[LeagueId].ViceCaptain.PointsInRounds[roundId])*2;
+							i.squad[LeagueId].RoundPoints[roundId] += (i.squad[LeagueId].ViceCaptain.PointsInRounds[roundId]) * 2;
+							i.squad[LeagueId].TotalPoints += (i.squad[LeagueId].ViceCaptain.PointsInRounds[roundId]) * 2;
 						}
 						else {
 							i.squad[LeagueId].RoundPoints[roundId] += i.squad[LeagueId].ViceCaptain.PointsInRounds[roundId];
@@ -1025,7 +1036,7 @@ void Admin::clacPoints(int roundId,Match match) {
 					if (inteam) {
 						while (!i.squad[LeagueId].deka.empty())
 						{
-							if (i.squad[LeagueId].deka.top().PlayerPosition == "Goolkeepr"&&k.PlayerPosition=="Goolkeepr") {
+							if (i.squad[LeagueId].deka.top().PlayerPosition == "Goolkeepr" && k.PlayerPosition == "Goolkeepr") {
 								i.squad[LeagueId].RoundPoints[roundId] += k.PointsInRounds[roundId];
 							}
 							else if (i.squad[LeagueId].deka.top().PlayerPosition != "Goolkeepr") {
@@ -1069,11 +1080,11 @@ void Admin::clacPoints(int roundId,Match match) {
 					}
 				}
 			}
-			 found = 0;
-			 inteam = 0;
-			 played = 0;
-			 captinisplayed = 0;
-			 captininmatch = 0;
+			found = 0;
+			inteam = 0;
+			played = 0;
+			captinisplayed = 0;
+			captininmatch = 0;
 		}
 	}
 }
