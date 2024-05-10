@@ -182,7 +182,7 @@ void User::setSquad() {
 		for (auto i : Leagues::leagues[leagueId].Players) {
 			if (i.second.PlayerPosition == position) {
 				for (auto j : squad[leagueId].squads[position]) {
-					if (j.PlayerId == i.second.PlayerId) {
+					if (j->PlayerId == i.second.PlayerId) {
 						isFind = false;
 						break;
 					}
@@ -227,7 +227,7 @@ void User::setSquad() {
 		}
 		else {
 			Budget -= Leagues::leagues[leagueId].Players[playerid].PlayerPrice;
-			squad[leagueId].squads[position].push_back(Leagues::leagues[leagueId].Players[playerid]);
+			squad[leagueId].squads[position].push_back(&Leagues::leagues[leagueId].Players[playerid]);
 			countsOfPosition[va]--;
 		}
 	}
@@ -242,7 +242,7 @@ void User::RemovePlayer() {
 
 	for (auto i : squad[leagueId].squads) {
 		for (auto j : i.second) {
-			cout << j.PlayerId << "-" << j.PlayerName << "-" << j.PlayerPrice << "-" << j.PlayerPosition << endl;
+			cout << j->PlayerId << "-" << j->PlayerName << "-" << j->PlayerPrice << "-" << j->PlayerPosition << endl;
 
 		}
 	}
@@ -251,14 +251,14 @@ void User::RemovePlayer() {
 	for (auto i : squad[leagueId].squads) {
 		count = 0;
 		for (auto j : i.second) {
-			if (j.PlayerId == playerid) {
+			if (j->PlayerId == playerid) {
 				position = i.first;
 				index = count;
 			}
 			count++;
 		}
 	}
-	Budget += squad[leagueId].squads[position][index].PlayerPrice;
+	Budget += squad[leagueId].squads[position][index]->PlayerPrice;
 	squad[leagueId].squads[position].erase(squad[leagueId].squads[position].begin() + index);
 	if (position == "Goolkeepr")
 		countsOfPosition[0]++;
@@ -275,7 +275,7 @@ void User::ShowPoints() {
 	bool x = 0;
 	bool dekaexist = 0;
 	vector <int> exist;
-	stack<Player>copydeka;
+	stack<Player*>copydeka;
 	for (auto i : Leagues::leagues[leagueId].rounds) {
 		for (auto j : i.second.matches) {
 			if (j.second.isPlayed == 1) {
@@ -312,7 +312,7 @@ void User::ShowPoints() {
 
 				while (!squad[roundid].deka.empty()) {
 					copydeka.push(squad[roundid].deka.top());
-					if (squad[roundid].deka.top().PlayerId == j.PlayerId) {
+					if (squad[roundid].deka.top()->PlayerId == j->PlayerId) {
 
 						dekaexist = 1;
 						break;
@@ -321,7 +321,7 @@ void User::ShowPoints() {
 
 				}
 				if (!dekaexist) {
-					cout << i.first << "  " << j.PlayerName << " has Point : " << j.PointsInRounds[roundid];
+					cout << i.first << "  " << j->PlayerName << " has Point : " << j->PointsInRounds[roundid];
 
 				}
 				while (!copydeka.empty()) {

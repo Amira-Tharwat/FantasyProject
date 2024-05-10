@@ -243,7 +243,7 @@ void ReadFromFiles() {
 			int PlayerId;
 			istringstream isss2(tokens[i]);
 			isss2 >> PlayerId;
-			users[userid-1].squad[leagueid].squads[Leagues::leagues[leagueid].Players[PlayerId].PlayerPosition].push_back(Leagues::leagues[leagueid].Players[PlayerId]);
+			users[userid-1].squad[leagueid].squads[Leagues::leagues[leagueid].Players[PlayerId].PlayerPosition].push_back(&Leagues::leagues[leagueid].Players[PlayerId]);
 		}
 		
 		
@@ -251,7 +251,7 @@ void ReadFromFiles() {
 			int playerid;
 			istringstream isss3(tokens[i]);
 			isss3 >>playerid;
-			users[userid-1].squad[leagueid].deka.push(Leagues::leagues[leagueid].Players[playerid]);
+			users[userid-1].squad[leagueid].deka.push(&Leagues::leagues[leagueid].Players[playerid]);
 		}
 		istringstream isss4(tokens[21]);
 		isss4 >> users[userid-1].squad[leagueid].TotalPoints;
@@ -433,7 +433,7 @@ void WriteInFiles() {
 	userroundpointsfile.open("UserRoundPoints.txt");
 	matchsfile.open("Matchs.txt");
 	detailsfile.open("DetailsMatchs");
-	stack <Player> copydeka;
+	stack <Player*> copydeka;
 	for (auto i = admins.begin(); i != admins.end();i++) {
 		adminsfile << i->Id << endl;
 		adminsfile << i->Name << endl;
@@ -492,12 +492,12 @@ void WriteInFiles() {
 				squadfile << j.first << '-' << i->Id << '-';
 				for (auto ps : j.second.squads) {
 					for (auto p : ps.second) {
-						squadfile << p.PlayerId << '-';
+						squadfile << p->PlayerId << '-';
 					}
 				}
 				copydeka = j.second.deka;
 				while (!copydeka.empty()) {
-					squadfile << copydeka.top().PlayerId << '-';
+					squadfile << copydeka.top()->PlayerId << '-';
 					copydeka.pop();
 				}
 				squadfile << j.second.TotalPoints<<'-';
