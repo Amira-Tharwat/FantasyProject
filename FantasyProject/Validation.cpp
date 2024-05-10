@@ -7,8 +7,12 @@ int Validation::ReadNumber()
 	string Number;
 	do
 	{
+
 		b = true;
+		
 		getline(cin, Number);
+		if (Number == "")
+			b = false;
 		for (int i = 0; i < Number.size(); i++) {
 			if (!(Number[i] >= '0' && Number[i] <= '9'))
 			{

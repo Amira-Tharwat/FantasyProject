@@ -29,64 +29,62 @@ void	Admin::SetLeagueId(const  vector<User>& Users)
 	Home();
 
 }
-void	 Admin::Home()
+void Admin::Home()
 {
-	cout << "Please Enter\n";
-	cout << "1- Add Team\n";
-	cout << "2- Remove Team\n";
-	cout << "3- Add Player\n";
-	cout << "4- Remove Player\n";
-	cout << "5- Add Round\n";
-	cout << "6- Add Match\n";
-	cout << "7- Remove Round\n";
-	cout << "8- Set Result\n";
-	cout << "9- View All users\n";
-	cout << "10-Logout\n";
-
-
-
-	int answer;
-	answer = Validation::ReadNumberInRange(1, 10);
-	switch (answer)
+	while (true)
 	{
-	case 1:
-		AddTeam();
-		break;
+		cout << "Please Enter\n";
+		cout << "1- Add Team\n";
+		cout << "2- Remove Team\n";
+		cout << "3- Add Player\n";
+		cout << "4- Remove Player\n";
+		cout << "5- Add Round\n";
+		cout << "6- Add Match\n";
+		cout << "7- Remove Round\n";
+		cout << "8- Set Result\n";
+		cout << "9- View All users\n";
+		cout << "10-Logout\n";
+		int answer = Validation::ReadNumberInRange(1, 10);
+		switch (answer)
+		{
+		case 1:
+			AddTeam();
+			break;
 
-	case 2:
-		RemoveTeam();
+		case 2:
+			RemoveTeam();
 
-		break;
+			break;
 
-	case 3:
-		AddPlayer();
+		case 3:
+			AddPlayer();
 
-		break;
+			break;
 
-	case 4:
-		RemovePlayer();
+		case 4:
+			RemovePlayer();
 
-		break;
+			break;
 
-	case 5:
-		AddRound();
+		case 5:
+			AddRound();
 
-		break;
-	case 6:
-		AddMatch();
+			break;
+		case 6:
+			AddMatch();
+			break;
+		case 7:
+			RemoveMatch();
 
-		break;
-	case 7:
-		RemoveMatch();
-
-		break;
-	case 8:
-		setResult();
-		break;
-	case 9:
-		return ;
+			break;
+		case 8:
+			setResult();
+			break;
+		case 9:
+			return;
+		}
+		return;
 	}
-	
 
 }
 void Admin::AddTeam() {
@@ -338,7 +336,7 @@ void Admin::AddRound()
 		int ans;
 		cout << "1-if you want to go back to home page\n";
 		ans = Validation::ReadNumberInRange(1, 1);
-		Home();
+		return;
 	}
 	do {
 		b = 1;
@@ -355,7 +353,7 @@ void Admin::AddRound()
 			switch (ans)
 			{
 			case 1:
-				Home();
+				return;
 				break;
 			case 2:
 				break;
@@ -398,7 +396,7 @@ void Admin::AddRound()
 		cout << "1-if you want enter anthor match\n2-if you want to go back to home page\n";
 		answer = Validation::ReadNumberInRange(1, 2);
 		if (answer == 2) {
-			Home();
+			return;
 		}
 	}
 	cout << "You are added all Matches succesufully\n";
@@ -406,7 +404,7 @@ void Admin::AddRound()
 	{
 		Leagues::leagues[LeagueId].teams[i.first] = i.second;
 	}
-	Home();
+	return;
 }
 void Admin::AddMatch() {
 	if (!Leagues::leagues[LeagueId].rounds.size())
@@ -500,7 +498,7 @@ void Admin::AddMatch() {
 			cout << "1-if you want enter anthor match\n2-if you want to go back to home page\n";
 			answer = Validation::ReadNumberInRange(1, 2);
 			if (answer == 2) {
-				Home();
+				return;
 			}
 		}
 	}
@@ -761,6 +759,7 @@ void Admin::setResult() {
 	}
 	cout << "Enter the Number of Red card in Match:";
 	cin >> countOfRed;
+	
 	while (countOfRed)
 	{
 		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId]) {
@@ -821,6 +820,7 @@ void Admin::setResult() {
 		Leagues::leagues[LeagueId].Players[i.first].PointsInRounds[roundId] += 1;
 	}
 	clacPoints(roundId, Leagues::leagues[LeagueId].rounds[roundId].matches[matchId]);
+	return;
 }
 void Admin::setSquadfortowteams(int roundId, int matchId) {
 	int playerId, counterwhile = 1;
