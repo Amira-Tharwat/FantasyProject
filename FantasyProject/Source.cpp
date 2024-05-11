@@ -3,15 +3,15 @@
 #include <sstream>
  vector<User> users;
  vector<Admin> admins;
-//void ReadFromFiles();
-//void WriteInFiles();
+void ReadFromFiles();
+void WriteInFiles();
 void First_Page();
 void SignIn();
 void SignUp();
 int main() {
-	/*ReadFromFiles();*/
+	ReadFromFiles();
 	First_Page();
-	/*WriteInFiles();*/
+	WriteInFiles();
 	exit(0);
 }
 void First_Page() {
@@ -28,7 +28,7 @@ void First_Page() {
 			SignUp();
 			break;
 		case 3:
-			/*WriteInFiles();*/
+			WriteInFiles();
 			exit(0);
 		default:
 			cout << "Invaled choose" << endl;
@@ -68,8 +68,8 @@ void SignIn() {
 		cout << "the name or password is uncorrect.. \n";
 		do {
 			cout << "1-try again\n2-back to home page\n";
-			cin >> answer1;
-			cin.ignore();
+			answer1=Validation::ReadNumberInRange(1,2);
+			
 			switch (answer1)
 			{
 			case 1:
@@ -97,6 +97,9 @@ void SignUp() {
 	user.Name = Validation::username(users);
 	cout << "Enter your password\n";
 	user.Password = Validation::pass();
+	for (auto i : Leagues::leagues) {
+		user.squad[i.first].TotalPoints = 0;
+	}
 	users.push_back(user);
 	cout << "your account created\n";
 	First_Page();
@@ -151,7 +154,7 @@ void ReadFromFiles() {
 	while (getline(playersfile, line)) {
 		istringstream iss(line);
 		string token;
-		Player player;
+		Player *player=new Player();
 		vector<string> tokens;
 		while (getline(iss, token, ',')) {
 
@@ -159,22 +162,22 @@ void ReadFromFiles() {
 
 		}
 		istringstream isss0(tokens[0]);
-		isss0 >> player.TeamId;
+		isss0 >> player->TeamId;
 		istringstream isss1(tokens[1]);
-		isss1 >> player.LeagueId;
+		isss1 >> player->LeagueId;
 		istringstream isss2(tokens[2]);
-		isss2 >> player.PlayerId;
+		isss2 >> player->PlayerId;
 		istringstream isss3(tokens[3]);
-		isss3 >> player.PlayerName;
+		isss3 >> player->PlayerName;
 		istringstream isss4(tokens[4]);
-		isss4 >> player.PlayerPosition;
+		isss4 >> player->PlayerPosition;
 		istringstream isss5(tokens[5]);
-		isss5 >> player.PlayerPrice;
+		isss5 >> player->PlayerPrice;
 	
 		
 		
-			Leagues::leagues[player.LeagueId].teams[player.TeamId].Players[player.PlayerId] = player;
-			Leagues::leagues[player.LeagueId].Players[player.PlayerId] = player;
+			Leagues::leagues[player->LeagueId].teams[player->TeamId].Players[player->PlayerId] = player;
+			Leagues::leagues[player->LeagueId].Players[player->PlayerId] = *player;
 	}
 
 	while (getline(playerpointsfile, line)) {
@@ -199,7 +202,7 @@ void ReadFromFiles() {
 		isss3 >> roundid;
 		istringstream isss4(tokens[4]);
 		isss4 >> points;
-		Leagues::leagues[player.LeagueId].teams[player.TeamId].Players[player.PlayerId].PointsInRounds[roundid]=points;
+		Leagues::leagues[player.LeagueId].teams[player.TeamId].Players[player.PlayerId]->PointsInRounds[roundid]=points;
 	}
 	while (getline(usersfile, line)) {
 		istringstream iss(line);
@@ -217,8 +220,7 @@ void ReadFromFiles() {
 		isss1 >> user.Name;
 		istringstream isss2(tokens[2]);
 		isss2 >> user.Password;
-		istringstream isss3(tokens[3]);
-		isss3 >> user.Budget;
+		
 		users.push_back(user);
 
 	}
@@ -226,8 +228,8 @@ void ReadFromFiles() {
 		istringstream iss(line);
 		string token;
 		vector<string> tokens;
-		int leagueid;
-		int userid;
+		
+		int userid,roundid,leagueid;
 		Squad squad;
 		while (getline(iss, token, '-')) {
 
@@ -239,35 +241,39 @@ void ReadFromFiles() {
 		isss0 >> leagueid;
 		istringstream isss1(tokens[1]);
 		isss1 >> userid;
-		for (int i = 2; i <= 16; i++) {
+		istringstream isss2(tokens[2]);
+		isss2 >> roundid;
+		for (int i = 3; i <= 17; i++) {
 			int PlayerId;
-			istringstream isss2(tokens[i]);
-			isss2 >> PlayerId;
-			users[userid-1].squad[leagueid].squads[Leagues::leagues[leagueid].Players[PlayerId].PlayerPosition].push_back(&Leagues::leagues[leagueid].Players[PlayerId]);
+			istringstream isss3(tokens[i]);
+			isss3 >> PlayerId;
+			users[userid-1].squad[leagueid].squads[roundid][Leagues::leagues[leagueid].Players[PlayerId].PlayerPosition].push_back(&Leagues::leagues[leagueid].Players[PlayerId]);
 		}
 		
 		
-		for (int i = 17; i <= 20; i++) {
+		for (int i = 18; i <= 21; i++) {
 			int playerid;
 			istringstream isss3(tokens[i]);
 			isss3 >>playerid;
-			users[userid-1].squad[leagueid].deka.push(&Leagues::leagues[leagueid].Players[playerid]);
+			users[userid-1].squad[leagueid].deka[roundid].push(&Leagues::leagues[leagueid].Players[playerid]);
 		}
-		istringstream isss4(tokens[21]);
+		istringstream isss4(tokens[22]);
 		isss4 >> users[userid-1].squad[leagueid].TotalPoints;
 		int playerid;
-		istringstream isss5(tokens[22]);
+		istringstream isss5(tokens[23]);
 		isss5 >> playerid;
 		users[userid-1].squad[leagueid].captain = &Leagues::leagues[leagueid].Players[playerid];
-		istringstream isss6(tokens[23]);
+		istringstream isss6(tokens[24]);
 		isss6 >> playerid;
 		users[userid-1].squad[leagueid].ViceCaptain = &Leagues::leagues[leagueid].Players[playerid];
-		istringstream isss7(tokens[24]);
+		istringstream isss7(tokens[25]);
 		isss7 >> users[userid-1].squad[leagueid].tribleCaptain ;
-		istringstream isss8(tokens[25]);
+		istringstream isss8(tokens[26]);
 		isss8 >> users[userid-1].squad[leagueid].wildCard;
-		istringstream isss9(tokens[26]);
+		istringstream isss9(tokens[27]);
 		isss9 >> users[userid-1].squad[leagueid].numOfSubestitution;
+		istringstream isss10(tokens[28]);
+		isss10 >> users[userid - 1].squad[leagueid].Budget;
 	}
 	while (getline(userroundpointsfile, line)) {
 		istringstream iss(line);
@@ -314,17 +320,20 @@ void ReadFromFiles() {
 		istringstream isss3(tokens[3]);
 		isss3 >> match.isPlayed;
 		istringstream isss4(tokens[4]);
-		isss4 >> match.team1.TeamId;
+		int teamid1;
+		isss4 >> teamid1;
+
 		istringstream isss5(tokens[5]);
 		isss5 >> match.res1;
 		istringstream isss7(tokens[7]);
-		isss7 >> match.team2.TeamId;
+		int teamid2;
+		isss7 >>teamid2;
 		istringstream isss8(tokens[8]);
 		isss8 >> match.res2;
 		istringstream isss6(tokens[6]);
 
-		match.team1 = Leagues::leagues[leagueid].teams[match.team1.TeamId];
-		match.team2 = Leagues::leagues[leagueid].teams[match.team2.TeamId];
+		match.team1 = &Leagues::leagues[leagueid].teams[teamid1];
+		match.team2 = &Leagues::leagues[leagueid].teams[teamid2];
 		string token2;
 		vector <string>tokens2;
 		int playerid;
@@ -334,12 +343,12 @@ void ReadFromFiles() {
 		for (int i = 0; i < 11; i++) {
 			istringstream isss0(tokens2[i]);
 			isss0 >> playerid;
-			match.XI[match.team1.TeamId][playerid]=Leagues::leagues[leagueid].Players[playerid];
+			match.XI[match.team1->TeamId][playerid]=&Leagues::leagues[leagueid].Players[playerid];
 		}
 		for (int i = 11; i < tokens2.size(); i++) {
 			istringstream isss0(tokens2[i]);
 			isss0 >> playerid;
-			match.pdla[match.team1.TeamId][playerid]= Leagues::leagues[leagueid].Players[playerid];
+			match.pdla[match.team1->TeamId][playerid]= &Leagues::leagues[leagueid].Players[playerid];
 		}
 
 		istringstream isss9(tokens[9]);
@@ -352,12 +361,12 @@ void ReadFromFiles() {
 		for (int i = 0; i < 11; i++) {
 			istringstream isss0(tokens3[i]);
 			isss0 >> playerid2;
-			match.XI[match.team2.TeamId][playerid2] = Leagues::leagues[leagueid].Players[playerid2];
+			match.XI[match.team2->TeamId][playerid2] = &Leagues::leagues[leagueid].Players[playerid2];
 		}
 		for (int i = 11; i < tokens3.size(); i++) {
 			istringstream isss0(tokens3[i]);
 			isss0 >> playerid2;
-			match.pdla[match.team2.TeamId][playerid2] = Leagues::leagues[leagueid].Players[playerid2];
+			match.pdla[match.team2->TeamId][playerid2] = &Leagues::leagues[leagueid].Players[playerid2];
 		}
 
 		Leagues::leagues[leagueid].rounds[roundid].matches[match.MatchId] = match;
@@ -433,7 +442,7 @@ void WriteInFiles() {
 	userroundpointsfile.open("UserRoundPoints.txt");
 	matchsfile.open("Matchs.txt");
 	detailsfile.open("DetailsMatchs");
-	stack <Player*> copydeka;
+	map<int,stack <Player*>> copydeka;
 	for (auto i = admins.begin(); i != admins.end();i++) {
 		adminsfile << i->Id << endl;
 		adminsfile << i->Name << endl;
@@ -456,19 +465,19 @@ void WriteInFiles() {
 				matchsfile << m.first << '-' << m.second.isPlayed << '-';
 				detailsfile<< i << ',' << r->first << ',';
 				detailsfile << m.first << ',';
-				matchsfile << m.second.team1.TeamId << '-' << m.second.res1 << '-';
-				for (auto p : m.second.XI[m.second.team1.TeamId]) {
+				matchsfile << m.second.team1->TeamId << '-' << m.second.res1 << '-';
+				for (auto p : m.second.XI[m.second.team1->TeamId]) {
 					matchsfile << p.first << ',';
 				}
-				for (auto d : m.second.pdla[m.second.team1.TeamId]) {
+				for (auto d : m.second.pdla[m.second.team1->TeamId]) {
 					matchsfile << d.first << ',';
 				}
 
-				matchsfile <<'-' << m.second.team2.TeamId << '-' << m.second.res2 << '-';
-				for (auto p : m.second.XI[m.second.team2.TeamId]) {
+				matchsfile <<'-' << m.second.team2->TeamId << '-' << m.second.res2 << '-';
+				for (auto p : m.second.XI[m.second.team2->TeamId]) {
 					matchsfile << p.first << ',';
 				}
-				for (auto d : m.second.pdla[m.second.team2.TeamId]) {
+				for (auto d : m.second.pdla[m.second.team2->TeamId]) {
 					matchsfile << d.first << ',';
 				}
 				matchsfile << endl;
@@ -485,32 +494,40 @@ void WriteInFiles() {
 		}
 	}
 	for (auto i = users.begin(); i != users.end(); i++) {
-		usersfile << i->Id << ',' << i->Name << ',' << i->Password << ',' << i->Budget<<endl;
+		usersfile << i->Id << ',' << i->Name << ',' << i->Password <<endl;
 		
 		for (auto j : i->squad) {
 			if (!(j.second.squads.empty())) {
 				squadfile << j.first << '-' << i->Id << '-';
 				for (auto ps : j.second.squads) {
-					for (auto p : ps.second) {
-						squadfile << p->PlayerId << '-';
+					squadfile << ps.first << '-';
+					copydeka[ps.first] = j.second.deka[ps.first];
+					for (auto r : ps.second) {
+						for (auto p : r.second) {
+							squadfile << p->PlayerId << '-';
+						}
 					}
-				}
-				copydeka = j.second.deka;
-				while (!copydeka.empty()) {
-					squadfile << copydeka.top()->PlayerId << '-';
-					copydeka.pop();
-				}
-				squadfile << j.second.TotalPoints<<'-';
-				squadfile << j.second.captain.PlayerId<<'-';
-				squadfile << j.second.ViceCaptain.PlayerId<<'-';
-				squadfile << j.second.tribleCaptain<<'-';
-				squadfile << j.second.wildCard<<'-';
-				squadfile << j.second.numOfSubestitution<<endl;
 
-				/*for (auto r : users[i->Id].squad[j.first].RoundPoints) {
+
+
+					while (!copydeka[ps.first].empty()) {
+						squadfile << copydeka[ps.first].top()->PlayerId << '-';
+						copydeka[ps.first].pop();
+					}
+					squadfile << j.second.TotalPoints << '-';
+					squadfile << j.second.captain->PlayerId << '-';
+					squadfile << j.second.ViceCaptain->PlayerId << '-';
+					squadfile << j.second.tribleCaptain << '-';
+					squadfile << j.second.wildCard << '-';
+					squadfile << j.second.numOfSubestitution << '-';
+					squadfile << j.second.Budget << endl;
+
+					
+				}
+				for (auto r : users[i->Id].squad[j.first].RoundPoints) {
 					userroundpointsfile << j.first << '-' << i->Id << '-' << r.first << '-' << r.second << endl;
 
-				}*/
+				}
 			}
 
 		}
