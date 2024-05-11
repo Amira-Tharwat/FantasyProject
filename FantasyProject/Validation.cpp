@@ -129,17 +129,20 @@ string Validation::nameVal() {
 		
 		else if (name.size() < 3)
 		{
-			cout << " minmum numeber of char is 3" << endl;
+			cout << " minmum numeber of char is 3 , Try Again: " << endl;
 			check = 0;
+			
 		}
-
-		for (int i = 0; i < name.size(); i++)
-		{
-	     if (!((name[i] >= 'a' && name[i] <= 'z') || (name[i] >= 'A' && name[i] <= 'Z')||name[i]=='_'))
-		 {
-			cout << "can not uese special char or integer" << endl;
-			check = 0;
-		 }
+		else {
+			for (int i = 0; i < name.size(); i++)
+			{
+				if (!((name[i] >= 'a' && name[i] <= 'z') || (name[i] >= 'A' && name[i] <= 'Z') || name[i] == '_'))
+				{
+					cout << "can not use special char or integer , Try Again: " << endl;
+					check = 0;
+					break;
+				}
+			}
 		}
 	} while (!check);
 
