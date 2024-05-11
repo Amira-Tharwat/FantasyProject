@@ -597,8 +597,6 @@ void Admin::RemoveMatch() {
 		Leagues::leagues[LeagueId].rounds.erase(roundId);
 	}
 }
-
-
 void Admin::setResult() {
 	int roundId, matchId, playerId, countOfGoals, countOfassit, res1, res2, assist1, assist2, choicegoal, countOfYellow, countOfRed, numberOfYellow, counterwhile = 1, roundisplayed = false;
 	char yn;
