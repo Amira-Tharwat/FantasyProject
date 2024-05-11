@@ -1,5 +1,4 @@
 #include "Match.h"
-
 class Round
 {
 public:

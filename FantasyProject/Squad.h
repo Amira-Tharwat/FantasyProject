@@ -4,13 +4,14 @@
 class Squad
 {
 public:
-	map <string,vector<Player*>>squads;  
-	stack <Player*> deka ;
+	map <int,map<string,vector<Player*>>>squads;  
+	map<int,stack <Player*>> deka ;
 	map<int, int> RoundPoints;
 	int TotalPoints;
-	Player captain , ViceCaptain;
-	bool tribleCaptain , wildCard;
-	int numOfSubestitution; 
+	Player *captain , *ViceCaptain;
+	int  wildCard=1;
+	int tribleCaptain=1;
+	int numOfSubestitution;
+	float Budget;
 	Squad();
 };
-

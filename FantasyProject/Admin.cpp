@@ -11,7 +11,7 @@ Admin::Admin(int id, string name, string password)
 	Password = password;
 	Id = id;
 }
-void	Admin::SetLeagueId(const  vector<User>& Users)
+void Admin::SetLeagueId(const  vector<User>& Users)
 {
 	us.resize(Users.size());
 	for (int i = 0; i < Users.size(); i++) {
@@ -50,32 +50,23 @@ void Admin::Home()
 		case 1:
 			AddTeam();
 			break;
-
 		case 2:
 			RemoveTeam();
-
 			break;
-
 		case 3:
 			AddPlayer();
-
 			break;
-
 		case 4:
 			RemovePlayer();
-
 			break;
-
 		case 5:
 			AddRound();
-
 			break;
 		case 6:
 			AddMatch();
 			break;
 		case 7:
 			RemoveMatch();
-
 			break;
 		case 8:
 			setResult();
@@ -170,7 +161,7 @@ void Admin::AddPlayer() {
 		}
 	}
 	bool b = 1;
-	Player p = Player();
+	Player p ;
 	int tID, ans = 0;
 	cout << "Enter Player Name \n";
 	p.PlayerName = Validation::nameVal();
@@ -210,33 +201,9 @@ void Admin::AddPlayer() {
 		} while (!b);
 		p.LeagueId = LeagueId;
 		p.TeamId = tID;
-		/*
-		auto s = Leagues::leagues[LeagueId].teams.find(tID);
-		if (s == Leagues::leagues[LeagueId].teams.end()) {
-			cin >> ans;
-			while (ans != 1 && ans != 2) {
-				cout << "This Team Id Not Available \n 1- try again 2-Exit";
-				cin >> ans;
-				switch (ans)
-				{
-				case 1:
-					AddPlayer();
-				case 2:
-					Home();
-
-				default:
-					cout << "Invalid Answer \n ";
-				}
-
-			}
-
-		}
-		else {
-
-
-		}*/
+		
 		Leagues::leagues[LeagueId].Players[p.PlayerId] = p;
-		Leagues::leagues[LeagueId].teams[tID].Players[p.PlayerId] = p;
+		Leagues::leagues[LeagueId].teams[tID].Players[p.PlayerId] = &p;
 		break;
 	}
 	Home();
@@ -244,7 +211,7 @@ void Admin::AddPlayer() {
 void Admin::AddPlayer(int tID)
 {
 	bool b = 1;
-	Player p = Player();
+	Player p ;
 	int ans = 0;
 	cout << "Enter Player Name";
 	p.PlayerName = Validation::nameVal();
@@ -269,7 +236,7 @@ void Admin::AddPlayer(int tID)
 	p.LeagueId = LeagueId;
 	p.TeamId = tID;
 	Leagues::leagues[LeagueId].Players[p.PlayerId] = p;
-	Leagues::leagues[LeagueId].teams[tID].Players[p.PlayerId] = p;
+	Leagues::leagues[LeagueId].teams[tID].Players[p.PlayerId] = &p;
 }
 void Admin::RemovePlayer()
 {
@@ -307,7 +274,7 @@ void Admin::RemovePlayer()
 	else
 	{
 		for (auto i = Leagues::leagues[LeagueId].teams[tID].Players.begin(); i != Leagues::leagues[LeagueId].teams[tID].Players.end(); i++)
-			cout << i->first << "\t" << i->second.PlayerName << endl;
+			cout << i->first << "\t" << i->second->PlayerName << endl;
 		cout << "Enter The Player Id : ";
 		do {
 			PID = Validation::ReadNumber();
@@ -320,8 +287,8 @@ void Admin::RemovePlayer()
 		} while (!b);
 		Leagues::leagues[LeagueId].teams[tID].Players.erase(PID);
 		Leagues::leagues[LeagueId].Players.erase(PID);
-		Player playerRemove = Leagues::leagues[LeagueId].teams[tID].Players[PID];
-		cout << " Player" << playerRemove.PlayerName << " is Removed successfully :)" << endl;
+		Player *playerRemove = Leagues::leagues[LeagueId].teams[tID].Players[PID];
+		cout << " Player" << playerRemove->PlayerName << " is Removed successfully :)" << endl;
 		Home();
 	}
 }
@@ -360,7 +327,7 @@ void Admin::AddRound()
 			}
 		}
 	} while (!b);
-	map<int, Team> tempTeams;
+	map<int, Team*> tempTeams;
 	for (int i = 0; i < 5; i++)
 	{
 		int t = 0;
@@ -380,7 +347,7 @@ void Admin::AddRound()
 					cout << "Not found team with this ID , try again\n";
 				}
 			} while (!b);
-			tempTeams[tID] = Leagues::leagues[LeagueId].teams[tID];
+			tempTeams[tID] = &Leagues::leagues[LeagueId].teams[tID];
 			Leagues::leagues[LeagueId].teams.erase(tID);
 			if (t == 1)
 			{
@@ -390,7 +357,11 @@ void Admin::AddRound()
 				match.team2 = tempTeams[tID];
 			t++;
 		}
-		match.MatchId = Leagues::leagues[LeagueId].rounds[roundId].matches.rbegin()->second.MatchId + 1;
+		if (Leagues::leagues[LeagueId].rounds[roundId].matches.empty()) {
+			match.MatchId = 1;
+		}
+		else
+			match.MatchId = Leagues::leagues[LeagueId].rounds[roundId].matches.rbegin()->second.MatchId + 1;
 		cout << "the match Added Successfuly\n";
 		Leagues::leagues[LeagueId].rounds[roundId].matches[match.MatchId] = match;
 		cout << "1-if you want enter anthor match\n2-if you want to go back to home page\n";
@@ -402,7 +373,7 @@ void Admin::AddRound()
 	cout << "You are added all Matches succesufully\n";
 	for (auto i : tempTeams)
 	{
-		Leagues::leagues[LeagueId].teams[i.first] = i.second;
+		Leagues::leagues[LeagueId].teams[i.first] = *i.second;
 	}
 	return;
 }
@@ -445,7 +416,7 @@ void Admin::AddMatch() {
 		} while (!b);
 
 		for (auto i : Leagues::leagues[LeagueId].rounds.find(roundId)->second.matches) {
-			cout << i.first << '-' << i.second.team1.TeamName << "     VS     " << i.second.team2.TeamName << endl;
+			cout << i.first << '-' << i.second.team1->TeamName << "     VS     " << i.second.team2->TeamName << endl;
 		}
 
 		cout << "this is Matches of this round\n";
@@ -463,7 +434,7 @@ void Admin::AddMatch() {
 				vector<int> teamsId;
 				for (auto ii = Leagues::leagues[LeagueId].teams.begin(); ii != Leagues::leagues[LeagueId].teams.end(); ii++) {
 					for (auto k : Leagues::leagues[LeagueId].rounds[roundId].matches) {
-						auto j = k.second.team1.TeamId; auto jj = k.second.team2.TeamId;
+						auto j = k.second.team1->TeamId; auto jj = k.second.team2->TeamId;
 						if (j != ii->second.TeamId && jj != ii->second.TeamId)
 						{
 							cout << ii->first << "\t" << ii->second.TeamName << endl;
@@ -486,10 +457,10 @@ void Admin::AddMatch() {
 
 				if (t == 1)
 				{
-					match.team1 = Leagues::leagues[LeagueId].teams[tID];
+					match.team1 = &Leagues::leagues[LeagueId].teams[tID];
 				}
 				else
-					match.team2 = Leagues::leagues[LeagueId].teams[tID];
+					match.team2 = &Leagues::leagues[LeagueId].teams[tID];
 				t++;
 			}
 			match.MatchId = Leagues::leagues[LeagueId].rounds[roundId].matches.rbegin()->second.MatchId + 1;
@@ -513,7 +484,7 @@ void Admin::RemoveMatch() {
 	cin >> roundId;
 
 	for (auto i : Leagues::leagues[LeagueId].rounds.find(roundId)->second.matches) {
-		cout << i.first << '-' << i.second.team1.TeamName << "     VS     " << i.second.team2.TeamName << endl;
+		cout << i.first << '-' << i.second.team1->TeamName << "     VS     " << i.second.team2->TeamName << endl;
 	}
 	cout << "this is matches of this Round\n";
 	cout << "Enter the Id of the Match Which you Want set it's Result:";
@@ -524,21 +495,34 @@ void Admin::RemoveMatch() {
 	}
 }
 void Admin::setResult() {
-	int roundId, matchId, playerId, countOfGoals, countOfassit, res1, res2, assist1, assist2, choicegoal, countOfYellow, countOfRed, numberOfYellow, counterwhile = 1;
+	int roundId, matchId, playerId, countOfGoals, countOfassit, res1, res2, assist1, assist2, choicegoal, countOfYellow, countOfRed, numberOfYellow, counterwhile = 1,roundisplayed=false;
 	char yn;
 	for (auto i : Leagues::leagues[LeagueId].rounds) {
 		cout << i.first << '-' << "Round " << i.second.roundId << endl;
 	}
 	cout << "Enter the number of the round\n";
 	cin >> roundId;
+	for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches) {
+		if (i.second.isPlayed) {
+			roundisplayed = true;
+			break;
+		}
+	}
+	if (!roundisplayed) {
+		for (auto i : us) {
+			if (i.squad[LeagueId].wildCard == 2) {
+				i.squad[LeagueId].wildCard = 3;
+			}
+		}
+	}
 	for (auto i : Leagues::leagues[LeagueId].rounds.find(roundId)->second.matches) {
-		cout << i.first << '-' << i.second.team1.TeamName << "     VS     " << i.second.team2.TeamName << endl;
+		cout << i.first << '-' << i.second.team1->TeamName << "     VS     " << i.second.team2->TeamName << endl;
 	}
 	cout << "this is matches of this Round\n";
 	cout << "Enter the Id of the Match Which you Want set it's Result:";
 	cin >> matchId;
 	cout << "/////////////////////////////////////////////////////////////////\n";
-	cout << Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].MatchId << "-" << Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamName << "          VS          " << Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2.TeamName << endl;
+	cout << Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].MatchId << "-" << Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1->TeamName << "          VS          " << Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2->TeamName << endl;
 	cout << "Now You Set the Squad of Tow Teams\n";
 	setSquadfortowteams(roundId, matchId);
 	cout << "Done----------- Now You Added Details of Match\n";
@@ -554,15 +538,15 @@ void Admin::setResult() {
 		switch (choicegoal)
 		{
 		case 1:
-			for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId]) {
-				auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Goals"].find(i.second.PlayerId);
+			for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1->TeamId]) {
+				auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Goals"].find(i.second->PlayerId);
 				if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Goals"].end())
-					cout << i.first << "-" << i.second.PlayerName << endl;
+					cout << i.first << "-" << i.second->PlayerName << endl;
 			}
-			for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].pdla[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId]) {
-				auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Goals"].find(i.second.PlayerId);
+			for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].pdla[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1->TeamId]) {
+				auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Goals"].find(i.second->PlayerId);
 				if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Goals"].end())
-					cout << i.first << "-" << i.second.PlayerName << endl;
+					cout << i.first << "-" << i.second->PlayerName << endl;
 			}
 			cout << "That player who participated in the match\n";
 			cout << "enter the Id of player who score one or more:";
@@ -578,16 +562,16 @@ void Admin::setResult() {
 			res1 -= countOfGoals;
 			break;
 		case 2:
-			for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2.TeamId]) {
-				auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["OwnGoal"].find(i.second.PlayerId);
+			for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2->TeamId]) {
+				auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["OwnGoal"].find(i.second->PlayerId);
 				if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["OwnGoal"].end())
-					cout << i.first << "-" << i.second.PlayerName << endl;
+					cout << i.first << "-" << i.second->PlayerName << endl;
 
 			}
-			for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].pdla[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2.TeamId]) {
-				auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["OwnGoal"].find(i.second.PlayerId);
+			for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].pdla[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2->TeamId]) {
+				auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["OwnGoal"].find(i.second->PlayerId);
 				if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["OwnGoal"].end())
-					cout << i.first << "-" << i.second.PlayerName << endl;
+					cout << i.first << "-" << i.second->PlayerName << endl;
 			}
 			cout << "That player who participated in the match\n";
 			cout << "enter the Id of player who score one or more:";
@@ -611,16 +595,16 @@ void Admin::setResult() {
 		switch (choicegoal)
 		{
 		case 1:
-			for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2.TeamId]) {
-				auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Goals"].find(i.second.PlayerId);
+			for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2->TeamId]) {
+				auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Goals"].find(i.second->PlayerId);
 				if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Goals"].end())
-					cout << i.first << "-" << i.second.PlayerName << endl;
+					cout << i.first << "-" << i.second->PlayerName << endl;
 
 			}
-			for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].pdla[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2.TeamId]) {
-				auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Goals"].find(i.second.PlayerId);
+			for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].pdla[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2->TeamId]) {
+				auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Goals"].find(i.second->PlayerId);
 				if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Goals"].end())
-					cout << i.first << "-" << i.second.PlayerName << endl;
+					cout << i.first << "-" << i.second->PlayerName << endl;
 
 			}
 			cout << "That player who participated in the match\n";
@@ -637,15 +621,15 @@ void Admin::setResult() {
 			res2 -= countOfGoals;
 			break;
 		case 2:
-			for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId]) {
-				auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["OwnGoal"].find(i.second.PlayerId);
+			for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1->TeamId]) {
+				auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["OwnGoal"].find(i.second->PlayerId);
 				if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["OwnGoal"].end())
-					cout << i.first << "-" << i.second.PlayerName << endl;
+					cout << i.first << "-" << i.second->PlayerName << endl;
 			}
-			for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].pdla[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId]) {
-				auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["OwnGoal"].find(i.second.PlayerId);
+			for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].pdla[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1->TeamId]) {
+				auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["OwnGoal"].find(i.second->PlayerId);
 				if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["OwnGoal"].end())
-					cout << i.first << "-" << i.second.PlayerName << endl;
+					cout << i.first << "-" << i.second->PlayerName << endl;
 			}
 			cout << "That player who participated in the match\n";
 			cout << "enter the Id of player who score one or more:";
@@ -665,15 +649,15 @@ void Admin::setResult() {
 	}
 	res1 = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].res1;
 	while (res1) {
-		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId]) {
-			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Assist"].find(i.second.PlayerId);
+		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1->TeamId]) {
+			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Assist"].find(i.second->PlayerId);
 			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Assist"].end())
-				cout << i.first << "-" << i.second.PlayerName << endl;
+				cout << i.first << "-" << i.second->PlayerName << endl;
 		}
-		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].pdla[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId]) {
-			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Assist"].find(i.second.PlayerId);
+		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].pdla[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1->TeamId]) {
+			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Assist"].find(i.second->PlayerId);
 			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Assist"].end())
-				cout << i.first << "-" << i.second.PlayerName << endl;
+				cout << i.first << "-" << i.second->PlayerName << endl;
 		}
 		cout << "That player who participated in the match\n";
 		cout << "enter the Id of player who assist one or more Goal:";
@@ -694,15 +678,15 @@ void Admin::setResult() {
 	}
 	res2 = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].res2;
 	while (res2) {
-		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2.TeamId]) {
-			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Assist"].find(i.second.PlayerId);
+		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2->TeamId]) {
+			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Assist"].find(i.second->PlayerId);
 			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Assist"].end())
-				cout << i.first << "-" << i.second.PlayerName << endl;
+				cout << i.first << "-" << i.second->PlayerName << endl;
 		}
-		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].pdla[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2.TeamId]) {
-			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Assist"].find(i.second.PlayerId);
+		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].pdla[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2->TeamId]) {
+			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Assist"].find(i.second->PlayerId);
 			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Assist"].end())
-				cout << i.first << "-" << i.second.PlayerName << endl;
+				cout << i.first << "-" << i.second->PlayerName << endl;
 		}
 		cout << "That player who participated in the match\n";
 		cout << "enter the Id of player who assist one or more Goal:";
@@ -725,25 +709,25 @@ void Admin::setResult() {
 	cin >> countOfYellow;
 	while (countOfYellow)
 	{
-		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId]) {
-			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Yellow"].find(i.second.PlayerId);
+		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1->TeamId]) {
+			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Yellow"].find(i.second->PlayerId);
 			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Yellow"].end())
-				cout << i.first << "-" << i.second.PlayerName << endl;
+				cout << i.first << "-" << i.second->PlayerName << endl;
 		}
-		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].pdla[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId]) {
-			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Yellow"].find(i.second.PlayerId);
+		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].pdla[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1->TeamId]) {
+			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Yellow"].find(i.second->PlayerId);
 			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Yellow"].end())
-				cout << i.first << "-" << i.second.PlayerName << endl;
+				cout << i.first << "-" << i.second->PlayerName << endl;
 		}
-		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2.TeamId]) {
-			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Yellow"].find(i.second.PlayerId);
+		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2->TeamId]) {
+			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Yellow"].find(i.second->PlayerId);
 			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Yellow"].end())
-				cout << i.first << "-" << i.second.PlayerName << endl;
+				cout << i.first << "-" << i.second->PlayerName << endl;
 		}
-		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].pdla[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2.TeamId]) {
-			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Yellow"].find(i.second.PlayerId);
+		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].pdla[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2->TeamId]) {
+			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Yellow"].find(i.second->PlayerId);
 			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Yellow"].end())
-				cout << i.first << "-" << i.second.PlayerName << endl;
+				cout << i.first << "-" << i.second->PlayerName << endl;
 		}
 		cout << "That player who participated in the match\n";
 		cout << "enter the Id of player who get Yellow Card";
@@ -762,25 +746,25 @@ void Admin::setResult() {
 	
 	while (countOfRed)
 	{
-		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId]) {
-			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Red"].find(i.second.PlayerId);
+		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1->TeamId]) {
+			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Red"].find(i.second->PlayerId);
 			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Red"].end())
-				cout << i.first << "-" << i.second.PlayerName << endl;
+				cout << i.first << "-" << i.second->PlayerName << endl;
 		}
-		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].pdla[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId]) {
-			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Red"].find(i.second.PlayerId);
+		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].pdla[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1->TeamId]) {
+			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Red"].find(i.second->PlayerId);
 			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Red"].end())
-				cout << i.first << "-" << i.second.PlayerName << endl;
+				cout << i.first << "-" << i.second->PlayerName << endl;
 		}
-		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2.TeamId]) {
-			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Red"].find(i.second.PlayerId);
+		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2->TeamId]) {
+			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Red"].find(i.second->PlayerId);
 			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Red"].end())
-				cout << i.first << "-" << i.second.PlayerName << endl;
+				cout << i.first << "-" << i.second->PlayerName << endl;
 		}
-		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].pdla[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2.TeamId]) {
-			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Red"].find(i.second.PlayerId);
+		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].pdla[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2->TeamId]) {
+			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Red"].find(i.second->PlayerId);
 			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Red"].end())
-				cout << i.first << "-" << i.second.PlayerName << endl;
+				cout << i.first << "-" << i.second->PlayerName << endl;
 		}
 		cout << "That player who participated in the match\n";
 		cout << "enter the Id of player who get Red Card";
@@ -792,33 +776,34 @@ void Admin::setResult() {
 		for (auto j : i.second) {
 			if (i.first == "Goals") {
 				Leagues::leagues[LeagueId].Players[j.first].PointsInRounds[roundId] += 6 * j.second;
-				Leagues::leagues[LeagueId].teams[Leagues::leagues[LeagueId].Players[j.first].TeamId].Players[j.first].PointsInRounds[roundId] = 6 * j.second;
+				Leagues::leagues[LeagueId].teams[Leagues::leagues[LeagueId].Players[j.first].TeamId].Players[j.first]->PointsInRounds[roundId] = 6 * j.second;
 			}
 			else if (i.first == "Assist") {
 				Leagues::leagues[LeagueId].Players[j.first].PointsInRounds[roundId] += 4 * j.second;
-				Leagues::leagues[LeagueId].teams[Leagues::leagues[LeagueId].Players[j.first].TeamId].Players[j.first].PointsInRounds[roundId] = 4 * j.second;
+				Leagues::leagues[LeagueId].teams[Leagues::leagues[LeagueId].Players[j.first].TeamId].Players[j.first]->PointsInRounds[roundId] = 4 * j.second;
 			}
 			else if (i.first == "Yellow") {
 				Leagues::leagues[LeagueId].Players[j.first].PointsInRounds[roundId] += -1 * j.second;
-				Leagues::leagues[LeagueId].teams[Leagues::leagues[LeagueId].Players[j.first].TeamId].Players[j.first].PointsInRounds[roundId] = -1 * j.second;
+				Leagues::leagues[LeagueId].teams[Leagues::leagues[LeagueId].Players[j.first].TeamId].Players[j.first]->PointsInRounds[roundId] = -1 * j.second;
 			}
 
 			else if (i.first == "Red") {
 				Leagues::leagues[LeagueId].Players[j.first].PointsInRounds[roundId] += -3;
-				Leagues::leagues[LeagueId].teams[Leagues::leagues[LeagueId].Players[j.first].TeamId].Players[j.first].PointsInRounds[roundId] += -3;
+				Leagues::leagues[LeagueId].teams[Leagues::leagues[LeagueId].Players[j.first].TeamId].Players[j.first]->PointsInRounds[roundId] += -3;
 			}
 			else if (i.first == "OwnGoal") {
 				Leagues::leagues[LeagueId].Players[j.first].PointsInRounds[roundId] += -4;
-				Leagues::leagues[LeagueId].teams[Leagues::leagues[LeagueId].Players[j.first].TeamId].Players[j.first].PointsInRounds[roundId] += -4;
+				Leagues::leagues[LeagueId].teams[Leagues::leagues[LeagueId].Players[j.first].TeamId].Players[j.first]->PointsInRounds[roundId] += -4;
 			}
 		}
 	}
-	for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId]) {
+	for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1->TeamId]) {
 		Leagues::leagues[LeagueId].Players[i.first].PointsInRounds[roundId] += 2;
 	}
-	for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].pdla[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId]) {
+	for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].pdla[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1->TeamId]) {
 		Leagues::leagues[LeagueId].Players[i.first].PointsInRounds[roundId] += 1;
 	}
+	
 	clacPoints(roundId, Leagues::leagues[LeagueId].rounds[roundId].matches[matchId]);
 	return;
 }
@@ -829,31 +814,30 @@ void Admin::setSquadfortowteams(int roundId, int matchId) {
 	using namespace std::this_thread; // sleep_for, sleep_until
 	using namespace std::chrono;
 	sleep_until(system_clock::now() + seconds(2));
-	for (auto i : Leagues::leagues[LeagueId].teams[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId].Players) {
+	for (auto i : Leagues::leagues[LeagueId].teams[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1->TeamId].Players) {
 
-		if (i.second.PlayerPosition == "Goolkeepr") {
-			/*auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId].find(i.second.PlayerId);
-			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId].end())*/
-			cout << i.second.PlayerId << '-' << i.second.PlayerName << '-' << i.second.PlayerPosition << endl;
+		if (i.second->PlayerPosition == "Goolkeepr") {
+			
+			cout << i.second->PlayerId << '-' << i.second->PlayerName << '-' << i.second->PlayerPosition << endl;
 		}
 	}
 	cout << "Enter the Id of The main goalkeeper:";
 	cin >> playerId;
-	Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId][playerId] = Leagues::leagues[LeagueId].Players[playerId];
+	Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1->TeamId][playerId] = &Leagues::leagues[LeagueId].Players[playerId];
 	cout << "Now we Enter The main players\n";
 	sleep_until(system_clock::now() + seconds(2));
 	while (counterwhile <= 10) {
-		for (auto j : Leagues::leagues[LeagueId].teams[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId].Players) {
-			if (j.second.PlayerPosition != "Goolkeepr") {
-				auto i = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId].find(j.second.PlayerId);
-				if (i == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId].end())
-					cout << j.second.PlayerId << '-' << j.second.PlayerName << '-' << j.second.PlayerPosition << endl;
+		for (auto j : Leagues::leagues[LeagueId].teams[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1->TeamId].Players) {
+			if (j.second->PlayerPosition != "Goolkeepr") {
+				auto i = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1->TeamId].find(j.second->PlayerId);
+				if (i == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1->TeamId].end())
+					cout << j.second->PlayerId << '-' << j.second->PlayerName << '-' << j.second->PlayerPosition << endl;
 			}
 		}
 		cout << "Enter the Id of The main Player" << counterwhile << ":";
 		cin >> playerId;
 		counterwhile++;
-		Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId][playerId] = Leagues::leagues[LeagueId].Players[playerId];
+		Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1->TeamId][playerId] =& Leagues::leagues[LeagueId].Players[playerId];
 	}
 	counterwhile = 1;
 	cout << "You Added the 11 players successfully\n";
@@ -863,15 +847,15 @@ void Admin::setSquadfortowteams(int roundId, int matchId) {
 		int numberOfsubtetution = 1;
 		while (numberOfsubtetution <= 5)
 		{
-			for (auto j : Leagues::leagues[LeagueId].teams[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId].Players) {
-				auto i = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId].find(j.second.PlayerId);
-				if (i == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId].end())
-					cout << j.second.PlayerId << '-' << j.second.PlayerName << '-' << j.second.PlayerPosition << endl;
+			for (auto j : Leagues::leagues[LeagueId].teams[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1->TeamId].Players) {
+				auto i = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1->TeamId].find(j.second->PlayerId);
+				if (i == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1->TeamId].end())
+					cout << j.second->PlayerId << '-' << j.second->PlayerName << '-' << j.second->PlayerPosition << endl;
 			}
 			cout << "Enter the Substitute Player" << numberOfsubtetution << ":";
 			cin >> playerId;
 
-			Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].pdla[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1.TeamId][playerId] = Leagues::leagues[LeagueId].Players[playerId];
+			Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].pdla[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1->TeamId][playerId] =& Leagues::leagues[LeagueId].Players[playerId];
 			numberOfsubtetution++;
 			cout << "You Need Add Anthor (y/n)?";
 			cin >> yn;
@@ -884,31 +868,31 @@ void Admin::setSquadfortowteams(int roundId, int matchId) {
 	using namespace std::this_thread; // sleep_for, sleep_until
 	using namespace std::chrono;
 	sleep_until(system_clock::now() + seconds(2));
-	for (auto i : Leagues::leagues[LeagueId].teams[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2.TeamId].Players) {
+	for (auto i : Leagues::leagues[LeagueId].teams[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2->TeamId].Players) {
 
-		if (i.second.PlayerPosition == "Goolkeepr") {
-			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2.TeamId].find(i.second.PlayerId);
-			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2.TeamId].end())
-				cout << i.second.PlayerId << '-' << i.second.PlayerName << '-' << i.second.PlayerPosition << endl;
+		if (i.second->PlayerPosition == "Goolkeepr") {
+			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2->TeamId].find(i.second->PlayerId);
+			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2->TeamId].end())
+				cout << i.second->PlayerId << '-' << i.second->PlayerName << '-' << i.second->PlayerPosition << endl;
 		}
 	}
 	cout << "Enter the Id of The main goalkeeper:";
 	cin >> playerId;
-	Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2.TeamId][playerId] = Leagues::leagues[LeagueId].Players[playerId];
+	Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2->TeamId][playerId] =&Leagues::leagues[LeagueId].Players[playerId];
 	cout << "Now we Enter The main players\n";
 	sleep_until(system_clock::now() + seconds(2));
 	while (counterwhile <= 10) {
-		for (auto j : Leagues::leagues[LeagueId].teams[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2.TeamId].Players) {
-			if (j.second.PlayerPosition != "Goolkeepr") {
-				auto i = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2.TeamId].find(j.second.PlayerId);
-				if (i == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2.TeamId].end())
-					cout << j.second.PlayerId << '-' << j.second.PlayerName << '-' << j.second.PlayerPosition << endl;
+		for (auto j : Leagues::leagues[LeagueId].teams[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2->TeamId].Players) {
+			if (j.second->PlayerPosition != "Goolkeepr") {
+				auto i = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2->TeamId].find(j.second->PlayerId);
+				if (i == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2->TeamId].end())
+					cout << j.second->PlayerId << '-' << j.second->PlayerName << '-' << j.second->PlayerPosition << endl;
 			}
 		}
 		cout << "Enter the Id of The main Player" << counterwhile << ":";
 		cin >> playerId;
 		counterwhile++;
-		Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2.TeamId][playerId] = Leagues::leagues[LeagueId].Players[playerId];
+		Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2->TeamId][playerId] = &Leagues::leagues[LeagueId].Players[playerId];
 	}
 	counterwhile = 1;
 	cout << "You Added the 11 players successfully\n";
@@ -918,14 +902,14 @@ void Admin::setSquadfortowteams(int roundId, int matchId) {
 		int numberOfsubtetution = 1;
 		while (numberOfsubtetution <= 5)
 		{
-			for (auto j : Leagues::leagues[LeagueId].teams[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2.TeamId].Players) {
-				auto i = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2.TeamId].find(j.second.PlayerId);
-				if (i == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2.TeamId].end())
-					cout << j.second.PlayerId << '-' << j.second.PlayerName << '-' << j.second.PlayerPosition << endl;
+			for (auto j : Leagues::leagues[LeagueId].teams[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2->TeamId].Players) {
+				auto i = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2->TeamId].find(j.second->PlayerId);
+				if (i == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2->TeamId].end())
+					cout << j.second->PlayerId << '-' << j.second->PlayerName << '-' << j.second->PlayerPosition << endl;
 			}
 			cout << "Enter the Substitute Player" << numberOfsubtetution << ":";
 			cin >> playerId;
-			Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].pdla[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2.TeamId][playerId] = Leagues::leagues[LeagueId].Players[playerId];
+			Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].pdla[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2->TeamId][playerId] = &Leagues::leagues[LeagueId].Players[playerId];
 			numberOfsubtetution++;
 			cout << "You Need Add Anthor (y/n)?";
 			cin >> yn;
@@ -945,10 +929,10 @@ void Admin::clacPoints(int roundId, Match match) {
 	bool captininmatch = 0;
 
 	for (auto i : us) {
-		for (auto j : i.squad[LeagueId].squads) {
+		for (auto j : i.squad[LeagueId].squads[roundId]) {
 			for (auto k : j.second) {
-				while (!(i.squad[LeagueId].deka.empty())) {
-					CopyDeka.push(i.squad[LeagueId].deka.top());
+				while (!(i.squad[LeagueId].deka[roundId].empty())) {
+					CopyDeka.push(i.squad[LeagueId].deka[roundId].top());
 					if (k->PlayerId == CopyDeka.top()->PlayerId) {
 						found = 1;
 					}
@@ -956,13 +940,13 @@ void Admin::clacPoints(int roundId, Match match) {
 				}
 				while (!CopyDeka.empty())
 				{
-					i.squad[LeagueId].deka.push(CopyDeka.top());
+					i.squad[LeagueId].deka[roundId].push(CopyDeka.top());
 					CopyDeka.pop();
 				}
 				if (!found) {
 					for (auto m : match.XI) {
 						for (auto n : m.second) {
-							if (n.second.PlayerId == k->PlayerId) {
+							if (n.second->PlayerId == k->PlayerId) {
 								played = 1;
 								break;
 							}
@@ -972,7 +956,7 @@ void Admin::clacPoints(int roundId, Match match) {
 						else if (!played) {
 							for (auto m : match.pdla) {
 								for (auto n : m.second) {
-									if (n.second.PlayerId == k->PlayerId) {
+									if (n.second->PlayerId == k->PlayerId) {
 										played = 1;
 										break;
 									}
@@ -983,9 +967,9 @@ void Admin::clacPoints(int roundId, Match match) {
 						}
 					}
 					if (!played) {
-						for (auto m : match.team1.Players) {
-							if (m.second.PlayerId == k->PlayerId) {
-								if (k->PlayerId == i.squad[LeagueId].captain.PlayerId) {
+						for (auto m : match.team1->Players) {
+							if (m.second->PlayerId == k->PlayerId) {
+								if (k->PlayerId == i.squad[LeagueId].captain->PlayerId) {
 									captinisplayed = 1;
 								}
 								inteam = 1;
@@ -993,9 +977,9 @@ void Admin::clacPoints(int roundId, Match match) {
 							}
 						}
 						if (!inteam) {
-							for (auto m : match.team2.Players) {
-								if (m.second.PlayerId == k->PlayerId) {
-									if (k->PlayerId == i.squad[LeagueId].captain.PlayerId) {
+							for (auto m : match.team2->Players) {
+								if (m.second->PlayerId == k->PlayerId) {
+									if (k->PlayerId == i.squad[LeagueId].captain->PlayerId) {
 										captinisplayed = 1;
 									}
 									inteam = 1;
@@ -1005,11 +989,12 @@ void Admin::clacPoints(int roundId, Match match) {
 						}
 					}
 					if (played) {
-						if (k->PlayerId == i.squad[LeagueId].captain.PlayerId) {
+						if (k->PlayerId == i.squad[LeagueId].captain->PlayerId) {
 							captinisplayed = 1;
-							if (i.squad[LeagueId].tribleCaptain) {
+							if (i.squad[LeagueId].tribleCaptain==2) {
 								i.squad[LeagueId].RoundPoints[roundId] += (k->PointsInRounds[roundId] * 3);
 								i.squad[LeagueId].TotalPoints += (k->PointsInRounds[roundId] * 3);
+								i.squad[LeagueId].tribleCaptain == 3;
 							}
 							else {
 								i.squad[LeagueId].RoundPoints[roundId] += (k->PointsInRounds[roundId]) * 2;
@@ -1022,26 +1007,27 @@ void Admin::clacPoints(int roundId, Match match) {
 						}
 					}
 					if (inteam && captinisplayed) {
-						if (i.squad[LeagueId].tribleCaptain) {
-							i.squad[LeagueId].RoundPoints[roundId] += (i.squad[LeagueId].ViceCaptain.PointsInRounds[roundId]) * 2;
-							i.squad[LeagueId].TotalPoints += (i.squad[LeagueId].ViceCaptain.PointsInRounds[roundId]) * 2;
+						if (i.squad[LeagueId].tribleCaptain==2) {
+							i.squad[LeagueId].RoundPoints[roundId] += (i.squad[LeagueId].ViceCaptain->PointsInRounds[roundId]) * 2;
+							i.squad[LeagueId].TotalPoints += (i.squad[LeagueId].ViceCaptain->PointsInRounds[roundId]) * 2;
+							i.squad[LeagueId].tribleCaptain == 3;
 						}
 						else {
-							i.squad[LeagueId].RoundPoints[roundId] += i.squad[LeagueId].ViceCaptain.PointsInRounds[roundId];
-							i.squad[LeagueId].TotalPoints += i.squad[LeagueId].ViceCaptain.PointsInRounds[roundId];
+							i.squad[LeagueId].RoundPoints[roundId] += i.squad[LeagueId].ViceCaptain->PointsInRounds[roundId];
+							i.squad[LeagueId].TotalPoints += i.squad[LeagueId].ViceCaptain->PointsInRounds[roundId];
 						}
 					}
 					if (inteam) {
-						while (!i.squad[LeagueId].deka.empty())
+						while (!i.squad[LeagueId].deka[roundId].empty())
 						{
-							if (i.squad[LeagueId].deka.top()->PlayerPosition == "Goolkeepr" && k->PlayerPosition == "Goolkeepr") {
+							if (i.squad[LeagueId].deka[roundId].top()->PlayerPosition == "Goolkeepr" && k->PlayerPosition == "Goolkeepr") {
 								i.squad[LeagueId].RoundPoints[roundId] += k->PointsInRounds[roundId];
 							}
-							else if (i.squad[LeagueId].deka.top()->PlayerPosition != "Goolkeepr") {
-								CopyDeka2.push(i.squad[LeagueId].deka.top());
+							else if (i.squad[LeagueId].deka[roundId].top()->PlayerPosition != "Goolkeepr") {
+								CopyDeka2.push(i.squad[LeagueId].deka[roundId].top());
 								for (auto m : match.XI) {
 									for (auto n : m.second) {
-										if (i.squad[LeagueId].deka.top()->PlayerId == n.second.PlayerId) {
+										if (i.squad[LeagueId].deka[roundId].top()->PlayerId == n.second->PlayerId) {
 											played = 1;
 											break;
 										}
@@ -1053,7 +1039,7 @@ void Admin::clacPoints(int roundId, Match match) {
 								}
 								for (auto m : match.pdla) {
 									for (auto n : m.second) {
-										if (i.squad[LeagueId].deka.top()->PlayerId == n.second.PlayerId) {
+										if (i.squad[LeagueId].deka[roundId].top()->PlayerId == n.second->PlayerId) {
 											played = 1;
 											break;
 										}
@@ -1068,11 +1054,11 @@ void Admin::clacPoints(int roundId, Match match) {
 									break;
 								}
 							}
-							i.squad[LeagueId].deka.pop();
+							i.squad[LeagueId].deka[roundId].pop();
 						}
 						while (!CopyDeka2.empty())
 						{
-							i.squad[LeagueId].deka.push(CopyDeka2.top());
+							i.squad[LeagueId].deka[roundId].push(CopyDeka2.top());
 							CopyDeka2.pop();
 						}
 					}
