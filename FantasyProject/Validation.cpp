@@ -1,5 +1,29 @@
 #include "Validation.h"
+string Validation::password()
+{
+	string pass;
+	int ch;
+	ch = _getch(); //cin
+	while (ch != 13) //13 = enter in ascii code
+	{
+		if (ch == 8) //8 = backspace in ascii code
+		{
 
+			if (!pass.empty())
+			{
+				pass.erase(pass.size() - 1);
+				cout << "\b \b"; //to delete last index in password
+			}
+		}
+		else {
+			pass.push_back(ch);
+			cout << "*";
+		}
+		ch = _getch();
+
+	}
+	return pass;
+}
 int Validation::ReadNumber()
 {
 	int number;
@@ -89,7 +113,7 @@ string Validation::pass()
 		check = 1;
 		character = 0; spicalcharacter = 0; integer = 0;
 		
-		getline(cin, pass);
+		pass = Validation::password();
 		for (int i = 0; i < pass.size();i++)
 		{
 			if (pass[i] >= '0' && pass[i] <= '9') {
@@ -122,6 +146,7 @@ string Validation::nameVal() {
 		check = 1;
 
 		getline(cin, name);
+		
 		if (name.find(' ') != string::npos) {
 			cout << " do not use spaces ! if you want add space add '_' " << endl;
 			check = 0;
@@ -145,6 +170,5 @@ string Validation::nameVal() {
 			}
 		}
 	} while (!check);
-
-		return name;
+	return name;
 }

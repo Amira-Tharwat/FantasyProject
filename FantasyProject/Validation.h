@@ -1,4 +1,5 @@
 #include "User.h"
+#include<conio.h>
 #include <string>
 class Validation {
 public:
@@ -8,7 +9,7 @@ public:
 	static string username(vector<User>);
 	static string pass();
 	static string nameVal();
-	
+	static string password();
 };
 
 

@@ -42,12 +42,12 @@ void SignIn() {
 	cout << "Enter your name\n";
 	getline(cin, name);
 	cout << "Enter your password\n";
-	getline(cin, password);
+	password = Validation::password();
 	for (int i = 0; i < 7; i++) {
 		if (admins[i].Name == name && admins[i].Password == password)
 		{
 			iffound = true;
-			cout << "welcome " << name << " in home admin" << endl;//function home admin  
+			cout << "\nwelcome " << name << " in home admin" << endl;//function home admin  
 			Admin::SetLeagueId(users);
 			First_Page();
 		}
@@ -56,9 +56,8 @@ void SignIn() {
 		for (int i = 0; i < users.size(); i++) {
 			if (users[i].Name == name && users[i].Password == password) {
 				iffound = true;
-				cout << "welcome " << name << " in home user" << endl;//function home user
+				cout << "\nwelcome " << name << " in home user" << endl;//function home user
 				users[i].GetUsers(users);
-				
 				users[i].chooseLeague(users[i].Id);
 				break;
 			}
@@ -101,7 +100,7 @@ void SignUp() {
 		user.squad[i.first].TotalPoints = 0;
 	}
 	users.push_back(user);
-	cout << "your account created\n";
+	cout << "\nyour account created\n";
 	First_Page();
 }
 void ReadFromFiles() {
