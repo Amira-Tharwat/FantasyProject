@@ -53,6 +53,7 @@ void User::Home() {
 		switch (answer)
 		{
 		case 1:
+			squad[leagueId].Budget = 80000;
 			setSquad();
 			Home();
 			break;
@@ -106,7 +107,6 @@ void User::Home() {
 			}
 		}
 	}
-
 }
 void User::setSquad() {
 	bool firstround = true;
@@ -123,7 +123,7 @@ void User::setSquad() {
 			break;
 		}
 	}
-	squad[leagueId].Budget = 80000;
+	
 	bool isFind = true;
 	int playerid;
 	vector<int> numplayersid;
@@ -267,16 +267,31 @@ void User::RemovePlayer(int rid) {
 	int count = 0;
 	string position;
 	int playerid;
+	bool playerexist = false;
+	vector <int>playersid;
 	cout << " your budget is " << squad[leagueId].Budget << endl;
 
 	for (auto i : squad[leagueId].squads[rid]) {
 		for (auto j : i.second) {
 			cout << j->PlayerId << "-" << j->PlayerName << "-" << j->PlayerPrice << "-" << j->PlayerPosition << endl;
-
+			playersid.push_back(j->PlayerId);
 		}
 	}
-	cout << "Enter the ID Of Player To remove:";
-	cin >> playerid;
+	do {
+		playerexist = false;
+		cout << "Enter the ID Of Player To remove:";
+		playerid = Validation::ReadNumber();
+		for (auto i : playersid) {
+			if (i == playerid) {
+				playerexist = true;
+				break;
+			}
+		}
+		if (playerexist)
+			break;
+		cout << "invalid Id enter again\n";
+	} while (!playerexist);
+	
 	for (auto i : squad[leagueId].squads[rid]) {
 		count = 0;
 		for (auto j : i.second) {
