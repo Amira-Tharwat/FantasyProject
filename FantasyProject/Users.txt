@@ -2,5 +2,3 @@
 2,mo,297
 3,simo,1811
 4,mmm,123
-5,memo,memo110.
-6,ali,ali110.

@@ -158,6 +158,7 @@
     <Text Include="Matchs.txt" />
     <Text Include="Players.txt" />
     <Text Include="Playerspoints.txt" />
+    <Text Include="Rounds.txt" />
     <Text Include="Squad.txt" />
     <Text Include="Teams.txt" />
     <Text Include="UserRoundPoints.txt" />

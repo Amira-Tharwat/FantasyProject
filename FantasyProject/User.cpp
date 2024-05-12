@@ -43,16 +43,17 @@ void User::Home() {
 
 	if (squad[leagueId].squads.empty()) {
 		cout << "1-set squad" << endl;
-		cout << "2-Change League \n";
+		cout << "2-Change League "<<endl;
 		cout << "3-Log Out" << endl;
 
 		int answer;
-		cout << "Enter Number Of Choice:";
+		cout << "Enter Number Of Choice:\n";
 		answer = Validation::ReadNumberInRange(1, 3);
 		/*cin.ignore();*/
 		switch (answer)
 		{
 		case 1:
+			squad[leagueId].Budget = 80000;
 			setSquad();
 			Home();
 			break;
@@ -81,7 +82,7 @@ void User::Home() {
 			int answer;
 			cout << "Enter Number Of Choice:";
 			answer = Validation::ReadNumberInRange(1, 6);
-			cin.ignore();
+			//cin.ignore();
 			switch (answer)
 			{
 			case 1:
@@ -106,12 +107,11 @@ void User::Home() {
 			}
 		}
 	}
-
 }
 void User::setSquad() {
 	bool firstround = true;
 	int roundid;
-	for (auto i : Leagues::leagues[leagueId].rounds) {
+	for (auto i : Leagues::leagues[leagueId+1].rounds) {
 		for (auto j : i.second.matches) {
 			if (j.second.isPlayed == true) {
 				firstround = false;
@@ -119,11 +119,11 @@ void User::setSquad() {
 			}
 		}
 		if (firstround) {
-			roundid = i.second.roundId;
+			roundid = i.first;
 			break;
 		}
 	}
-	squad[leagueId].Budget = 80000;
+	
 	bool isFind = true;
 	int playerid;
 	vector<int> numplayersid;
@@ -234,7 +234,11 @@ void User::setSquad() {
 				}
 			}
 			if (validid == 0) {
-				cout << "the id is invalid ...\n1- try again \n2- go back \n";
+
+			//	cout << "the id is invalid ...\n1- try again \n2- go back \n";
+
+				cout << "the id is invalid ...\n1-try again \n2- go back \n";
+
 				int ans = Validation::ReadNumberInRange(1, 2);
 				switch (ans)
 				{
@@ -267,16 +271,31 @@ void User::RemovePlayer(int rid) {
 	int count = 0;
 	string position;
 	int playerid;
+	bool playerexist = false;
+	vector <int>playersid;
 	cout << " your budget is " << squad[leagueId].Budget << endl;
 
 	for (auto i : squad[leagueId].squads[rid]) {
 		for (auto j : i.second) {
 			cout << j->PlayerId << "-" << j->PlayerName << "-" << j->PlayerPrice << "-" << j->PlayerPosition << endl;
-
+			playersid.push_back(j->PlayerId);
 		}
 	}
-	cout << "Enter the ID Of Player To remove:";
-	cin >> playerid;
+	do {
+		playerexist = false;
+		cout << "Enter the ID Of Player To remove:";
+		playerid = Validation::ReadNumber();
+		for (auto i : playersid) {
+			if (i == playerid) {
+				playerexist = true;
+				break;
+			}
+		}
+		if (playerexist)
+			break;
+		cout << "invalid Id enter again\n";
+	} while (!playerexist);
+	
 	for (auto i : squad[leagueId].squads[rid]) {
 		count = 0;
 		for (auto j : i.second) {
@@ -309,7 +328,7 @@ void User::ShowPoints() {
 		for (auto j : i.second.matches) {
 			if (j.second.isPlayed == 1) {
 
-				cout << i.first << "- Round " << i.first;
+				cout << i.first << "- Round " << i.first<<"\n";
 				exist.push_back(i.first);
 				break;
 			}
@@ -332,9 +351,9 @@ void User::ShowPoints() {
 		}
 	} while (!x);
 	if (x == 1) {
-		cout << "Points of This Round is " << squad[leagueId].RoundPoints[roundid];
+		cout << "Points of This Round is " << squad[leagueId].RoundPoints[roundid]<<"\n";
 
-		cout << "Points of each Player is  ";
+		cout << "Points of each Player is  \n";
 		for (auto i : squad[leagueId].squads[roundid]) {
 
 			for (auto j : i.second) {
@@ -379,8 +398,8 @@ void User::showRank() {
 		count++;
 	}
 
-	cout << "if You Want Go back to Home Enter 1:";
-	cin.ignore();
+	cout << "if You Want Go back to Home Enter 1:\n";
+	//cin.ignore();
 	ans = Validation::ReadNumberInRange(1, 1);
 	Home();
 }
