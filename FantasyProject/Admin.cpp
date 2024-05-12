@@ -1014,7 +1014,7 @@ void Admin::setResult() {
 	countOfYellow = Validation::ReadNumber();
 	while (countOfYellow)
 	{
-		playersid.clear()
+		playersid.clear();
 		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1->TeamId]) {
 			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Yellow"].find(i.second->PlayerId);
 			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Yellow"].end()) {
@@ -1199,9 +1199,9 @@ void Admin::setSquadfortowteams(int roundId, int matchId) {
 		playerexist = false;
 		cout << "Enter the Id of The main goalkeeper:";
 		playerId = Validation::ReadNumber();
-		playerexist = false;
+		
 		for (auto j : playersid) {
-			if (j == playerexist) {
+			if (j ==playerId ) {
 				playerexist = true;
 				break;
 			}
