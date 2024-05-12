@@ -41,7 +41,7 @@ int Validation::ReadNumber()
 			if (!(Number[i] >= '0' && Number[i] <= '9'))
 			{
 				b = false;
-				cout << "Invalid Number, Enter again:";
+				cout << "\033[31m Invalid Number, Enter again: \033[0m";
 				break;
 			}
 		}	
@@ -65,7 +65,7 @@ int Validation::ReadNumberInRange(int From, int To)
 
 	while (!IsNumberInRange(Number, From, To))
 	{
-		cout << "Number is not within range, Enter again:";
+		cout << "\033[31m Number is not within range, Enter again: \033[0m";
 		Number = ReadNumber();
 	}
 	return Number;
@@ -80,23 +80,23 @@ string Validation::username(vector<User>users)
 		 
 		 getline(cin, name);
 	if (name.find(' ')!= string::npos) {
-		cout << " do not use spaces !" <<endl;
+		cout << "\033[33m do not use spaces ! \033[0m" <<endl;
 		check = 0;
 	}
 	else if (!((name[0] >= 'a' && name[0] <= 'z') || (name[0] >= 'A' && name[0] <= 'Z')))
 	{
-		cout << "can not uese special char or integer in the first"<<endl;
+		cout << "\033[31m can not use special char or integer in the first \033[0m"<<endl;
 		check = 0;
 	}
 	else if(name.size() < 3)
 	{
-		cout << " minmum numeber of char is 3"<<endl;
+		cout << "\033[33m minmum numeber of char is 3\033[0m"<<endl;
 		check = 0;
 	}
 	for (auto i : users)
 	{
 		if (name == i.Name) {
-			cout << "this name already exist " << endl;
+			cout << "\033[31m this name already exist \033[0m" << endl;
 			check = 0;
 		}
 	}
@@ -131,7 +131,7 @@ string Validation::pass()
 		
 		if ( pass.size() < 6 || !( character && spicalcharacter && integer))
 		{
-			cout << " weak password !! at least 6 char and contan number and char and spical char " << endl;
+			cout << "\033[33m weak password !! at least 6 char and contan number and char and spical char \033[0m" << endl;
 			check = 0;
 		}
 
@@ -148,13 +148,13 @@ string Validation::nameVal() {
 		getline(cin, name);
 		
 		if (name.find(' ') != string::npos) {
-			cout << " do not use spaces ! if you want add space add '_' " << endl;
+			cout << "\033[33m do not use spaces ! if you want add space add '_' \033[0m" << endl;
 			check = 0;
 		}
 		
 		else if (name.size() < 3)
 		{
-			cout << " minmum numeber of char is 3 , Try Again: " << endl;
+			cout << "\033[33m minimum numeber of char is 3 , Try Again: \033[0m" << endl;
 			check = 0;
 			
 		}
@@ -163,7 +163,7 @@ string Validation::nameVal() {
 			{
 				if (!((name[i] >= 'a' && name[i] <= 'z') || (name[i] >= 'A' && name[i] <= 'Z') || name[i] == '_'))
 				{
-					cout << "can not use special char or integer , Try Again: " << endl;
+					cout << "\033[31m can not use special char or integer , Try Again: \033[0m" << endl;
 					check = 0;
 					break;
 				}

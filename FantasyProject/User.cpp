@@ -168,7 +168,7 @@ void User::setSquad() {
 		{
 		case 1:
 			if (countsOfPosition[0] == 0) {
-				cout << "you Choosen the max Number Of Goolkeeper\n";
+				cout << "\033[31m you Choosen the max Number Of Goolkeeper \033[0m\n";
 				continue;
 			}
 			position = "Goolkeepr";
@@ -177,7 +177,7 @@ void User::setSquad() {
 			break;
 		case 2:
 			if (countsOfPosition[1] == 0) {
-				cout << "you Choosen the max Number Of defenders\n";
+				cout << "\033[31m you Choosen the max Number Of defenders \033[0m\n";
 				continue;
 			}
 			position = "defenders";
@@ -186,7 +186,7 @@ void User::setSquad() {
 			break;
 		case 3:
 			if (countsOfPosition[2] == 0) {
-				cout << "you Choosen the max Number Of Midfielders\n";
+				cout << "\033[31m you Choosen the max Number Of Midfielders \033[0m\n";
 				continue;
 			}
 			position = "Midfielders";
@@ -197,7 +197,7 @@ void User::setSquad() {
 		case 4:
 
 			if (countsOfPosition[3] == 0) {
-				cout << "you Choosen the max Number Of forward\n";
+				cout << "\033[31m you Choosen the max Number Of forward \033[0m\n";
 				continue;
 			}
 			position = "forward";
@@ -225,7 +225,7 @@ void User::setSquad() {
 		}
 		bool validid = 0;
 		do {
-			cout << "Enter the ID Of Player:";
+			cout << "\033[33m Enter the ID Of Player: \033[0m";
 			playerid = Validation::ReadNumber();
 			for (auto i : numplayersid) {
 				if (playerid == i) {
@@ -237,7 +237,7 @@ void User::setSquad() {
 
 			//	cout << "the id is invalid ...\n1- try again \n2- go back \n";
 
-				cout << "the id is invalid ...\n1-try again \n2- go back \n";
+				cout << "\033[31m the id is invalid ...\033[0m\n1-try again \n2- go back \n";
 
 				int ans = Validation::ReadNumberInRange(1, 2);
 				switch (ans)
@@ -293,7 +293,7 @@ void User::RemovePlayer(int rid) {
 		}
 		if (playerexist)
 			break;
-		cout << "invalid Id enter again\n";
+		cout << "\033[31m invalid Id enter again \033[0m\n";
 	} while (!playerexist);
 	
 	for (auto i : squad[leagueId].squads[rid]) {
@@ -558,7 +558,7 @@ void User::PickSquad(int roundid = 0) {
 		}
 		cout << " this is the Bench\n\n\n";
 	}
-	cout << "1-set captin and vice captin\n2-switch between main squad and Bench\n 3-if you want active triple captin\n4-back to Home\n";
+	cout << "1-set captin and vice captin\n2-switch between main squad and Bench\n3-if you want active triple captin\n4-back to Home\n";
 	answer = Validation::ReadNumberInRange(1, 4);
 	switch (answer)
 	{

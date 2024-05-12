@@ -9,6 +9,7 @@ void First_Page();
 void SignIn();
 void SignUp();
 int main() {
+	
 	ReadFromFiles();
 	First_Page();
 	WriteInFiles();
@@ -31,7 +32,7 @@ void First_Page() {
 			WriteInFiles();
 			exit(0);
 		default:
-			cout << "Invaled choose" << endl;
+			cout << " \033[31m Invaled choose \033[30m" << endl;
 		}
 	}
 }
@@ -47,7 +48,7 @@ void SignIn() {
 		if (admins[i].Name == name && admins[i].Password == password)
 		{
 			iffound = true;
-			cout << "\nwelcome " << name << " in home admin" << endl;//function home admin  
+			cout << "\n\033[32m welcome " << name << " in home admin \033[0m" << endl;//function home admin  
 			Admin::SetLeagueId(users);
 			First_Page();
 		}
@@ -56,7 +57,7 @@ void SignIn() {
 		for (int i = 0; i < users.size(); i++) {
 			if (users[i].Name == name && users[i].Password == password) {
 				iffound = true;
-				cout << "\nwelcome " << name << " in home user" << endl;//function home user
+				cout << "\n \033[31m welcome " << name << " in home user \033[0m" << endl;//function home user
 				users[i].GetUsers(users);
 				users[i].chooseLeague(users[i].Id);
 				break;
@@ -64,7 +65,7 @@ void SignIn() {
 		}
 	}
 	if (!iffound) {
-		cout << "the name or password is uncorrect.. \n";
+		cout << "\033[31m the name or password is uncorrect..\033[0m \n";
 		do {
 			cout << "1-try again\n2-back to home page\n";
 			answer1 = Validation::ReadNumberInRange(1, 2);
@@ -100,7 +101,7 @@ void SignUp() {
 		user.squad[i.first].TotalPoints = 0;
 	}
 	users.push_back(user);
-	cout << "\nyour account created\n";
+	cout << "\n\033[32m your account created\033[0m\n";
 	First_Page();
 }
 void ReadFromFiles() {
