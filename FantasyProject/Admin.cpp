@@ -900,7 +900,7 @@ void Admin::setResult() {
 				do {
 					cout << "Enter the Number of Goals: ";
 					countOfGoals = Validation::ReadNumber();
-					if (countOfGoals <= res1) {
+					if (countOfGoals <= res2) {
 						break;
 					}
 					else {
@@ -967,6 +967,9 @@ void Admin::setResult() {
 		}
 		Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Assist"][playerId] = countOfassit;
 		res1 -= countOfassit;
+		if (res1) {
+			break;
+		}
 		cout << "1-if you want You More\n2-it is enough\n";
 		yn = Validation::ReadNumberInRange(1, 2);
 		if (yn == 1)
@@ -1010,7 +1013,7 @@ void Admin::setResult() {
 			do {
 				cout << "Enter the Number of assist: ";
 				countOfassit = Validation::ReadNumber();
-				if (countOfassit <= res1) {
+				if (countOfassit <= res2) {
 					break;
 				}
 				else {
@@ -1087,7 +1090,7 @@ void Admin::setResult() {
 			do {
 				cout << "Enter the Number of Yellow card: ";
 				numberOfYellow = Validation::ReadNumber();
-				if (numberOfYellow <= res1) {
+				if (numberOfYellow <= countOfYellow) {
 					break;
 				}
 				else {
@@ -1101,8 +1104,7 @@ void Admin::setResult() {
 		countOfYellow -= numberOfYellow;
 	}
 	cout << "Enter the Number of Red card in Match:";
-	countOfRed = Validation::ReadNumber();
-
+	countOfRed = Validation::ReadNumberInRange(1, 6);
 	while (countOfRed)
 	{
 		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1->TeamId]) {
