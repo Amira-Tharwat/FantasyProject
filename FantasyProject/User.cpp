@@ -421,11 +421,12 @@ void User::PickSquad(int roundid = 0) {
 			for (auto j : i.second) {
 				while (!(squad[leagueId].deka[roundid].empty())) {
 					copyDeka.push(squad[leagueId].deka[roundid].top());
+					squad[leagueId].deka[roundid].pop();
 					if (j->PlayerId == copyDeka.top()->PlayerId) {
 						isfound = true;
 						break;
 					}
-					squad[leagueId].deka[roundid].pop();
+
 				}
 				if (i.first != "Goolkeepr") {
 					if (!found && !setcaptin) {
@@ -434,7 +435,7 @@ void User::PickSquad(int roundid = 0) {
 					}
 					else if (!found && setcaptin) {
 						squad[leagueId].ViceCaptain = j;
-						break;
+
 					}
 				}
 				while (!(copyDeka.empty())) {
@@ -445,6 +446,7 @@ void User::PickSquad(int roundid = 0) {
 		}
 	}
 	for (auto i : Leagues::leagues[leagueId].rounds) {
+		isplayed = false;
 		for (auto j : i.second.matches)
 		{
 			if (j.second.isPlayed) {
@@ -463,13 +465,15 @@ void User::PickSquad(int roundid = 0) {
 	isfound = false;
 	for (auto i : squad[leagueId].squads[round.roundId]) {
 		for (auto j : i.second) {
+			isfound = false;
 			while (!(squad[leagueId].deka[round.roundId].empty())) {
 				copyDeka.push(squad[leagueId].deka[round.roundId].top());
+				squad[leagueId].deka[round.roundId].pop();
 				if (j->PlayerId == copyDeka.top()->PlayerId) {
 					isfound = true;
 					break;
 				}
-				squad[leagueId].deka[round.roundId].pop();
+
 			}
 			if (!isfound) {
 				if (j->PlayerId == squad[leagueId].captain->PlayerId) {
@@ -483,109 +487,7 @@ void User::PickSquad(int roundid = 0) {
 				}
 
 			}
-			for (auto k : round.matches) {
-				auto m = k.second.team1->Players.find(j->PlayerId);
-				if (m != k.second.team1->Players.end()) {
-					matchid = k.second.MatchId;
-					whoteam = true;
-					teamisplayed = true;
-					break;
-				}
-				m = k.second.team2->Players.find(j->PlayerId);
-				if (m != k.second.team2->Players.end()) {
-					matchid = k.second.MatchId;
-					whoteam = false;
-					teamisplayed = true;
-					break;
-				}
-			}
-			if (!teamisplayed) {
-				cout << "-" << endl;
-			}
-			else {
-				if (whoteam) {
-					cout << round.matches[matchid].team2->TeamName << endl;
-				}
-				else if (!whoteam) {
-					cout << round.matches[matchid].team1->TeamName << endl;
-				}
-			}
-			while (!(copyDeka.empty()))
-			{
-				squad[leagueId].deka[roundid].push(copyDeka.top());
-				copyDeka.pop();
-			}
-		}
-		cout << " this is the main squad\n\n\n";
-		while (!(squad[leagueId].deka[roundid].empty())) {
-			copyDeka.push(squad[leagueId].deka[roundid].top());
-			cout << copyDeka.top()->PlayerId << " - " << copyDeka.top()->PlayerName << "       " << copyDeka.top()->PlayerPosition << "       ";
-			for (auto k : round.matches) {
-				auto m = k.second.team1->Players.find(copyDeka.top()->PlayerId);
-				if (m != k.second.team1->Players.end()) {
-					matchid = k.second.MatchId;
-					whoteam = true;
-					teamisplayed = true;
-					break;
-				}
-				m = k.second.team2->Players.find(copyDeka.top()->PlayerId);
-				if (m != k.second.team2->Players.end()) {
-					matchid = k.second.MatchId;
-					whoteam = false;
-					teamisplayed = true;
-					break;
-				}
-			}
-			if (!teamisplayed) {
-				cout << " - " << endl;
-			}
-			else {
-				if (whoteam) {
-					cout << round.matches[matchid].team2->TeamName << endl;
-				}
-				else if (!whoteam) {
-					cout << round.matches[matchid].team1->TeamName << endl;
-				}
-			}
-			squad[leagueId].deka[roundid].pop();
-
-		}
-
-		while (!(copyDeka.empty()))
-		{
-			squad[leagueId].deka[roundid].push(copyDeka.top());
-			copyDeka.pop();
-		}
-		cout << " this is the Bench\n\n\n";
-	}
-	cout << "1-set captin and vice captin\n2-switch between main squad and Bench\n3-if you want active triple captin\n4-back to Home\n";
-	answer = Validation::ReadNumberInRange(1, 4);
-	switch (answer)
-	{
-	case 1:
-		playersid.clear();
-		for (auto i : squad[leagueId].squads[roundid]) {
-			for (auto j : i.second) {
-				while (!(squad[leagueId].deka.empty())) {
-					copyDeka.push(squad[leagueId].deka[roundid].top());
-					if (j->PlayerId == copyDeka.top()->PlayerId) {
-						isfound = true;
-						break;
-					}
-					squad[leagueId].deka[roundid].pop();
-				}
-				if (!isfound) {
-					if (j->PlayerId != squad[leagueId].captain->PlayerId) {
-						if (j->PlayerId == squad[leagueId].ViceCaptain->PlayerId) {
-							cout << j->PlayerId << " - " << j->PlayerName << "       " << j->PlayerPosition << "       " << "Vice Captin";
-						}
-						else {
-							cout << j->PlayerId << " - " << j->PlayerName << "       " << j->PlayerPosition << "       ";
-							playersid.push_back(j->PlayerId);
-
-						}
-					}
-				}
+			if (!isfound) {
 				for (auto k : round.matches) {
 					auto m = k.second.team1->Players.find(j->PlayerId);
 					if (m != k.second.team1->Players.end()) {
@@ -603,7 +505,7 @@ void User::PickSquad(int roundid = 0) {
 					}
 				}
 				if (!teamisplayed) {
-					cout << " - " << endl;
+					cout << "-" << endl;
 				}
 				else {
 					if (whoteam) {
@@ -613,10 +515,121 @@ void User::PickSquad(int roundid = 0) {
 						cout << round.matches[matchid].team1->TeamName << endl;
 					}
 				}
-				while (!(copyDeka.empty()))
-				{
-					squad[leagueId].deka[roundid].push(copyDeka.top());
-					copyDeka.pop();
+			}
+			while (!(copyDeka.empty()))
+			{
+				squad[leagueId].deka[roundid].push(copyDeka.top());
+				copyDeka.pop();
+			}
+		}
+	}
+	cout << " this is the main squad\n\n\n";
+	while (!(squad[leagueId].deka[roundid].empty())) {
+		copyDeka.push(squad[leagueId].deka[roundid].top());
+		cout << copyDeka.top()->PlayerId << " - " << copyDeka.top()->PlayerName << "       " << copyDeka.top()->PlayerPosition << "       ";
+		for (auto k : round.matches) {
+			auto m = k.second.team1->Players.find(copyDeka.top()->PlayerId);
+			if (m != k.second.team1->Players.end()) {
+				matchid = k.second.MatchId;
+				whoteam = true;
+				teamisplayed = true;
+				break;
+			}
+			m = k.second.team2->Players.find(copyDeka.top()->PlayerId);
+			if (m != k.second.team2->Players.end()) {
+				matchid = k.second.MatchId;
+				whoteam = false;
+				teamisplayed = true;
+				break;
+			}
+		}
+		if (!teamisplayed) {
+			cout << " - " << endl;
+		}
+		else {
+			if (whoteam) {
+				cout << round.matches[matchid].team2->TeamName << endl;
+			}
+			else if (!whoteam) {
+				cout << round.matches[matchid].team1->TeamName << endl;
+			}
+		}
+		squad[leagueId].deka[roundid].pop();
+
+	}
+
+	while (!(copyDeka.empty()))
+	{
+		squad[leagueId].deka[roundid].push(copyDeka.top());
+		copyDeka.pop();
+	}
+	cout << " this is the Bench\n\n\n";
+
+	cout << "1-set captin and vice captin\n2-switch between main squad and Bench\n 3-if you want active triple captin\n4-back to Home\n";
+	answer = Validation::ReadNumberInRange(1, 4);
+	switch (answer)
+	{
+	case 1:
+		playersid.clear();
+		for (auto i : squad[leagueId].squads[roundid]) {
+			for (auto j : i.second) {
+				while (!(squad[leagueId].deka.empty())) {
+					isfound = false;
+					copyDeka.push(squad[leagueId].deka[roundid].top());
+					squad[leagueId].deka[roundid].pop();
+					if (j->PlayerId == copyDeka.top()->PlayerId) {
+						isfound = true;
+						break;
+					}
+
+				}
+				if (!isfound) {
+					if (j->PlayerId != squad[leagueId].captain->PlayerId) {
+						if (j->PlayerId == squad[leagueId].ViceCaptain->PlayerId) {
+							cout << j->PlayerId << " - " << j->PlayerName << "       " << j->PlayerPosition << "       " << "Vice Captin";
+						}
+						else {
+							cout << j->PlayerId << " - " << j->PlayerName << "       " << j->PlayerPosition << "       ";
+							playersid.push_back(j->PlayerId);
+
+						}
+					}
+				}
+				if (!isfound) {
+
+
+					for (auto k : round.matches) {
+						auto m = k.second.team1->Players.find(j->PlayerId);
+						if (m != k.second.team1->Players.end()) {
+							matchid = k.second.MatchId;
+							whoteam = true;
+							teamisplayed = true;
+							break;
+						}
+						m = k.second.team2->Players.find(j->PlayerId);
+						if (m != k.second.team2->Players.end()) {
+							matchid = k.second.MatchId;
+							whoteam = false;
+							teamisplayed = true;
+							break;
+						}
+					}
+					if (!teamisplayed) {
+						cout << " - " << endl;
+					}
+					else {
+						if (whoteam) {
+							cout << round.matches[matchid].team2->TeamName << endl;
+						}
+						else if (!whoteam) {
+							cout << round.matches[matchid].team1->TeamName << endl;
+						}
+					}
+					while (!(copyDeka.empty()))
+					{
+						squad[leagueId].deka[roundid].push(copyDeka.top());
+						copyDeka.pop();
+					}
 				}
 			}
 		}

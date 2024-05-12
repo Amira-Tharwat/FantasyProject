@@ -1567,4 +1567,4 @@ void Admin::clacPoints(int roundId, Match match) {
 			captininmatch = 0;
 		}
 	}
-}+
+}
