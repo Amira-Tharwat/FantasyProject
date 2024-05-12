@@ -599,7 +599,7 @@ void Admin::RemoveMatch() {
 }
 void Admin::setResult() {
 	int roundId, matchId, playerId, countOfGoals, countOfassit, res1, res2, assist1, assist2, choicegoal, countOfYellow, countOfRed, numberOfYellow, counterwhile = 1, roundisplayed = false, roundexist = false, matchexist = false, playerexist = false;
-	char yn;
+	int yn;
 	vector<int>roundsid;
 	vector<int>matchsid;
 	vector<int>playersid;
@@ -862,16 +862,38 @@ void Admin::setResult() {
 			}
 			}
 			cout << "That player who participated in the match\n";
-			cout << "enter the Id of player who score one or more:";
-			cin >> playerId;
+			do {
+				playerexist = false;
+				cout << "enter the Id of player who score one or more:";
+				playerId = Validation::ReadNumber();
+				for (auto p : playersid) {
+					if (p == playerId) {
+						playerexist = true;
+						break;
+					}
+				}
+				if (playerexist) {
+					break;
+				}
+				cout << "invalid Id enter again\n";
+
+			} while (!playerexist);
 			if (Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].res2 > 1) {
-				cout << "Enter the Number of Goals: ";
-				cin >> countOfGoals;
+				do {
+					cout << "Enter the Number of Goals: ";
+					countOfGoals = Validation::ReadNumber();
+					if (countOfGoals <= res1) {
+						break;
+					}
+					else {
+						cout << "invalid number of goals\n";
+					}
+				} while (true);
 			}
 			else {
 				countOfGoals = 1;
 			}
-			Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Goals"][playerId] = countOfGoals;
+			Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["OwnGoal"][playerId] = countOfGoals;
 			res2 -= countOfGoals;
 		default:
 			break;
@@ -881,90 +903,179 @@ void Admin::setResult() {
 	while (res1) {
 		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1->TeamId]) {
 			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Assist"].find(i.second->PlayerId);
-			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Assist"].end())
+			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Assist"].end()){
 				cout << i.first << "-" << i.second->PlayerName << endl;
+			playersid.push_back(i.first);
+		}
 		}
 		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].pdla[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1->TeamId]) {
 			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Assist"].find(i.second->PlayerId);
-			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Assist"].end())
+			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Assist"].end()){
 				cout << i.first << "-" << i.second->PlayerName << endl;
+			playersid.push_back(i.first);
+		}
 		}
 		cout << "That player who participated in the match\n";
-		cout << "enter the Id of player who assist one or more Goal:";
-		cin >> playerId;
+		do {
+			playerexist = false;
+			cout << "enter the Id of player who score one or more:";
+			playerId = Validation::ReadNumber();
+			for (auto p : playersid) {
+				if (p == playerId) {
+					playerexist = true;
+					break;
+				}
+			}
+			if (playerexist) {
+				break;
+			}
+			cout << "invalid Id enter again\n";
+
+		} while (!playerexist);
 		if (Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].res1 > 1) {
-			cout << "Enter the Number of Goals: ";
-			cin >> countOfassit;
+			do {
+				cout << "Enter the Number of assist: ";
+				countOfassit = Validation::ReadNumber();
+				if (countOfassit <= res1) {
+					break;
+				}
+				else {
+					cout << "invalid number of assist\n";
+				}
+			} while (true);
 		}
 		else {
 			countOfassit = 1;
 		}
 		Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Assist"][playerId] = countOfassit;
 		res1 -= countOfassit;
-		cout << "Do You Enter More (y/n)?";
-		cin >> yn;
-		if (yn == 'n' || yn == 'N')
+		cout << "1-if you want You More\n2-it is enough\n";
+		yn = Validation::ReadNumberInRange(1, 2);
+		if (yn == 1)
 			break;
 	}
 	res2 = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].res2;
 	while (res2) {
+		playersid.clear();
 		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2->TeamId]) {
 			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Assist"].find(i.second->PlayerId);
-			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Assist"].end())
+			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Assist"].end()) {
 				cout << i.first << "-" << i.second->PlayerName << endl;
+				playersid.push_back(i.first);
+			}
 		}
 		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].pdla[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2->TeamId]) {
 			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Assist"].find(i.second->PlayerId);
-			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Assist"].end())
+			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Assist"].end()) {
 				cout << i.first << "-" << i.second->PlayerName << endl;
+				playersid.push_back(i.first);
+			}
 		}
 		cout << "That player who participated in the match\n";
-		cout << "enter the Id of player who assist one or more Goal:";
-		cin >> playerId;
+		do {
+			playerexist = false;
+			cout << "enter the Id of player who assist:";
+			playerId = Validation::ReadNumber();
+			for (auto p : playersid) {
+				if (p == playerId) {
+					playerexist = true;
+					break;
+				}
+			}
+			if (playerexist) {
+				break;
+			}
+			cout << "invalid Id enter again\n";
+
+		} while (!playerexist);
 		if (Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].res2 > 1) {
-			cout << "Enter the Number of Goals: ";
-			cin >> countOfassit;
+			do {
+				cout << "Enter the Number of assist: ";
+				countOfassit = Validation::ReadNumber();
+				if (countOfassit <= res1) {
+					break;
+				}
+				else {
+					cout << "invalid number of assist\n";
+				}
+			} while (true);
 		}
 		else {
 			countOfassit = 1;
 		}
 		Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Assist"][playerId] = countOfassit;
 		res1 -= countOfassit;
-		cout << "Do You Enter More (y/n)?";
-		cin >> yn;
-		if (yn == 'n' || yn == 'N')
+		cout << "1-if You want to Enter More\n 2- is this enough?";
+		yn = Validation::ReadNumberInRange(1, 2);
+		if (yn == 1)
 			break;
 	}
 	cout << "Enter the Number of Yellow card in Match:";
-	cin >> countOfYellow;
+	countOfYellow = Validation::ReadNumber();
 	while (countOfYellow)
 	{
+		playersid.clear()
 		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1->TeamId]) {
 			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Yellow"].find(i.second->PlayerId);
-			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Yellow"].end())
+			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Yellow"].end()) {
 				cout << i.first << "-" << i.second->PlayerName << endl;
+				playersid.push_back(i.first);
+			}
+				
 		}
 		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].pdla[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1->TeamId]) {
 			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Yellow"].find(i.second->PlayerId);
-			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Yellow"].end())
+			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Yellow"].end()) {
 				cout << i.first << "-" << i.second->PlayerName << endl;
+				playersid.push_back(i.first);
+			}
+				
 		}
 		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2->TeamId]) {
 			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Yellow"].find(i.second->PlayerId);
-			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Yellow"].end())
+			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Yellow"].end()) {
 				cout << i.first << "-" << i.second->PlayerName << endl;
+				playersid.push_back(i.first);
+			}
+				
 		}
 		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].pdla[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2->TeamId]) {
 			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Yellow"].find(i.second->PlayerId);
-			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Yellow"].end())
+			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Yellow"].end()) {
 				cout << i.first << "-" << i.second->PlayerName << endl;
+				playersid.push_back(i.first);
+			}
+				
 		}
 		cout << "That player who participated in the match\n";
-		cout << "enter the Id of player who get Yellow Card";
-		cin >> playerId;
+		do {
+			playerexist = false;
+			cout << "enter the Id of player who get yellow card:";
+			playerId = Validation::ReadNumber();
+			for (auto p : playersid) {
+				if (p == playerId) {
+					playerexist = true;
+					break;
+				}
+			}
+			if (playerexist) {
+				break;
+			}
+			cout << "invalid Id enter again\n";
+
+		} while (!playerexist);
 		if (countOfYellow > 1) {
-			cout << "Enter the Number of Yellow card: ";
-			cin >> numberOfYellow;
+			
+			do {
+				cout << "Enter the Number of Yellow card: ";					
+				numberOfYellow = Validation::ReadNumber();
+				if (numberOfYellow <= res1) {
+					break;
+				}
+				else {
+					cout << "invalid number of assist\n";
+				}
+			} while (true);
 		}
 		else
 			numberOfYellow = 1;
@@ -972,33 +1083,61 @@ void Admin::setResult() {
 		countOfYellow -= numberOfYellow;
 	}
 	cout << "Enter the Number of Red card in Match:";
-	cin >> countOfRed;
+	countOfRed = Validation::ReadNumber();
 
 	while (countOfRed)
 	{
 		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1->TeamId]) {
 			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Red"].find(i.second->PlayerId);
 			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Red"].end())
+			{
 				cout << i.first << "-" << i.second->PlayerName << endl;
+				playersid.push_back(i.first);
+			}
 		}
 		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].pdla[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team1->TeamId]) {
 			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Red"].find(i.second->PlayerId);
 			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Red"].end())
+			{
 				cout << i.first << "-" << i.second->PlayerName << endl;
+				playersid.push_back(i.first);
+			}
 		}
 		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].XI[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2->TeamId]) {
 			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Red"].find(i.second->PlayerId);
 			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Red"].end())
+			{
 				cout << i.first << "-" << i.second->PlayerName << endl;
+				playersid.push_back(i.first);
+			}
+
 		}
 		for (auto i : Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].pdla[Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].team2->TeamId]) {
 			auto j = Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Red"].find(i.second->PlayerId);
 			if (j == Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Red"].end())
+			{
 				cout << i.first << "-" << i.second->PlayerName << endl;
+				playersid.push_back(i.first);
+			}
 		}
 		cout << "That player who participated in the match\n";
-		cout << "enter the Id of player who get Red Card";
-		cin >> playerId;
+		
+		do {
+			playerexist = false;
+			cout << "enter the Id of player who get Red Card";
+			playerId = Validation::ReadNumber();
+			for (auto p : playersid) {
+				if (p == playerId) {
+					playerexist = true;
+					break;
+				}
+			}
+			if (playerexist) {
+				break;
+			}
+			cout << "invalid Id enter again\n";
+
+		} while (!playerexist);
 		Leagues::leagues[LeagueId].rounds[roundId].matches[matchId].Details["Red"][playerId] = 1;
 		countOfRed -= 1;
 	}

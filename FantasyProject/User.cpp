@@ -234,7 +234,7 @@ void User::setSquad() {
 				}
 			}
 			if (validid == 0) {
-				cout << "the id is invalid ...\n1- please try again \n2- go back \n";
+				cout << "the id is invalid ...\n1-try again \n2- go back \n";
 				int ans = Validation::ReadNumberInRange(1, 2);
 				switch (ans)
 				{
