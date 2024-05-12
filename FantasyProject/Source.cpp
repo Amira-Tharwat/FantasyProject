@@ -339,15 +339,17 @@ void ReadFromFiles() {
 		while (getline(isss6, token2,',')) {
 			tokens2.push_back(token2);
 		}
-		for (int i = 0; i < 11; i++) {
-			istringstream isss0(tokens2[i]);
-			isss0 >> playerid;
-			match.XI[match.team1->TeamId][playerid]=&Leagues::leagues[leagueid].Players[playerid];
-		}
-		for (int i = 11; i < tokens2.size(); i++) {
-			istringstream isss0(tokens2[i]);
-			isss0 >> playerid;
-			match.pdla[match.team1->TeamId][playerid]= &Leagues::leagues[leagueid].Players[playerid];
+		if (!tokens2.empty()) {
+			for (int i = 0; i < 11; i++) {
+				istringstream isss0(tokens2[i]);
+				isss0 >> playerid;
+				match.XI[match.team1->TeamId][playerid] = &Leagues::leagues[leagueid].Players[playerid];
+			}
+			for (int i = 11; i < tokens2.size(); i++) {
+				istringstream isss0(tokens2[i]);
+				isss0 >> playerid;
+				match.pdla[match.team1->TeamId][playerid] = &Leagues::leagues[leagueid].Players[playerid];
+			}
 		}
 
 		istringstream isss9(tokens[9]);
@@ -357,15 +359,17 @@ void ReadFromFiles() {
 		while (getline(isss9, token3, ',')) {
 			tokens3.push_back(token3);
 		}
-		for (int i = 0; i < 11; i++) {
-			istringstream isss0(tokens3[i]);
-			isss0 >> playerid2;
-			match.XI[match.team2->TeamId][playerid2] = &Leagues::leagues[leagueid].Players[playerid2];
-		}
-		for (int i = 11; i < tokens3.size(); i++) {
-			istringstream isss0(tokens3[i]);
-			isss0 >> playerid2;
-			match.pdla[match.team2->TeamId][playerid2] = &Leagues::leagues[leagueid].Players[playerid2];
+		if (!tokens3.empty()) {
+			for (int i = 0; i < 11; i++) {
+				istringstream isss0(tokens3[i]);
+				isss0 >> playerid2;
+				match.XI[match.team2->TeamId][playerid2] = &Leagues::leagues[leagueid].Players[playerid2];
+			}
+			for (int i = 11; i < tokens3.size(); i++) {
+				istringstream isss0(tokens3[i]);
+				isss0 >> playerid2;
+				match.pdla[match.team2->TeamId][playerid2] = &Leagues::leagues[leagueid].Players[playerid2];
+			}
 		}
 
 		Leagues::leagues[leagueid].rounds[roundid].matches[match.MatchId] = match;
@@ -479,7 +483,7 @@ void WriteInFiles() {
 				for (auto d : m.second.pdla[m.second.team2->TeamId]) {
 					matchsfile << d.first << ',';
 				}
-				matchsfile << endl;
+				matchsfile << '-' << endl;
 				for (auto de : m.second.Details) {
 					detailsfile << de.first << '>';
 					for (auto dep : de.second) {

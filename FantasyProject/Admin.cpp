@@ -1062,7 +1062,7 @@ void Admin::setSquadfortowteams(int roundId, int matchId) {
 		playerId = Validation::ReadNumber();
 		playerexist = false;
 		for (auto j : playersid) {
-			if (j == playerexist) {
+			if (j == playerId) {
 				playerexist = true;
 				break;
 			}
